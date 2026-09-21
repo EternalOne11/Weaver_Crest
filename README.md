@@ -49,19 +49,19 @@
 - First, its inspired by spider webs, and the weaver runes that use silk and is delibratly symentrical to distinguish it from other crests.
 - Second its hexigonal design is derived from hives motif due to hornets connection with them.
 
-
-# Credits
+## Credits
 - Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools)
 Concept, 
 - KAdala, (The artist who made the entire moveset)
 - Me, (who created the concept, tweaked the art, and did much of the code)
 
-# Special Thanks to (wip)
+## Special Thanks to (wip)
 - VoidBaroness, (The Creator of Needleforge)
 - Kaycodes13, (Creator of the Queens crest for the template)
 - DerVorce, (Creator of the Void crest, which served as reference)
 - Everyone in the HK wiki discord, who uncovered the cut content, that inspired this mod.
 - Everyone in the HK modding discord who helped refine my ideas and code the mod.
 
-# If anyone wants to take or reuse any of these ideas feel free to. 
+## If anyone wants to take or reuse any of these ideas feel free to. 
+
 # If this mod ever reaches the notice team cherry, feel free to implement any of these ideas.
