@@ -1,0 +1,67 @@
+using Needleforge.Attacks;
+using Silksong.UnityHelper.Util;
+using System.Linq;
+using UnityEngine;
+using static Weaver_Crest.Weaver_CrestPlugin;
+using WrapMode = tk2dSpriteAnimationClip.WrapMode;
+
+namespace Weaver_Crest.Patches;
+
+internal static partial class Moveset {
+
+	private static void AltSlash() {
+		string[] altSlashFiles = ["slashAlt_E0000.png", "slashAlt_E0001.png", "slashAlt_E0002.png", "slashAlt_E0003.png", "slashAlt_E0004.png"];
+		Texture2D[] altSlashTex = LoadNamedTextures(altSlashFiles);
+		string[] altSlashHornetFiles = ["slashAlt0000.png", "slashAlt0001.png", "slashAlt0002.png", "slashAlt0003.png", "slashAlt0004.png"];
+		Texture2D[] altSlashHornetTex = LoadNamedTextures(altSlashHornetFiles);
+
+		tk2dSpriteCollectionData altSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
+			sprites: [.. altSlashTex, .. altSlashHornetTex],
+			spriteCenters: [
+				.. altSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(80f, 0f)),
+				.. altSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
+			]
+		);
+		Object.DontDestroyOnLoad(altSlashData.gameObject);
+		altSlashData.gameObject.name = $"{YenId}_AltSlashAnim";
+		altSlashData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
+		{
+			tk2dSprite? heroSprite = HeroController.instance.GetComponentInChildren<tk2dSprite>();
+			if (heroSprite != null) {
+				Material heroMaterial = heroSprite.GetCurrentSpriteDef().material;
+				foreach (var def in altSlashData.spriteDefinitions)
+					if (def != null)
+						def.material.shader = heroMaterial.shader;
+			}
+		}
+
+		tk2dSpriteAnimation altSlashAnims = altSlashData.gameObject.AddComponent<tk2dSpriteAnimation>();
+		altSlashAnims.clips = [
+			new tk2dSpriteAnimationClip {
+				name = "Weaver AltSlash Effect",
+				fps = 12,
+				wrapMode = WrapMode.Once,
+				frames = [
+					altSlashData.CreateFrame(altSlashTex[0].name, triggerEvent: true),
+					.. altSlashData.CreateFrames(altSlashTex.Skip(1).Select(t => t.name)),
+					altSlashData.CreateFrame(altSlashTex[^1].name, triggerEvent: true),
+				],
+			},
+			new tk2dSpriteAnimationClip {
+				name = "SlashAlt",
+				fps = 12,
+				wrapMode = WrapMode.Once,
+				frames = altSlashData.CreateFrames(altSlashHornetTex.Select(t => t.name)),
+			},
+		];
+		altSlashAnims.ValidateLookup();
+		sharedLib.clips = [.. sharedLib.clips, altSlashAnims.clips[1]];
+
+		YenCrest.Moveset.AltSlash = new Attack {
+			Name = "WeaverAltSlash",
+			AnimName = "Weaver AltSlash Effect",
+			AnimLibrary = altSlashAnims,
+			Hitbox = standardHitbox,
+		};
+	}
+}

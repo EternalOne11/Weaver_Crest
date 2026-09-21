@@ -1,0 +1,138 @@
+using HarmonyLib;
+using HutongGames.PlayMaker;
+using HutongGames.PlayMaker.Actions;
+using Needleforge.Attacks;
+using Silksong.FsmUtil;
+using Silksong.UnityHelper.Util;
+using System.Collections;
+using System.Linq;
+using UnityEngine;
+using static Weaver_Crest.Weaver_CrestPlugin;
+using WrapMode = tk2dSpriteAnimationClip.WrapMode;
+
+namespace Weaver_Crest.Patches;
+
+internal static partial class Moveset {
+
+	private static void ChargedSlash() {
+		string[] chargedFiles = ["charged_e0000.png", "charged_e0001.png", "charged_e0002.png"];
+		Texture2D[] chargedTex = LoadNamedTextures(chargedFiles);
+		string[] chargedHornetFiles = [
+			"charged0000.png", "charged0001.png", "charged0002.png", "charged0003.png", "charged0004.png",
+			"charged0005.png", "charged0006.png", "charged0007.png", "charged0008.png", "charged0009.png",
+			"charged0010.png", "charged0011.png", "charged0012.png", "charged0013.png", "charged0014.png",
+		];
+		Texture2D[] chargedHornetTex = LoadNamedTextures(chargedHornetFiles);
+
+		tk2dSpriteCollectionData chargedData = Tk2dUtil.CreateTk2dSpriteCollection(
+			sprites: [.. chargedTex, .. chargedHornetTex],
+			spriteCenters: [
+				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(190f, 0f)),
+				.. chargedHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
+			]
+		);
+		Object.DontDestroyOnLoad(chargedData.gameObject);
+		chargedData.gameObject.name = $"{YenId}_ChargedAnim";
+		chargedData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
+		{
+			tk2dSprite? heroSprite = HeroController.instance.GetComponentInChildren<tk2dSprite>();
+			if (heroSprite != null) {
+				Material heroMaterial = heroSprite.GetCurrentSpriteDef().material;
+				foreach (var def in chargedData.spriteDefinitions)
+					if (def != null)
+						def.material.shader = heroMaterial.shader;
+			}
+		}
+
+		tk2dSpriteAnimation chargedAnims = chargedData.gameObject.AddComponent<tk2dSpriteAnimation>();
+		chargedAnims.clips = [
+			new tk2dSpriteAnimationClip {
+				name = "Weaver Charged Effect",
+				fps = 12,
+				wrapMode = WrapMode.Once,
+				frames = [
+					chargedData.CreateFrame(chargedTex[0].name, triggerEvent: true),
+					.. chargedData.CreateFrames(chargedTex.Skip(1).Take(chargedTex.Length - 2).Select(t => t.name)),
+					chargedData.CreateFrame(chargedTex[^1].name, triggerEvent: true),
+				],
+			},
+			new tk2dSpriteAnimationClip {
+				name = "Slash_Charged",
+				fps = 16,
+				wrapMode = WrapMode.Once,
+				frames = [
+					.. chargedData.CreateFrames(chargedHornetTex.Take(11).Select(t => t.name)),
+					chargedData.CreateFrame(chargedHornetTex[11].name, triggerEvent: true),
+					.. chargedData.CreateFrames(chargedHornetTex.Skip(12).Select(t => t.name)),
+				],
+			},
+		];
+		chargedAnims.ValidateLookup();
+		sharedLib.clips = [.. sharedLib.clips, chargedAnims.clips[1]];
+
+		YenCrest.Moveset.ChargedSlash = new ChargedAttack {
+			Name = "WeaverSlashCharged",
+			PlayOnActivation = false,
+			PlayStepsInSequence = false,
+			Steps = [
+				new ChargedAttack.Step {
+					AnimName = "Weaver Charged Effect",
+					Hitbox = [new Vector2(-0.4f, 1.2f),new Vector2(-2.0f, 1.9f),new Vector2(-3.8f, 1.5f),new Vector2(-5.2f, 0.4f),
+					new Vector2(-5.2f, -0.4f),new Vector2(-3.8f, -1.5f),new Vector2(-2.0f, -1.9f),new Vector2(-0.4f, -1.2f),],
+					KeepWorldPosition = true,
+				},
+			],
+		};
+		YenCrest.Moveset.ChargedSlash.SetAnimLibrary(chargedAnims);
+
+		YenCrest.Moveset.HeroConfig!.ChargedSlashFsmEdit = ChargedFsmEdit;
+
+		void ChargedFsmEdit(PlayMakerFSM fsm, FsmState startState, out FsmState[] endStates) {
+			FsmState attackState = fsm.AddState("Weaver Slash");
+			endStates = [attackState];
+
+			bool isLocking = false;
+			Vector3 lockedPosition = default;
+
+			IEnumerator LockPosition() {
+				while (isLocking) {
+					HeroController.instance.transform.position = lockedPosition;
+					yield return null;
+				}
+			}
+
+			startState.AddMethod(() => {
+				lockedPosition = HeroController.instance.transform.position;
+				isLocking = true;
+				HeroController.instance.StartCoroutine(LockPosition());
+				HeroController.instance.SpriteFlash.flashFocusHeal();
+				YenCrest.Moveset.ChargedSlash!.GameObject!.SetActive(true);
+				foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
+					step.EndAttack();
+			});
+			startState.AddActions(
+				new Tk2dPlayAnimationWithEvents {
+					gameObject = new(),
+					clipName = "Slash_Charged",
+					animationTriggerEvent = FsmEvent.Finished,
+				}
+			);
+			startState.AddTransition(FsmEvent.Finished.name, attackState.name);
+
+			attackState.AddMethod(() => {
+				HeroController.instance.StartCoroutine(PlayStepsInSequence());
+				IEnumerator PlayStepsInSequence() {
+					foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps) {
+						step.StartAttack();
+						yield return new WaitForSeconds(0.15f);
+					}
+					isLocking = false;
+				}
+			});
+			attackState.AddAction(new Tk2dWatchAnimationEvents {
+				gameObject = new(),
+				animationCompleteEvent = FsmEvent.Finished,
+			});
+		}
+	}
+}
