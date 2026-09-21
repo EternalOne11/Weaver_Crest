@@ -1,0 +1,206 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 
+  Imports silksong path properties only if present in order to allow CI builds. The file should be gitignored.
+  If you are checking out from git and need to create a new one, you can use `dotnet new silksongpath` to generate one.
+  -->
+  <Import Condition="Exists('SilksongPath.props')" Project="SilksongPath.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisMode>recommended</AnalysisMode>
+    <!-- Ignore warning about processor architecture mismatch with PlayMaker ConditionalExpression -->
+    <NoWarn>$(NoWarn);MSB3270</NoWarn>
+
+    <RestorePackagesWithLockFile>True</RestorePackagesWithLockFile>
+    <RestoreLockedMode Condition="'$(CI)' == 'true'">True</RestoreLockedMode>
+
+    <!-- Shortens and anonymizes paths in debug symbols relative to the project directory. Breakpoints will not work, however. -->
+    <PathMap Condition="'$(Configuration)' == 'Release'">$(MSBuildProjectDirectory)=/</PathMap>
+
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/EternalOne11/Weaver Crest</RepositoryUrl>
+  </PropertyGroup>
+  
+    <ItemGroup>
+    <EmbeddedResource Include="Resources\Crest.png" />
+	<EmbeddedResource Include="Resources\CrestEquipGlow.png" />
+    <EmbeddedResource Include="Resources\CrestGlow.png" />
+    <EmbeddedResource Include="Resources\CrestSilhouette.png" />
+    <EmbeddedResource Include="Resources\CrestIcon.png" />
+	<EmbeddedResource Include="Resources\CrestIcon_S.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud0.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud1.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud2.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud3.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud4.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud5.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud6.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud7.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud8.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud9.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud10.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud11.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud12.png" />
+    <EmbeddedResource Include="Resources\Hud\Hud13.png" />
+	<EmbeddedResource Include="Resources\Hud_S\Hud0_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud1_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud2_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud3_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud4_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud5_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud6_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud7_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud8_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud9_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud10_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud11_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud12_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud13_S.png" />
+	<EmbeddedResource Include="Resources\Slash\slash0000.png" />
+	<EmbeddedResource Include="Resources\Slash\slash0001.png" />
+	<EmbeddedResource Include="Resources\Slash\slash0002.png" />
+	<EmbeddedResource Include="Resources\Slash\slash0003.png" />
+	<EmbeddedResource Include="Resources\Slash\slash0004.png" />
+	<EmbeddedResource Include="Resources\SlashAlt\slashAlt0000.png" />
+	<EmbeddedResource Include="Resources\SlashAlt\slashAlt0001.png" />
+	<EmbeddedResource Include="Resources\SlashAlt\slashAlt0002.png" />
+	<EmbeddedResource Include="Resources\SlashAlt\slashAlt0003.png" />
+	<EmbeddedResource Include="Resources\SlashAlt\slashAlt0004.png" />
+	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_E0000.png" />
+	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_E0001.png" />
+	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_E0002.png" />
+	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_E0003.png" />
+	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_E0004.png" />
+	<EmbeddedResource Include="Resources\Slash Effect\slash_E0000.png" />
+	<EmbeddedResource Include="Resources\Slash Effect\slash_E0001.png" />
+	<EmbeddedResource Include="Resources\Slash Effect\slash_E0002.png" />
+	<EmbeddedResource Include="Resources\Slash Effect\slash_E0003.png" />
+	<EmbeddedResource Include="Resources\Slash Effect\slash_E0004.png" />
+	<EmbeddedResource Include="Resources\Wall Slash\Wall_1.png" />
+	<EmbeddedResource Include="Resources\Wall Slash\Wall_2.png" />
+	<EmbeddedResource Include="Resources\Wall Slash\Wall_3.png" />
+	<EmbeddedResource Include="Resources\Wall Slash\Wall_4.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0000.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0001.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0002.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0003.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0004.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0005.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0006.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0007.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash0008.png" />
+    <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_E0000.png" />
+	<EmbeddedResource Include="Resources\DownSlash Effect\downSlash_E0001.png" />
+    <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_E0002.png" />
+    <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_E0003.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0000.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0001.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0002.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0003.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0004.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0005.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0006.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0007.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0008.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0009.png" />
+    <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0000.png" />
+    <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0001.png" />
+    <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0002.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0000.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0001.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0002.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0003.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0004.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0005.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0006.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0007.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0008.png" />
+    <EmbeddedResource Include="Resources\UpSlashSilkless\upSlash_S0009.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0000.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0001.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0002.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0003.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0004.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0005.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0006.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0007.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0008.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0009.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0010.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0011.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0012.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0013.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\charged0014.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0000.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0001.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0002.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0000.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0001.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0002.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0003.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0004.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0005.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0006.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0007.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0008.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0009.png" />
+	<EmbeddedResource Include="Resources\DashSlash\dashSlash0010.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0000.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0001.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0002.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0003.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0004.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0005.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0006.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0007.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0008.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0009.png" />
+	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0010.png" />
+	
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+    <PackageReference Include="HarmonyX" Version="2.9.0" />
+    <PackageReference Include="Harmonize" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Hamunii.BepInEx.AutoPlugin" Version="2.1.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.26.0" PrivateAssets="all" />
+	<PackageReference Include="Needleforge" Version="0.9.0" />
+    <PackageReference Include="UnityEngine.Modules" Version="6000.0.50" IncludeAssets="compile"/>
+    <PackageReference Include="Silksong.UnityHelper" Version="1.2.0" />
+    <PackageReference Include="Silksong.GameLibs" Version="*-*" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Remove="thunderstore/temp;thunderstore/dist" />
+    <None Include="README.md" Pack="True" PackagePath="README.md" />
+    <None Include="thunderstore/icon.png" Pack="True" PackagePath="icon.png" />
+  </ItemGroup>
+  <Target Name="CopyAndPackageMod" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <Binaries Include="$(TargetPath)" LocalDir="/" PackDir="/" />
+      <Binaries Include="$(TargetDir)/$(TargetName).pdb" LocalDir="/" PackDir="/" />
+	  <Binaries Include="Languages/*.json" PackDir="/Languages/" LocalDir="/Languages/" />
+      <Binaries Include="Languages/*.json" PackDir="/plugins/Languages/" />
+    </ItemGroup>
+    <PropertyGroup>
+      <ThunderstoreDir>$(ProjectDir)/thunderstore</ThunderstoreDir>
+    </PropertyGroup>
+
+    <!-- Local install -->
+    <Copy SourceFiles="@(Binaries)" DestinationFolder="$(SilksongPluginsFolder)/EternalOne11-$(AssemblyTitle)/%(Binaries.LocalDir)" Condition="'$(SilksongPluginsFolder)' != '' And Exists('$(SilksongPluginsFolder)')" />
+    <!-- Thunderstore packaging -->
+    <RemoveDir Directories="$(ThunderstoreDir)/temp;$(ThunderstoreDir)/dist" />
+    <MakeDir Directories="$(ThunderstoreDir)/temp" />
+    <Copy SourceFiles="@(Binaries)" DestinationFolder="$(ThunderstoreDir)/temp/%(Binaries.PackDir)" />
+    <PropertyGroup>
+      <ThunderstorePkgVersion>$([System.String]::Copy($(Version)).Split('-')[0])</ThunderstorePkgVersion>
+    </PropertyGroup>
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet tcli build --config-path &quot;$(ThunderstoreDir)/thunderstore.toml&quot; --package-name &quot;$(AssemblyTitle)&quot; --package-version $(ThunderstorePkgVersion)" StandardOutputImportance="High" StandardErrorImportance="High" />
+  </Target>
+</Project>
