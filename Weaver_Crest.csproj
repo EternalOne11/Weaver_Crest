@@ -96,6 +96,15 @@
 	<EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0001.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0002.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0003.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0000.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0001.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0002.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0003.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0004.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0005.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0006.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0007.png" />
+	<EmbeddedResource Include="Resources\DownSlashSilkless\downSlash_S0008.png" />
     <EmbeddedResource Include="Resources\UpSlash\upSlash0000.png" />
     <EmbeddedResource Include="Resources\UpSlash\upSlash0001.png" />
     <EmbeddedResource Include="Resources\UpSlash\upSlash0002.png" />
