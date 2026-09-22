@@ -10,7 +10,7 @@ namespace Weaver_Crest.Patches;
 internal static partial class Moveset {
 
 	private static void DownSlash() {
-		string[] downSlashFiles = ["downSlash_E0000.png", "downSlash_E0001.png", "downSlash_E0002.png", "downSlash_E0003.png"];
+		string[] downSlashFiles = ["downSlash_e0000.png", "downSlash_e0001.png", "downSlash_e0002.png", "downSlash_e0003.png"];
 		Texture2D[] downSlashTex = LoadNamedTextures(downSlashFiles);
 		string[] downSlashHornetFiles = [
 			"downSlash0000.png", "downSlash0001.png", "downSlash0002.png", "downSlash0003.png", "downSlash0004.png",
