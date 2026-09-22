@@ -58,14 +58,10 @@ internal static partial class Moveset {
 		if (animLibObj)
 			return animLibObj.GetComponent<tk2dSpriteAnimation>();
 
-		animLibObj = new GameObject($"{YenId}_AnimLib") {
-			hideFlags = HideFlags.HideAndDontSave
-		};
+		animLibObj = new GameObject($"{YenId}_AnimLib");
 		Object.DontDestroyOnLoad(animLibObj);
 		var animLib = animLibObj.AddComponent<tk2dSpriteAnimation>();
 		animLib.clips = [];
-		animLib.isValid = false;
-		animLib.ValidateLookup();
 		return animLib;
 	}
 }
