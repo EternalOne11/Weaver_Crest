@@ -43,7 +43,7 @@ internal static class Hud
 	// The values X,Y Represent, horizontal and vertical respectivly. 
 	// X is the horizontal axis, Negative values move the image right, Positive move them left.
 	// Y is the Vertical axis, Negative values move it Down, Postive move it Up.
-    private static readonly Vector2 OffsetPixels = new(-71f, 26f);
+    private static readonly Vector2 OffsetPixels = new(-70f, 28f);
 
     internal static void Setup(CrestData crest)
     {
@@ -115,12 +115,13 @@ internal static class Hud
 
         Vector2[] centers = textures
             .Select(t => new Vector2(
-                t.width / 0f + OffsetPixels.x,
-                t.height / 0f + OffsetPixels.y))
+                t.width / 2f + OffsetPixels.x,
+                t.height / 2f + OffsetPixels.y))
             .ToArray();
 
         tk2dSpriteCollectionData collection = Tk2dUtil.CreateTk2dSpriteCollection(
             sprites: textures,
+            spriteCenters: centers,
             pixelsPerUnit: PixelsPerUnit
         );
 
