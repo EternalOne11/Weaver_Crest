@@ -11,7 +11,7 @@ namespace Weaver_Crest.Patches;
 internal static partial class Moveset {
 
 	private static void Slash() {
-		string[] slashFiles = ["slash_E0000.png", "slash_E0001.png", "slash_E0002.png", "slash_E0003.png", "slash_E0004.png"];
+		string[] slashFiles = ["slash_e0000.png", "slash_e0001.png", "slash_e0002.png", "slash_e0003.png", "slash_e0004.png"];
 		Texture2D[] slashTex = LoadNamedTextures(slashFiles);
 		string[] slashHornetFiles = ["slash0000.png", "slash0001.png", "slash0002.png", "slash0003.png", "slash0004.png"];
 		Texture2D[] slashHornetTex = LoadNamedTextures(slashHornetFiles);
