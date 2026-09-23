@@ -1,4 +1,5 @@
-(last updated 09/14/2026, Evening)
+**Todo list/ Current Status** (partially for myself)
+(last updated 09/22/2026, Evening)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -12,8 +13,8 @@ Bind Glow (done) (unused)
 Ingame Hud animations (done)
 Ingame Hud alignment (done)
 Silk varient (done)
-Non steel soul varient (done)
-Lifeblood Overdose (not done)
+Non steel soul varient (color off)
+Lifeblood Overdose (automatic)
 
 **Bind** (Nearly complete) 
 Triple bind (done)
@@ -42,8 +43,8 @@ Ensure speed of hornet animations are correct compared to vanilla
 Ensure Speed and duration of slash effects are the same as vanilla.
 (check if other crests adjust the movements before each attack then do the same)
 Longclaw (broken implementation)
-Weighted Belt (unsure)
-Flint slate (undecided)
+Weighted Belt (automatic)
+Flint slate (automatic)
 attack cooldowns (not done)
 
 **Custom Mechanics**
@@ -58,9 +59,7 @@ Half silk spool void degredation.
 **Polish** (remove when completed)
 Hud animation timings.
 Pixel alignment for save slot icon (maybe done)
-Tweaked attack animations (waiting)
-Hud alignment broken...
-Hud color off.
+Non steel Hud color off.
 
 **Bugs to squash**
 (make charge attack obey gravity)
@@ -73,6 +72,7 @@ Silk mechanics ignore silk heart slots... (and weavelight?)
 -15 to -25% spell damage? (code done) (disabled currently)
 20-33% spell casting speed reduction?
 0.5 extra silk via clawline?
+Half knockback like witch?
 
 **Progression** (after mod launch)
 Memory lockets locations (Not Implemented)
