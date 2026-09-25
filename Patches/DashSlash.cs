@@ -13,17 +13,15 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 	private static void DashSlash() {
-		string[] dashFiles = [
-			"dashSlash_e0000.png", "dashSlash_e0001.png", "dashSlash_e0002.png", "dashSlash_e0003.png",
+		string[] dashFiles = ["dashSlash_e0000.png", "dashSlash_e0001.png", "dashSlash_e0002.png", "dashSlash_e0003.png",
 			"dashSlash_e0004.png", "dashSlash_e0005.png", "dashSlash_e0006.png", "dashSlash_e0007.png",
-			"dashSlash_e0008.png", "dashSlash_e0009.png", "dashSlash_e0010.png",
-		];
+			"dashSlash_e0008.png", "dashSlash_e0009.png", "dashSlash_e0010.png", "dashSlash_e0011.png",
+			"dashSlash_e0012.png", "dashSlash_e0013.png",];
 		Texture2D[] dashTex = LoadNamedTextures(dashFiles);
-		string[] dashHornetFiles = [
-			"dashSlash0000.png", "dashSlash0001.png", "dashSlash0002.png", "dashSlash0003.png",
-			"dashSlash0004.png", "dashSlash0005.png", "dashSlash0006.png", "dashSlash0007.png",
-			"dashSlash0008.png", "dashSlash0009.png", "dashSlash0010.png",
-		];
+		string[] dashHornetFiles = ["dashSlash_0000.png", "dashSlash_0001.png", "dashSlash_0002.png", "dashSlash_0003.png",
+			"dashSlash_0004.png", "dashSlash_0005.png", "dashSlash_0006.png", "dashSlash_0007.png",
+			"dashSlash_0008.png", "dashSlash_0009.png", "dashSlash_0010.png", "dashSlash_0011.png",
+			"dashSlash_0012.png", "dashSlash_0013.png",];
 		Texture2D[] dashHornetTex = LoadNamedTextures(dashHornetFiles);
 
 		tk2dSpriteCollectionData dashData = Tk2dUtil.CreateTk2dSpriteCollection(
