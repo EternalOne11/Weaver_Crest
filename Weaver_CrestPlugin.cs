@@ -96,9 +96,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		YenCrest.Moveset.OnInitialized += Moveset.Setup;
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(EvaOptOut));
-        Harmony.PatchAll(typeof(SilkSkills));
         Harmony.PatchAll(typeof(SilkMechanics));
-		Harmony.PatchAll(typeof(LongClaw));
+        Harmony.PatchAll(typeof(ToolDamage));
 		#endregion
 	}
 
