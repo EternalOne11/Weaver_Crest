@@ -13,7 +13,7 @@ internal static class Bind
     private const float BaseDuration = 0.8f;
 
     private static float cachedTickDuration;
-    private static bool cancelCheckInstalled;
+    private static bool cancelCheck;
 
     internal static void TripleBind(FsmInt amountHealed, FsmInt numberOfBinds, FsmFloat secondsPerBind, PlayMakerFSM bindFsm)
     {
@@ -30,8 +30,8 @@ internal static class Bind
         secondsPerBind.Value = DesiredDuration / (quickBindEquipped ? 0.6f : 1f);
         cachedTickDuration = DesiredDuration;
 
-        if (!cancelCheckInstalled)
-            cancelCheckInstalled = true;
+        if (!cancelCheck)
+            cancelCheck = true;
             bindFsm.GetState("Bind Chain Start")!.AddMethod(() => BindChainStart(bindFsm));
     }
 
