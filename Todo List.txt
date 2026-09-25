@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 09/22/2026, Evening)
+(last updated 09/24/2026, Evening)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -13,41 +13,43 @@ Bind Glow (done) (unused)
 Ingame Hud animations (done)
 Ingame Hud alignment (done)
 Silk varient (done)
-Non steel soul varient (color off)
+Non steel soul varient (color wrong)
 Lifeblood Overdose (automatic)
 
-**Bind** (Nearly complete) 
+**Bind** (complete?) 
 Triple bind (done)
 Bind cancel (done)
 Multibinder (done)
 Injector band (done)
-Claw mirrors (needs to be nerfed)
+Claw mirrors nerf (done)
+Custom Bind animations (Maybe)
 
 **Misc features** 
 Save slot icon (Done)
-Both steel soul and normal (done) 
+Both steel soul (done) 
+Normal (color wrong)
 Silk skill changes (Done) (disabled)
 
 **Moveset**
 Basic Slash (animations may change, basic implementation with hitboxes done)
 Alt slash (animations may change, basic implementation with hitboxes done)
 Up attack (animation done, basic implementation with hitboxes done)
-Down attack (animation may change, basic implementation with hitboxes done)
-Dash attack (Not done)
+Down attack (not done)
+Dash attack (Not done) (short 2 slash and 4 slash varients?)
 Charge attack (animation done, basic implementation with hitboxes done)
-Wall slash... (need more infromation)
+Wall slash... (need more infromation) (sprite not working)
 **Silkless moveset** (Same attacks without silk use, and reduced damage) (not done)
 
 **Moveset general checklist...**
-Ensure speed of hornet animations are correct compared to vanilla
+Attack speed set to hunter for now. 
 Ensure Speed and duration of slash effects are the same as vanilla.
 (check if other crests adjust the movements before each attack then do the same)
-Longclaw (broken implementation)
+Longclaw (WIP)
 Weighted Belt (automatic)
 Flint slate (automatic)
 attack cooldowns (not done)
 
-**Custom Mechanics**
+**Custom Mechanics** (not done)
 Silk Use (crudely implemented) melee attacks use 1 silk, but count silk hearts in the process of regenerating 
 Double silk (implemented) (might have bugs)
 (Dash attack and charge attack are not functioning.)
@@ -59,7 +61,6 @@ Half silk spool void degredation.
 **Polish** (remove when completed)
 Hud animation timings.
 Pixel alignment for save slot icon (maybe done)
-Non steel Hud color off.
 
 **Bugs to squash**
 (make charge attack obey gravity)
@@ -73,6 +74,7 @@ Silk mechanics ignore silk heart slots... (and weavelight?)
 20-33% spell casting speed reduction?
 0.5 extra silk via clawline?
 Half knockback like witch?
+Attack speed?
 
 **Progression** (after mod launch)
 Memory lockets locations (Not Implemented)
@@ -82,6 +84,5 @@ Corpse bind sprite (N/A)
 
 **TBD**
 Sounds for every attack. (around playtest)
-custom Bind animations (Maybe)
 Half silk, for acid... (for architect)
 Additional mod Compatability... (maybe with a glass soul mod)
