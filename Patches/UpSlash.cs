@@ -12,10 +12,9 @@ internal static partial class Moveset {
 	private static void UpSlash() {
 		string[] upSlashFiles = ["upSlash_e0000.png", "upSlash_e0001.png", "upSlash_e0002.png"];
 		Texture2D[] upSlashTex = LoadNamedTextures(upSlashFiles);
-		string[] upSlashHornetFiles = [
-			"upSlash0000.png", "upSlash0001.png", "upSlash0002.png", "upSlash0003.png", "upSlash0004.png",
-			"upSlash0005.png", "upSlash0006.png", "upSlash0007.png", "upSlash0008.png", "upSlash0009.png",
-		];
+		string[] upSlashHornetFiles = ["upSlash0000.png", "upSlash0001.png", "upSlash0002.png", "upSlash0003.png",
+			"upSlash0004.png", "upSlash0005.png", "upSlash0006.png", "upSlash0007.png",
+			"upSlash0008.png", "upSlash0009.png",];
 		Texture2D[] upSlashHornetTex = LoadNamedTextures(upSlashHornetFiles);
 
 		tk2dSpriteCollectionData upSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
@@ -64,8 +63,8 @@ internal static partial class Moveset {
 			Name = "WeaverUpSlash",
 			AnimName = "Weaver UpSlash Effect",
 			AnimLibrary = upSlashAnims,
-						Hitbox = [new Vector2(-1f, 0f),new Vector2(-1f, 2.6f),new Vector2(0f, 3f),new Vector2(1f, 2.6f),
-			new Vector2(1f, 0f),new Vector2(0.5f, 0f),new Vector2(0.5f, 2f),new Vector2(-0.5f, 0f),],
+			Hitbox = [new Vector2(-1.5f, 0f),new Vector2(-1f, 2.6f),new Vector2(0f, 3f),new Vector2(1f, 2.6f),
+			new Vector2(1.5f, 0f),new Vector2(0.5f, 0f),new Vector2(-0.5f, 0f),],
 		};
 	}
 }
