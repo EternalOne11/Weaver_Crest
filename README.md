@@ -28,8 +28,7 @@
 
 ## Tool slots/Silk Skills
 - This crest has 7 slots, 2 silk/white slots, 1 red slot, 2 blue slots, and 2 yellow slots.
-- To compansate for increased silk generation, all skill skills deal 20-25% less damage. (75-80% vs shamens 140%)
-- (all yellow and blue slots will be locked eventully)
+- (all yellow and blue slots will be locked eventully) (memory lockets will be added)
 
 ## Tool ineractions
 - Multibinder adds an additional 4th bind that heals 1 mask.
