@@ -10,12 +10,11 @@ namespace Weaver_Crest.Patches;
 internal static partial class Moveset {
 
 	private static void DownSlash() {
-		string[] downSlashFiles = ["downSlash_e0000.png", "downSlash_e0001.png", "downSlash_e0002.png", "downSlash_e0003.png"];
+		string[] downSlashFiles = ["downSlash_e0000.png", "downSlash_e0001.png", "downSlash_e0002.png", "downSlash_e0003.png",
+		"downSlash_e0004.png", "downSlash_e0005.png", "downSlash_e0006.png", "downSlash_e0007.png", "downSlash_e0008.png"];
 		Texture2D[] downSlashTex = LoadNamedTextures(downSlashFiles);
-		string[] downSlashHornetFiles = [
-			"downSlash0000.png", "downSlash0001.png", "downSlash0002.png", "downSlash0003.png", "downSlash0004.png",
-			"downSlash0005.png", "downSlash0006.png", "downSlash0007.png", "downSlash0008.png",
-		];
+		string[] downSlashHornetFiles = ["downSlash_0000.png", "downSlash_0001.png", "downSlash_0002.png", "downSlash_0003.png",
+		"downSlash_0004.png", "downSlash_0005.png", "downSlash_0006.png", "downSlash_0007.png", "downSlash_0008.png",];
 		Texture2D[] downSlashHornetTex = LoadNamedTextures(downSlashHornetFiles);
 
 		tk2dSpriteCollectionData downSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
