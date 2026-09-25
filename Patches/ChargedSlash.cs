@@ -17,21 +17,20 @@ internal static partial class Moveset {
 	private static void ChargedSlash() {
 		string[] chargedFiles = ["charged_e0000.png", "charged_e0001.png", "charged_e0002.png"];
 		Texture2D[] chargedTex = LoadNamedTextures(chargedFiles);
-		string[] chargedHornetFiles = [
-			"charged0000.png", "charged0001.png", "charged0002.png", "charged0003.png", "charged0004.png",
-			"charged0005.png", "charged0006.png", "charged0007.png", "charged0008.png", "charged0009.png",
-			"charged0010.png", "charged0011.png", "charged0012.png", "charged0013.png", "charged0014.png",
-		];
+		string[] chargedHornetFiles = ["chargeSlash_0000.png", "chargeSlash_0001.png", "chargeSlash_0002.png", "chargeSlash_0003.png",
+			"chargeSlash_0004.png", "chargeSlash_0005.png", "chargeSlash_0006.png", "chargeSlash_0007.png",
+			"chargeSlash_0008.png", "chargeSlash_0009.png", "chargeSlash_0010.png", "chargeSlash_0011.png",
+			"chargeSlash_0012.png", "chargeSlash_0013.png", "chargeSlash_0014.png",];
 		Texture2D[] chargedHornetTex = LoadNamedTextures(chargedHornetFiles);
 
 		tk2dSpriteCollectionData chargedData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. chargedTex, .. chargedHornetTex],
 			spriteCenters: [
-				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(190f, 0f)),
+				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(270f, 0f)),
 				.. chargedHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
 			]
 		);
-		Object.DontDestroyOnLoad(chargedData.gameObject);
+		Object.DontDestroyOnLoad(chargedData.gameObject); //check if line is redundent
 		chargedData.gameObject.name = $"{YenId}_ChargedAnim";
 		chargedData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
 		{
@@ -79,7 +78,6 @@ internal static partial class Moveset {
 					AnimName = "Weaver Charged Effect",
 					Hitbox = [new Vector2(-0.4f, 1.2f),new Vector2(-2.0f, 1.9f),new Vector2(-3.8f, 1.5f),new Vector2(-5.2f, 0.4f),
 					new Vector2(-5.2f, -0.4f),new Vector2(-3.8f, -1.5f),new Vector2(-2.0f, -1.9f),new Vector2(-0.4f, -1.2f),],
-					KeepWorldPosition = true,
 				},
 			],
 		};
@@ -91,20 +89,9 @@ internal static partial class Moveset {
 			FsmState attackState = fsm.AddState("Weaver Slash");
 			endStates = [attackState];
 
-			bool isLocking = false;
-			Vector3 lockedPosition = default;
-
-			IEnumerator LockPosition() {
-				while (isLocking) {
-					HeroController.instance.transform.position = lockedPosition;
-					yield return null;
-				}
-			}
-
 			startState.AddMethod(() => {
-				lockedPosition = HeroController.instance.transform.position;
-				isLocking = true;
-				HeroController.instance.StartCoroutine(LockPosition());
+				HeroController.instance.RelinquishControlNotVelocity();
+                HeroController.instance.SetStartWithDownSpikeEnd();
 				HeroController.instance.SpriteFlash.flashFocusHeal();
 				YenCrest.Moveset.ChargedSlash!.GameObject!.SetActive(true);
 				foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
@@ -115,18 +102,24 @@ internal static partial class Moveset {
 					gameObject = new(),
 					clipName = "Slash_Charged",
 					animationTriggerEvent = FsmEvent.Finished,
-				}
+				},
+                new DecelerateV2 {
+                    gameObject = new(),
+                    deceleration = 0.6f,
+                    brakeOnExit = true,
+                }
 			);
 			startState.AddTransition(FsmEvent.Finished.name, attackState.name);
 
 			attackState.AddMethod(() => {
-				HeroController.instance.StartCoroutine(PlayStepsInSequence());
-				IEnumerator PlayStepsInSequence() {
-					foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps) {
+				HeroController.instance.StartCoroutine(PlayStepsFaster());
+                IEnumerator PlayStepsFaster()
+                {
+					foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
+					{
 						step.StartAttack();
 						yield return new WaitForSeconds(0.15f);
 					}
-					isLocking = false;
 				}
 			});
 			attackState.AddAction(new Tk2dWatchAnimationEvents {
