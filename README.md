@@ -33,8 +33,8 @@
 
 ## Tool ineractions
 - Multibinder adds an additional 4th bind that heals 1 mask.
-
-- (WIP more to come)
+- Clawmirror damage is nerfed to account for the multiple binds
+- Weighted belt, flint slate, and longclaw are all functional
 
 ## Map changes/implementation
 - A chapel of the weaver is planned for MT Fay
