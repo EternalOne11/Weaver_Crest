@@ -27,15 +27,8 @@ internal static partial class Moveset {
 		Object.DontDestroyOnLoad(downSlashData.gameObject);
 		downSlashData.gameObject.name = $"{YenId}_DownSlashAnim";
 		downSlashData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
-		{
-			tk2dSprite? heroSprite = HeroController.instance.GetComponentInChildren<tk2dSprite>();
-			if (heroSprite != null) {
-				Material heroMaterial = heroSprite.GetCurrentSpriteDef().material;
-				foreach (var def in downSlashData.spriteDefinitions)
-					if (def != null)
-						def.material.shader = heroMaterial.shader;
-			}
-		}
+		
+		heroShaderCollections.Add(downSlashData);
 
 		tk2dSpriteAnimation downSlashAnims = downSlashData.gameObject.AddComponent<tk2dSpriteAnimation>();
 		downSlashAnims.clips = [
