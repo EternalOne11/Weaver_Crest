@@ -34,15 +34,8 @@ internal static partial class Moveset {
 		Object.DontDestroyOnLoad(dashData.gameObject);
 		dashData.gameObject.name = $"{YenId}_DashAnim";
 		dashData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
-		{
-			tk2dSprite? heroSprite = HeroController.instance.GetComponentInChildren<tk2dSprite>();
-			if (heroSprite != null) {
-				Material heroMaterial = heroSprite.GetCurrentSpriteDef().material;
-				foreach (var def in dashData.spriteDefinitions)
-					if (def != null)
-						def.material.shader = heroMaterial.shader;
-			}
-		}
+		
+		heroShaderCollections.Add(dashData);
 
 		tk2dSpriteAnimation dashAnims = dashData.gameObject.AddComponent<tk2dSpriteAnimation>();
 		dashAnims.clips = [
