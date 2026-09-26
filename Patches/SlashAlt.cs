@@ -9,7 +9,7 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
-	private static void AltSlash() {
+	private static void SlashAlt() {
 		string[] altSlashFiles = ["slashAlt_e0000.png", "slashAlt_e0001.png", "slashAlt_e0002.png", "slashAlt_e0003.png", "slashAlt_e0004.png"];
 		Texture2D[] altSlashTex = LoadNamedTextures(altSlashFiles);
 		string[] altSlashHornetFiles = ["slashAlt0000.png", "slashAlt0001.png", "slashAlt0002.png", "slashAlt0003.png", "slashAlt0004.png"];
@@ -25,20 +25,13 @@ internal static partial class Moveset {
 		Object.DontDestroyOnLoad(altSlashData.gameObject);
 		altSlashData.gameObject.name = $"{YenId}_AltSlashAnim";
 		altSlashData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
-		{
-			tk2dSprite? heroSprite = HeroController.instance.GetComponentInChildren<tk2dSprite>();
-			if (heroSprite != null) {
-				Material heroMaterial = heroSprite.GetCurrentSpriteDef().material;
-				foreach (var def in altSlashData.spriteDefinitions)
-					if (def != null)
-						def.material.shader = heroMaterial.shader;
-			}
-		}
+		
+		heroShaderCollections.Add(altSlashData);
 
 		tk2dSpriteAnimation altSlashAnims = altSlashData.gameObject.AddComponent<tk2dSpriteAnimation>();
 		altSlashAnims.clips = [
 			new tk2dSpriteAnimationClip {
-				name = "Weaver AltSlash Effect",
+				name = "Weaver SlashAlt Effect",
 				fps = 12,
 				wrapMode = WrapMode.Once,
 				frames = [
@@ -58,8 +51,8 @@ internal static partial class Moveset {
 		sharedLib.clips = [.. sharedLib.clips, altSlashAnims.clips[1]];
 
 		YenCrest.Moveset.AltSlash = new Attack {
-			Name = "WeaverAltSlash",
-			AnimName = "Weaver AltSlash Effect",
+			Name = "Weaver SlashAlt",
+			AnimName = "Weaver SlashAlt Effect",
 			AnimLibrary = altSlashAnims,
 			Hitbox = [new Vector2(-0.3f, 0.8f),new Vector2(-1.5f, 1.3f),new Vector2(-2.8f, 1.0f),new Vector2(-3.6f, 0.3f),
 			new Vector2(-3.6f, -0.3f),new Vector2(-2.8f, -1.0f),new Vector2(-1.5f, -1.3f),new Vector2(-0.3f, -0.8f),],
