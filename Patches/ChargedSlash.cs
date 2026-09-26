@@ -14,6 +14,9 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
+	// Charge attack Damage multipler
+	private const float ChargedMultiplier = 3f;
+
 	private static void ChargedSlash() {
 		string[] chargedFiles = ["charged_e0000.png", "charged_e0001.png", "charged_e0002.png"];
 		Texture2D[] chargedTex = LoadNamedTextures(chargedFiles);
@@ -33,15 +36,8 @@ internal static partial class Moveset {
 		Object.DontDestroyOnLoad(chargedData.gameObject); //check if line is redundent
 		chargedData.gameObject.name = $"{YenId}_ChargedAnim";
 		chargedData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
-		{
-			tk2dSprite? heroSprite = HeroController.instance.GetComponentInChildren<tk2dSprite>();
-			if (heroSprite != null) {
-				Material heroMaterial = heroSprite.GetCurrentSpriteDef().material;
-				foreach (var def in chargedData.spriteDefinitions)
-					if (def != null)
-						def.material.shader = heroMaterial.shader;
-			}
-		}
+
+		heroShaderCollections.Add(chargedData);
 
 		tk2dSpriteAnimation chargedAnims = chargedData.gameObject.AddComponent<tk2dSpriteAnimation>();
 		chargedAnims.clips = [
@@ -82,50 +78,56 @@ internal static partial class Moveset {
 			],
 		};
 		YenCrest.Moveset.ChargedSlash.SetAnimLibrary(chargedAnims);
+	}
 
-		YenCrest.Moveset.HeroConfig!.ChargedSlashFsmEdit = ChargedFsmEdit;
+	internal static void ChargedDamage() {
+		GameObject? chargedObj = YenCrest.Moveset.ChargedSlash?.GameObject;
+		if (chargedObj == null) return;
 
-		void ChargedFsmEdit(PlayMakerFSM fsm, FsmState startState, out FsmState[] endStates) {
-			FsmState attackState = fsm.AddState("Weaver Slash");
-			endStates = [attackState];
+		foreach (var de in chargedObj.GetComponentsInChildren<DamageEnemies>(true))
+			de.nailDamageMultiplier = ChargedMultiplier;
+	}
 
-			startState.AddMethod(() => {
-				HeroController.instance.RelinquishControlNotVelocity();
-                HeroController.instance.SetStartWithDownSpikeEnd();
-				HeroController.instance.SpriteFlash.flashFocusHeal();
-				YenCrest.Moveset.ChargedSlash!.GameObject!.SetActive(true);
-				foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
-					step.EndAttack();
-			});
-			startState.AddActions(
-				new Tk2dPlayAnimationWithEvents {
-					gameObject = new(),
-					clipName = "Slash_Charged",
-					animationTriggerEvent = FsmEvent.Finished,
-				},
-                new DecelerateV2 {
-                    gameObject = new(),
-                    deceleration = 0.6f,
-                    brakeOnExit = true,
-                }
-			);
-			startState.AddTransition(FsmEvent.Finished.name, attackState.name);
+	private static void ChargedFsmEdit(PlayMakerFSM fsm, FsmState startState, out FsmState[] endStates) {
+		FsmState attackState = fsm.AddState("Weaver Slash");
+		endStates = [attackState];
 
-			attackState.AddMethod(() => {
-				HeroController.instance.StartCoroutine(PlayStepsFaster());
-                IEnumerator PlayStepsFaster()
-                {
-					foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
-					{
-						step.StartAttack();
-						yield return new WaitForSeconds(0.15f);
-					}
-				}
-			});
-			attackState.AddAction(new Tk2dWatchAnimationEvents {
+		startState.AddMethod(() => {
+			HeroController.instance.RelinquishControlNotVelocity();
+			HeroController.instance.SetStartWithDownSpikeEnd();
+			HeroController.instance.SpriteFlash.flashFocusHeal();
+			YenCrest.Moveset.ChargedSlash!.GameObject!.SetActive(true);
+			foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
+				step.EndAttack();
+		});
+		startState.AddActions(
+			new Tk2dPlayAnimationWithEvents {
 				gameObject = new(),
-				animationCompleteEvent = FsmEvent.Finished,
-			});
-		}
+				clipName = "Slash_Charged",
+				animationTriggerEvent = FsmEvent.Finished,
+			},
+			new DecelerateV2 {
+				gameObject = new(),
+				deceleration = 0.6f,
+				brakeOnExit = true,
+			}
+		);
+		startState.AddTransition(FsmEvent.Finished.name, attackState.name);
+
+		attackState.AddMethod(() => {
+			HeroController.instance.StartCoroutine(PlayStepsFaster());
+			IEnumerator PlayStepsFaster()
+			{
+				foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
+				{
+					step.StartAttack();
+					yield return new WaitForSeconds(0.15f);
+				}
+			}
+		});
+		attackState.AddAction(new Tk2dWatchAnimationEvents {
+			gameObject = new(),
+			animationCompleteEvent = FsmEvent.Finished,
+		});
 	}
 }
