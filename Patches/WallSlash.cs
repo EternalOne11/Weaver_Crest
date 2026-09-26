@@ -13,7 +13,7 @@ internal static partial class Moveset {
 
 	private static void WallSlash() {
 		try {
-			string[] wallSlashHornetFiles = ["Wall_1.png", "Wall_2.png", "Wall_3.png", "Wall_4.png"];
+			string[] wallSlashHornetFiles = ["Wall_1.png", "Wall_2.png", "Wall_3.png", "Wall_4.png", "Wall_5.png"];
 			Texture2D[] wallSlashHornetTex = LoadNamedTextures(wallSlashHornetFiles);
 
 			tk2dSpriteCollectionData wallSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
@@ -23,15 +23,8 @@ internal static partial class Moveset {
 			Object.DontDestroyOnLoad(wallSlashData.gameObject);
 			wallSlashData.gameObject.name = $"{YenId}_WallSlashAnim";
 			wallSlashData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
-			{
-				tk2dSprite? heroSprite = HeroController.instance.GetComponentInChildren<tk2dSprite>();
-				if (heroSprite != null) {
-					Material heroMaterial = heroSprite.GetCurrentSpriteDef().material;
-					foreach (var def in wallSlashData.spriteDefinitions)
-						if (def != null)
-							def.material.shader = heroMaterial.shader;
-				}
-			}
+			
+			heroShaderCollections.Add(wallSlashData);
 
 			tk2dSpriteAnimation wallSlashAnims = wallSlashData.gameObject.AddComponent<tk2dSpriteAnimation>();
 			wallSlashAnims.clips = [
@@ -52,7 +45,7 @@ internal static partial class Moveset {
 				Hitbox = standardHitbox,
 			};
 		} catch {
-			Log.LogWarning("Wall Slash sprites (Wall_1-4.png) not found or failed to load. Falling back to Hunter's default Wall Slash for now.");
+			Log.LogWarning($"Wall Slash setup failed, falling back to Hunter");
 		}
 	}
 
