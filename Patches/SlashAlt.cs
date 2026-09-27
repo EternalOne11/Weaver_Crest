@@ -54,8 +54,8 @@ internal static partial class Moveset {
 			Name = "Weaver SlashAlt",
 			AnimName = "Weaver SlashAlt Effect",
 			AnimLibrary = altSlashAnims,
-			Hitbox = [new Vector2(-0.3f, 0.8f),new Vector2(-1.5f, 1.3f),new Vector2(-2.8f, 1.0f),new Vector2(-3.6f, 0.3f),
-			new Vector2(-3.6f, -0.3f),new Vector2(-2.8f, -1.0f),new Vector2(-1.5f, -1.3f),new Vector2(-0.3f, -0.8f),],
+			Hitbox = [new Vector2(0f, 0.8f),new Vector2(-1.5f, 1.3f),new Vector2(-2.8f, 1.0f),new Vector2(-3.6f, 0.3f),
+			new Vector2(-3.6f, -0.3f),new Vector2(-2.8f, -1.0f),new Vector2(-1.5f, -1.3f),new Vector2(0.2f, -0.8f),],
 		};
 	}
 }
