@@ -18,7 +18,7 @@ internal static class SilkMechanics {
 		LastWeave = Time.time;
 
 		if (PlayerData.instance.silk > 0)
-			HeroController.instance.AddSilk(-1, true, SilkSpool.SilkAddSource.Normal, false);
+			HeroController.instance.AddSilk(-1, false, SilkSpool.SilkAddSource.Normal, false);
 	}
 
 	private static float LastWeave = -1f;
@@ -51,6 +51,6 @@ internal static class SilkMechanics {
 			return;
 
 		if (PlayerData.instance.silk > 0)
-			HeroController.instance.AddSilk(-1, true, SilkSpool.SilkAddSource.Normal, false);
+			HeroController.instance.AddSilk(-1, false, SilkSpool.SilkAddSource.Normal, false);
 	}
 }
