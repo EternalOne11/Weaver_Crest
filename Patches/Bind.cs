@@ -10,7 +10,7 @@ namespace Weaver_Crest.Patches;
 internal static class Bind
 {
 	//speed of each bind
-    private const float BaseDuration = 0.8f;
+    private const float BaseDuration = 0.65f;
 
     private static float cachedTickDuration;
     private static bool cancelCheck;
@@ -24,10 +24,9 @@ internal static class Bind
 		// Quick bind speed, multipler... (Vanilla is 0.6) 
 		// Higher values mean slower bind, Lower values mean quicker bind.
         bool quickBindEquipped = ToolItemManager.IsToolEquipped("Quickbind");
-        const float QuickBindSpeed = 0.6f;
+        const float QuickBindSpeed = 1f;
         float DesiredDuration = quickBindEquipped ? BaseDuration * QuickBindSpeed : BaseDuration;
-		//Cancels out vanilla's 0.6 modifer. (maybe disable)
-        secondsPerBind.Value = DesiredDuration / (quickBindEquipped ? 0.6f : 1f);
+        secondsPerBind.Value = DesiredDuration;
         cachedTickDuration = DesiredDuration;
 
         if (!cancelCheck)
