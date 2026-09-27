@@ -14,8 +14,14 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
-	// Charge attack Damage multipler
+	// Charge attack nail damage multipler
 	private const float ChargedMultiplier = 3f;
+
+	// left and right air movement speed
+	private const float ChargedMoveSpeed = 8f;
+
+	//frame where the animation is split (into windup and slash)
+	private const int ChargedSplit = 11;
 
 	private static void ChargedSlash() {
 		string[] chargedFiles = ["charged_e0000.png", "charged_e0001.png", "charged_e0002.png"];
@@ -23,17 +29,17 @@ internal static partial class Moveset {
 		string[] chargedHornetFiles = ["chargeSlash_0000.png", "chargeSlash_0001.png", "chargeSlash_0002.png", "chargeSlash_0003.png",
 			"chargeSlash_0004.png", "chargeSlash_0005.png", "chargeSlash_0006.png", "chargeSlash_0007.png",
 			"chargeSlash_0008.png", "chargeSlash_0009.png", "chargeSlash_0010.png", "chargeSlash_0011.png",
-			"chargeSlash_0012.png", "chargeSlash_0013.png", "chargeSlash_0014.png",];
+			"chargeSlash_0012.png", "chargeSlash_0013.png", "chargeSlash_0014.png", "chargeSlash_0015.png",];
 		Texture2D[] chargedHornetTex = LoadNamedTextures(chargedHornetFiles);
 
 		tk2dSpriteCollectionData chargedData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. chargedTex, .. chargedHornetTex],
 			spriteCenters: [
-				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(270f, 0f)),
-				.. chargedHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
+				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(275f, 0f)),
+				.. chargedHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(89f, 0f)),
 			]
 		);
-		Object.DontDestroyOnLoad(chargedData.gameObject); //check if line is redundent
+		Object.DontDestroyOnLoad(chargedData.gameObject);
 		chargedData.gameObject.name = $"{YenId}_ChargedAnim";
 		chargedData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
 
@@ -52,18 +58,23 @@ internal static partial class Moveset {
 				],
 			},
 			new tk2dSpriteAnimationClip {
-				name = "Slash_Charged",
-				fps = 16,
+				name = "Slash_Windup",
+				fps = 20f,
 				wrapMode = WrapMode.Once,
 				frames = [
-					.. chargedData.CreateFrames(chargedHornetTex.Take(11).Select(t => t.name)),
-					chargedData.CreateFrame(chargedHornetTex[11].name, triggerEvent: true),
-					.. chargedData.CreateFrames(chargedHornetTex.Skip(12).Select(t => t.name)),
+					.. chargedData.CreateFrames(chargedHornetTex.Take(ChargedSplit - 1).Select(t => t.name)),
+					chargedData.CreateFrame(chargedHornetTex[ChargedSplit - 1].name, triggerEvent: true),
 				],
+			},
+			new tk2dSpriteAnimationClip {
+				name = "Slash_Charged",
+				fps = 16f,
+				wrapMode = WrapMode.Once,
+				frames = chargedData.CreateFrames(chargedHornetTex.Skip(ChargedSplit).Select(t => t.name)),
 			},
 		];
 		chargedAnims.ValidateLookup();
-		sharedLib.clips = [.. sharedLib.clips, chargedAnims.clips[1]];
+		sharedLib.clips = [.. sharedLib.clips, chargedAnims.clips[1], chargedAnims.clips[2]];
 
 		YenCrest.Moveset.ChargedSlash = new ChargedAttack {
 			Name = "WeaverSlashCharged",
@@ -72,8 +83,8 @@ internal static partial class Moveset {
 			Steps = [
 				new ChargedAttack.Step {
 					AnimName = "Weaver Charged Effect",
-					Hitbox = [new Vector2(-0.4f, 1.2f),new Vector2(-2.0f, 1.9f),new Vector2(-3.8f, 1.5f),new Vector2(-5.2f, 0.4f),
-					new Vector2(-5.2f, -0.4f),new Vector2(-3.8f, -1.5f),new Vector2(-2.0f, -1.9f),new Vector2(-0.4f, -1.2f),],
+					Hitbox = [new Vector2(0f, 1.2f),new Vector2(-2.4f, 1.9f),new Vector2(-4.3f, 1.5f),new Vector2(-7.2f, 0.4f),
+					new Vector2(-7.2f, -0.4f),new Vector2(-4.3f, -1.4f),new Vector2(-2.4f, -1.4f),new Vector2(0f, -1.2f),],
 				},
 			],
 		};
@@ -92,10 +103,26 @@ internal static partial class Moveset {
 		FsmState attackState = fsm.AddState("Weaver Slash");
 		endStates = [attackState];
 
+
 		startState.AddMethod(() => {
-			HeroController.instance.RelinquishControlNotVelocity();
-			HeroController.instance.SetStartWithDownSpikeEnd();
+			HeroController.instance.RelinquishControl();
+			HeroController.instance.AffectedByGravity(true);
+			Rigidbody2D rb = HeroController.instance.GetComponent<Rigidbody2D>();
+
+			// Horizontal movement during charge attack, when in the air (ground movement disabled by CheckTouchingGround)
+			HeroController.instance.StartCoroutine(ChargedMovement());
+			IEnumerator ChargedMovement() {
+				while (fsm.ActiveStateName == startState.Name || fsm.ActiveStateName == attackState.Name) {
+					float input = HeroController.instance.CheckTouchingGround() ? 0f : InputHandler.Instance.inputActions.MoveVector.Vector.x;
+					float dir = Mathf.Abs(input) > 0.3f ? Mathf.Sign(input) : 0f;
+					rb.linearVelocity = new Vector2(dir * ChargedMoveSpeed, rb.linearVelocity.y);
+					yield return new WaitForFixedUpdate();
+				}
+			}
+
 			HeroController.instance.SpriteFlash.flashFocusHeal();
+			GameObject sphereFlash = fsm.FsmVariables.GetFsmGameObject("Sphere Flash").Value;
+			if (sphereFlash) sphereFlash.SetActive(true);
 			YenCrest.Moveset.ChargedSlash!.GameObject!.SetActive(true);
 			foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
 				step.EndAttack();
@@ -103,18 +130,16 @@ internal static partial class Moveset {
 		startState.AddActions(
 			new Tk2dPlayAnimationWithEvents {
 				gameObject = new(),
-				clipName = "Slash_Charged",
+				clipName = "Slash_Windup",
 				animationTriggerEvent = FsmEvent.Finished,
-			},
-			new DecelerateV2 {
-				gameObject = new(),
-				deceleration = 0.6f,
-				brakeOnExit = true,
 			}
 		);
 		startState.AddTransition(FsmEvent.Finished.name, attackState.name);
 
 		attackState.AddMethod(() => {
+			// Removes small the recoil
+			fsm.FsmVariables.GetFsmString("Recoil Method").Value = "";
+
 			HeroController.instance.StartCoroutine(PlayStepsFaster());
 			IEnumerator PlayStepsFaster()
 			{
@@ -125,8 +150,9 @@ internal static partial class Moveset {
 				}
 			}
 		});
-		attackState.AddAction(new Tk2dWatchAnimationEvents {
+		attackState.AddAction(new Tk2dPlayAnimationWithEvents {
 			gameObject = new(),
+			clipName = "Slash_Charged",
 			animationCompleteEvent = FsmEvent.Finished,
 		});
 	}
