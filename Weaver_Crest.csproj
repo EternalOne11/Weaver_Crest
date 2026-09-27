@@ -163,6 +163,7 @@
 	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0012.png" />
 	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0013.png" />
 	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0014.png" />
+	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0015.png" />
 	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0000.png" />
 	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0001.png" />
 	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0002.png" />
