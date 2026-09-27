@@ -36,7 +36,7 @@ Alt slash (animations may change, basic implementation with hitboxes done)
 Up attack (animation done, basic implementation with hitboxes done)
 Down attack (animation done, not implemented)
 Dash attack (Not done) (short 2 slash and 4 slash varients?)
-Charge attack (animation done, basic implementation with hitboxes done)
+Charge attack (Basically done)
 Wall slash... (waiting on animation, basically done)
 **Silkless moveset** (Same attacks without silk use, and reduced damage) (not done)
 
