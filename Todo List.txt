@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 09/24/2026, Evening)
+(last updated 09/27/2026, Afternoon)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -22,7 +22,7 @@ Bind cancel (done)
 Multibinder (done)
 Injector band (done)
 Claw mirrors nerf (done)
-Custom Bind animations (Maybe)
+Custom Bind animations (not done)
 
 **Misc features** 
 Save slot icon (Done)
@@ -31,28 +31,27 @@ Normal (color wrong)
 Silk skill changes (Done) (disabled)
 
 **Moveset**
-Basic Slash (animations may change, basic implementation with hitboxes done)
+Basic Slash (animations done, basic implementation with hitboxes done)
 Alt slash (animations may change, basic implementation with hitboxes done)
 Up attack (animation done, basic implementation with hitboxes done)
-Down attack (not done)
+Down attack (animation done, not implemented)
 Dash attack (Not done) (short 2 slash and 4 slash varients?)
 Charge attack (animation done, basic implementation with hitboxes done)
-Wall slash... (need more infromation) (sprite not working)
+Wall slash... (waiting on animation, basically done)
 **Silkless moveset** (Same attacks without silk use, and reduced damage) (not done)
 
 **Moveset general checklist...**
 Attack speed set to hunter for now. 
 Ensure Speed and duration of slash effects are the same as vanilla.
-(check if other crests adjust the movements before each attack then do the same)
-Longclaw (WIP)
+Longclaw (Done) [values not finalized]
 Weighted Belt (automatic)
 Flint slate (automatic)
-attack cooldowns (not done)
+Attack cooldowns (done?)
 
 **Custom Mechanics** (not done)
 Silk Use (crudely implemented) melee attacks use 1 silk, but count silk hearts in the process of regenerating 
 Double silk (implemented) (might have bugs)
-(Dash attack and charge attack are not functioning.)
+(Dash attack not functioning.)
 Half silk spools (Not implemented) **I Will need someone else to code it**
 Half silk spools animations (Not implemented, sprites done)
 Half silk spool muckmaggots...
@@ -63,18 +62,19 @@ Hud animation timings.
 Pixel alignment for save slot icon (maybe done)
 
 **Bugs to squash**
-(make charge attack obey gravity)
 Run attack not working properly... in many ways... (dashing like hunters, and repeating the same attack twice)
+Down attack not working (broken implementation)
 
 **Playtest Decisions**
 Silk refund on parries? 
+20-33% spell casting speed reduction?
 Bind speed too quick or too slow?
 Silk mechanics ignore silk heart slots... (and weavelight?)
 -15 to -25% spell damage? (code done) (disabled currently)
-20-33% spell casting speed reduction?
 0.5 extra silk via clawline?
 Half knockback like witch?
 Attack speed?
+**Remove silkless attacks?**
 
 **Progression** (after mod launch)
 Memory lockets locations (Not Implemented)
