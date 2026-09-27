@@ -97,7 +97,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Sprite
 			linework = LoadEmbeddedPngAsSprite("Crest.png", pivot),
 			silhouette = LoadEmbeddedPngAsSprite("CrestSilhouette.png", pivot),
-			glow = LoadEmbeddedPngAsSprite("CrestEquipGlow.png", pivot, 140f); // what does 140f do (I forget)
+			glow = LoadEmbeddedPngAsSprite("CrestEquipGlow.png", pivot, 101f);
 
 		float slotOffset = (0.5f - pivot.y) * (linework.rect.height / linework.pixelsPerUnit);
 
