@@ -52,7 +52,7 @@
 - Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools)
 Concept, 
 - KAdala, (The artist who made the entire moveset)
-- Me, (who created the concept, tweaked the art, and did much of the code)
+- Me, (who created the concept, tweaked the art, and did the code)
 
 ## Special Thanks to (wip)
 - VoidBaroness, (The Creator of Needleforge)
