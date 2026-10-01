@@ -1,15 +1,16 @@
 # Crest of the Weaver
 - The fully custom themed around the Weavers, hornets cloakless moveset, and the use of silk.
 - This is likely the first custom crest, with a fully animated unique moveset.
-- This has been a passion project that I have slowly worked on over the last 9.5 months.
+- This has been a passion project that I have slowly worked on over the last 11 months
 - This crest is currently unlocked automatically, for now. It will have its own custom shrine eventully and potentially a config option. 
 - Please don't ask how much I have spent commisioning the art, and some code... (It wasnt cheap)
 
 ## Custom Silk mechanics
-- There 3 custom mechanics which are centeral to the this mod.
+- There 4 custom mechanics which are centeral to the this mod.
 - First, there is the introduction of half silk notches. These are akin to moss berry bands, and cannot be used for healing or silk skills.
 - Second, the use of silk in every attack, for melee attacks will always drain half a silk.
 - Third, silk gained from attack is doubled, but due to the draining effect of attacks, a succesful hit will provide 1.5 silk.
+- Fourth, when you run out of silk, hornet will break a mask to gain 3 silk.
 
 ## Hud
 - The hud is fully custom, and comes with both regular, and steel soul varients. 
@@ -32,6 +33,7 @@
 
 ## Tool ineractions
 - Multibinder adds an additional 4th bind that heals 1 mask.
+- Injector band works as intended
 - Clawmirror damage is nerfed to account for the multiple binds
 - Weighted belt, flint slate, and longclaw are all functional
 
