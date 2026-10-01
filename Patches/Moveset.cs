@@ -1,5 +1,6 @@
 using Needleforge.Data;
 using Needleforge.Attacks;
+using Silksong.UnityHelper.Util;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,15 +14,15 @@ internal static partial class Moveset {
 
 	private static tk2dSpriteAnimation sharedLib = null!;
 	private static readonly Vector2[] standardHitbox = [
-	new Vector2(-0.3f, 0.8f), new Vector2(-1.5f, 1.3f), new Vector2(-2.8f, 1.0f), new Vector2(-3.6f, 0.3f),
-	new Vector2(-3.6f, -0.3f), new Vector2(-2.8f, -1.0f), new Vector2(-1.5f, -1.3f), new Vector2(-0.3f, -0.8f),
-];
+		new Vector2(-0.3f, 0.8f), new Vector2(-1.5f, 1.3f), new Vector2(-2.8f, 1.0f), new Vector2(-3.6f, 0.3f),
+		new Vector2(-3.6f, -0.3f), new Vector2(-2.8f, -1.0f), new Vector2(-1.5f, -1.3f), new Vector2(-0.3f, -0.8f),
+	];
 
 	// For Sprite collections that need Hero shader
 	private static readonly List<tk2dSpriteCollectionData> heroShaderCollections = [];
-	
+
 	#region Called from Awake
-	
+
 	internal static void ImportAnimations() {
 		sharedLib = GetOrCreateAnimationLibrary();
 	}
@@ -36,9 +37,34 @@ internal static partial class Moveset {
 		DownSlash();
 		DashSlash();
 		ChargedSlash();
+		MaskBreak(); //in silkMechanics
 
 		sharedLib.isValid = false;
 		sharedLib.ValidateLookup();
+	}
+
+	//mask break animation
+	internal static tk2dSpriteAnimationClip MaskBreakClip { get; private set; } = null!;
+
+	private static void MaskBreak() {
+		string[] maskBreakFiles = ["slash_e0000.png", "slash_e0001.png", "slash_e0002.png"];
+		Texture2D[] maskBreakTex = LoadNamedTextures(maskBreakFiles);
+
+		tk2dSpriteCollectionData maskBreakData = Tk2dUtil.CreateTk2dSpriteCollection(
+			sprites: maskBreakTex,
+			spriteCenters: [.. maskBreakTex.Select(t => new Vector2(t.width, t.height) * 0.5f)]
+		);
+		Object.DontDestroyOnLoad(maskBreakData.gameObject);
+		maskBreakData.gameObject.name = $"{YenId}_MaskBreakAnim";
+		maskBreakData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
+		heroShaderCollections.Add(maskBreakData);
+
+		MaskBreakClip = new tk2dSpriteAnimationClip {
+			name = "Weaver Mask Break",
+			fps = 12,
+			wrapMode = tk2dSpriteAnimationClip.WrapMode.Once,
+			frames = maskBreakData.CreateFrames(maskBreakTex.Select(t => t.name)),
+		};
 	}
 
 	#endregion
@@ -60,13 +86,13 @@ internal static partial class Moveset {
 	// OnInitialized not from Awake
 	internal static void EditHeroConfig() {
 		HeroConfigNeedleforge yenConfig = YenCrest.Moveset.HeroConfig!;
-		
+
 		yenConfig.heroAnimOverrideLib = GetOrCreateAnimationLibrary();
 
 		yenConfig.downSlashType = HeroControllerConfig.DownSlashTypes.DownSpike;
 		yenConfig.SetDownspikeFields(
-			anticTime: 0.1f, time: 0.15f, recoveryTime: 0.05f,
-			doesThrust: false, velocity: new Vector2(-15, -15), doesBurstEffect: true
+			anticTime: DownAnticTime, time: DownThrustTime, recoveryTime: DownRecoveryTime,
+			doesThrust: false, velocity: Vector2.zero, doesBurstEffect: false
 		);
 
 		yenConfig.canBind = true;
@@ -75,7 +101,7 @@ internal static partial class Moveset {
 			quickSpeedMult: 1.5f, quickCooldown: 0.205f); // Flea Brew
 
 		yenConfig.SetDashStabFields(time: 0.3f, speed: -30, bounceJumpSpeed: 40); //default (experiment)
-		
+
 		yenConfig.ChargedSlashFsmEdit = ChargedFsmEdit;
 	}
 
@@ -85,7 +111,6 @@ internal static partial class Moveset {
 			t.name = f;
 			return t;
 		}).ToArray();
-
 	private static tk2dSpriteAnimation GetOrCreateAnimationLibrary() {
 		if (animLibObj)
 			return animLibObj.GetComponent<tk2dSpriteAnimation>();
