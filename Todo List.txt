@@ -32,11 +32,11 @@ Silk skill changes (Done) (disabled)
 
 **Moveset**
 Basic Slash (animations done, basic implementation with hitboxes done)
-Alt slash (animations may change, basic implementation with hitboxes done)
-Up attack (animation done, basic implementation with hitboxes done)
-Down attack (animation done, not implemented)
+Alt slash (animations done, basic implementation with hitboxes done)
+Up attack (animations done, basic implementation with hitboxes done)
+Down attack (animation done, WIP implemented)
 Dash attack (Not done) (short 2 slash and 4 slash varients?)
-Charge attack (Basically done)
+Charge attack (done, hitbox tweaks needed)
 Wall slash... (waiting on animation, basically done)
 
 **Moveset general checklist...**
