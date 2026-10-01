@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 09/27/2026, Afternoon)
+(last updated 10/01/2026, Afternoon)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -38,7 +38,6 @@ Down attack (animation done, not implemented)
 Dash attack (Not done) (short 2 slash and 4 slash varients?)
 Charge attack (Basically done)
 Wall slash... (waiting on animation, basically done)
-**Silkless moveset** (Same attacks without silk use, and reduced damage) (not done)
 
 **Moveset general checklist...**
 Attack speed set to hunter for now. 
@@ -50,8 +49,8 @@ Attack cooldowns (done?)
 
 **Custom Mechanics** (not done)
 Silk Use (crudely implemented) melee attacks use 1 silk, but count silk hearts in the process of regenerating 
-Double silk (implemented) (might have bugs)
-(Dash attack not functioning.)
+Double silk (implemented) (Dash attack not functioning.)
+Mask damage to restore silk (done)
 Half silk spools (Not implemented) **I Will need someone else to code it**
 Half silk spools animations (Not implemented, sprites done)
 Half silk spool muckmaggots...
@@ -74,7 +73,6 @@ Silk mechanics ignore silk heart slots... (and weavelight?)
 0.5 extra silk via clawline?
 Half knockback like witch?
 Attack speed?
-**Remove silkless attacks?**
 
 **Progression** (after mod launch)
 Memory lockets locations (Not Implemented)
