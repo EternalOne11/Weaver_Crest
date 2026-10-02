@@ -107,6 +107,7 @@
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0006.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0007.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0008.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash_0009.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0000.png" />
 	<EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0001.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0002.png" />
@@ -195,6 +196,14 @@
 	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0011.png" />
 	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0012.png" />
 	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0013.png" />	
+	<EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0000.png" />
+    <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0001.png" />
+    <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0002.png" />
+    <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0003.png" />
+    <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0004.png" />
+    <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0005.png" />
+    <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0006.png" />
+    <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0007.png" />
   </ItemGroup>
 
 
