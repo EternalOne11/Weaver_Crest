@@ -109,70 +109,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		YenCrest.HudFrame.ProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon.png");        // Save profile for normal save
 		YenCrest.HudFrame.SteelProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon_S.png"); // Save profile for Steel soul
 
-		//Tool slot locations (x,y)using BepInEx;
-	
-		Moveset.SetupSlashes();
-
-		YenCrest.Moveset.OnInitialized += () =>
-		{
-			Moveset.EditHeroConfig();
-
-			// Hornet shaders
-			Moveset.ApplyHeroShader();
-			
-			// Charge damage mulitpler
-			Moveset.ChargedDamage();
-
-			// Longclaw
-			var m = YenCrest.Moveset;
-			foreach (var attack in new GameObjectProxy?[] { m.Slash, m.AltSlash, m.UpSlash, m.WallSlash, m.DownSlash, m.DashSlash })
-			{
-				if (attack == null || attack.GameObject == null) continue;
-				foreach (var nab in attack.GameObject.GetComponentsInChildren<NailAttackBase>(true))
-				{
-					nab.overrideLongNeedleScale = true;
-					nab.longNeedleScale = Vector3.Scale(nab.scale, new Vector3(1.2f, 1.2f, 1f));
-				}
-			}
-		};
-	}
-
-	private void OnDestroy() => Harmony.UnpatchSelf();
-
-	private static void RegisterCrest()
-	{
-		Vector2 pivot = new(0.5f, 0.44f);
-
-		Sprite
-			linework = LoadEmbeddedPngAsSprite("Crest.png", pivot),
-			silhouette = LoadEmbeddedPngAsSprite("CrestSilhouette.png", pivot),
-			glow = LoadEmbeddedPngAsSprite("CrestEquipGlow.png", pivot, 101f);
-
-		float slotOffset = (0.5f - pivot.y) * (linework.rect.height / linework.pixelsPerUnit);
-
-		YenCrest = NeedleforgePlugin.AddCrest(YenId, YenName, YenDesc, linework, silhouette, glow);
-		YenCrest.HudFrame.ProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon.png");        // Save profile for normal save
-		YenCrest.HudFrame.SteelProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon_S.png"); // Save profile for Steel soul
-
 		//Tool slot locations (x,y)
-	    // X is the horizontal axis, Negative values move the image left, Positive move them right.
-	    // Y is the Vertical axis, Negative values move it Down, Postive move it Up
-		YenCrest.AddSkillSlot(AttackToolBinding.Up,new(0f, 1.47f + slotOffset), false);
-		YenCrest.AddSkillSlot(AttackToolBinding.Down,new(0f, -2.19f + slotOffset), false);
-		YenCrest.AddRedSlot(AttackToolBinding.Neutral,new(0f, -0.36f + slotOffset), false);
-		YenCrest.AddYellowSlot(new(-1.57f, 0.4f + slotOffset), false); // set true when memory lockets are added
-		YenCrest.AddYellowSlot(new(-1.57f, -1.1f + slotOffset), false); // set true when memory lockets are added
-		YenCrest.AddBlueSlot(new( 1.57f, 0.4f + slotOffset), false); // set true when memory lockets are added
-		YenCrest.AddBlueSlot(new( 1.57f, -1.1f + slotOffset), false); // set true when memory lockets are added
-
-		YenCrest.ApplyAutoSlotNavigation(slotDimensions: new(1.25f, 0.75f));
-
-		// Hud and Bind
-		Hud.Setup(YenCrest);
-		YenCrest.BindEvent = Bind.TripleBind;
-	}
-}
-
 	    // X is the horizontal axis, Negative values move the image left, Positive move them right.
 	    // Y is the Vertical axis, Negative values move it Down, Postive move it Up
 		YenCrest.AddSkillSlot(AttackToolBinding.Up,new(0f, 1.47f + slotOffset), false);
