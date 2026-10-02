@@ -12,7 +12,7 @@ internal static partial class Moveset {
 	private static void SlashAlt() {
 		string[] altSlashFiles = ["slashAlt_e0000.png", "slashAlt_e0001.png", "slashAlt_e0002.png", "slashAlt_e0003.png", "slashAlt_e0004.png"];
 		Texture2D[] altSlashTex = LoadNamedTextures(altSlashFiles);
-		string[] altSlashHornetFiles = ["slashAlt0000.png", "slashAlt0001.png", "slashAlt0002.png", "slashAlt0003.png", "slashAlt0004.png"];
+		string[] altSlashHornetFiles = ["slashAlt_0000.png", "slashAlt_0001.png", "slashAlt_0002.png", "slashAlt_0003.png", "slashAlt_0004.png"];
 		Texture2D[] altSlashHornetTex = LoadNamedTextures(altSlashHornetFiles);
 
 		tk2dSpriteCollectionData altSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
