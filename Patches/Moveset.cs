@@ -13,10 +13,6 @@ internal static partial class Moveset {
 	private static GameObject? animLibObj;
 
 	private static tk2dSpriteAnimation sharedLib = null!;
-	private static readonly Vector2[] standardHitbox = [
-		new Vector2(-0.3f, 0.8f), new Vector2(-1.5f, 1.3f), new Vector2(-2.8f, 1.0f), new Vector2(-3.6f, 0.3f),
-		new Vector2(-3.6f, -0.3f), new Vector2(-2.8f, -1.0f), new Vector2(-1.5f, -1.3f), new Vector2(-0.3f, -0.8f),
-	];
 
 	// For Sprite collections that need Hero shader
 	private static readonly List<tk2dSpriteCollectionData> heroShaderCollections = [];
