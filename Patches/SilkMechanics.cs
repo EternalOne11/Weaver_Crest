@@ -18,7 +18,7 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-		HalfSilk.RemoveHalfSilk();
+		HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
 	private static float LastWeave = -1f;
@@ -51,7 +51,7 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-		HalfSilk.RemoveHalfSilk();
+		HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
 	//Mask break code.

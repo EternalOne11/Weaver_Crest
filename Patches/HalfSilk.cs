@@ -46,7 +46,8 @@ public static class HalfSilk
     /// <summary>
     /// Removes a half silk or turns a full silk into a half silk
     /// </summary>
-    public static void RemoveHalfSilk()
+    /// <param name="interruptRegen">False = silk-heart regeneration keeps going</param>
+    public static void RemoveHalfSilk(bool interruptRegen = true)
     {
         if (GetHasHalfSilk())
         {
@@ -60,7 +61,23 @@ public static class HalfSilk
             Log.LogInfo($"RemoveHalfSilk - Doesn't have half silk");
             HasHalfSilk = true;
             TransformLastSilk();
-            HeroController.instance.TakeSilk(1);
+            if (interruptRegen)
+                HeroController.instance.TakeSilk(1);
+            else
+                TakeSilkQuietly();
+        }
+    }
+    private static void TakeSilkQuietly()
+    {
+        PlayerData.instance.silk = Mathf.Max(0, PlayerData.instance.silk - 1);
+        SilkSpool.Instance.EvaluatePositions();
+
+        if (PlayerData.instance.silk < SilkSpool.BindCost)
+        {
+            if (CurrentHalf)
+                CurrentHalf.EndGlow();
+            foreach (SilkChunk chunk in SilkSpool.Instance.silkChunks)
+                chunk.EndGlow();
         }
     }
 
@@ -757,19 +774,6 @@ public static class HalfSilk
         }
         return currentPos;
     }
-
-    [HarmonyPatch(typeof(HeroController), nameof(HeroController.Update))]
-	[HarmonyPostfix]
-	private static void Update()
-    {
-		if (!YenCrest.IsEquipped)
-			return;
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            Log.LogInfo($"Update - K pressed");
-            AddHalfSilk();
-        }
-	}
 
     [HarmonyPatch(typeof(HeroController), nameof(HeroController.Die), [typeof(bool), typeof(bool)])]
 	[HarmonyPostfix]
