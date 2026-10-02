@@ -18,9 +18,7 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-
-		if (PlayerData.instance.silk > 0)
-			HeroController.instance.AddSilk(-1, false, SilkSpool.SilkAddSource.Normal, false);
+		HalfSilk.RemoveHalfSilk();
 	}
 
 	private static float LastWeave = -1f;
@@ -52,8 +50,8 @@ internal static class SilkMechanics {
 		if (!(YenCrest.Moveset.ChargedSlash?.Steps.Contains(__instance) ?? false))
 			return;
 
-		if (PlayerData.instance.silk > 0)
-			HeroController.instance.AddSilk(-1, false, SilkSpool.SilkAddSource.Normal, false);
+		LastWeave = Time.time;
+		HalfSilk.RemoveHalfSilk();
 	}
 
 	//Mask break code.
@@ -78,7 +76,8 @@ internal static class SilkMechanics {
 		!Breaking
 		&& !Moveset.DownAnimLocked
 		&& PlayerData.instance.silk <= 0
-		&& PlayerData.instance.health > Cost //never on the last mask
+		&& !HalfSilk.GetHasHalfSilk() // Spend half silk, now. 
+		&& PlayerData.instance.health > Cost // never on her last mask
 		&& HeroController.instance.CanInput();
 
 
