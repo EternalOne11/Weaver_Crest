@@ -53,7 +53,8 @@
 ## Credits
 - Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools)
 - KAdala, (The artist who made the entire moveset)
-- Me,(who created the concept, tweaked the art, and did the code)
+- Redfrog (Who coded the half silk.)
+- Me,(who created the concept, tweaked the art, and did most of the code)
 
 ## Special Thanks to (wip)
 - VoidBaroness, (The Creator of Needleforge)
