@@ -156,7 +156,7 @@ internal static class Hud
             DecideIdleSilk = isSteelSoul ? SteelIdleSilk : IdleSilk,
             DecideIdleNoSilk = isSteelSoul ? SteelIdleNoSilk : IdleNoSilk;
 
-        bool hadSilk = PlayerData.instance.silk > 0;
+		bool hadSilk = PlayerData.instance.silk > 0 || HalfSilk.GetHasHalfSilk();
         if (hadSilk)
 		{
 			hudInstance.PlayFrameAnim(DecideGainSilk.name, 0);
@@ -168,7 +168,7 @@ internal static class Hud
             if (!crest.IsEquipped)
                 yield break;
 
-            bool hasSilk = PlayerData.instance.silk > 0;
+            bool hasSilk = PlayerData.instance.silk > 0 || HalfSilk.GetHasHalfSilk();
             if (hasSilk != hadSilk)
             {
                 tk2dSpriteAnimationClip transition = hasSilk ? DecideGainSilk : DecideLoseSilk;
