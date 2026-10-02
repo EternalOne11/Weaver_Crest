@@ -481,6 +481,9 @@ public static class HalfSilk
         
         if (HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal) || HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Drain))
             orig *= 1.5f;
+			
+        if (HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Acid))
+            orig = self.acidUseColor;
         
         if (HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Void))
             orig = new Color(0f, 0f, 0f, 1f);
