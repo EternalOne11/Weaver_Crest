@@ -14,7 +14,7 @@ internal static partial class Moveset {
 	private const float DownFps = 15f;
 	private const float DownEndHold = 0.05f;
 
-	private const int DownAnticFrames = 4, DownKickFrames = 3, DownRecoverFrames = 3;
+	private const int DownAnticFrames = 7, DownKickFrames = 3, DownRecoverFrames = 3;
 
 	internal const float DownAnticTime = DownAnticFrames / DownFps;//windup
 	internal const float DownThrustTime = DownKickFrames / DownFps;
@@ -35,9 +35,9 @@ internal static partial class Moveset {
 
 	private static void DownSlash() {
 		string[] fxFiles = ["downSlash_e0004.png", "downSlash_e0005.png"];
-		string[] anticFiles = ["downSlash_0000.png", "downSlash_0001.png", "downSlash_0002.png", "downSlash_0003.png"];
-		string[] kickFiles = ["downSlash_0004.png", "downSlash_0005.png", "downSlash_0006.png"];
-		string[] recoverFiles = ["downSlash_0007.png", "downSlash_0008.png", "downSlash_0009.png"];
+		string[] anticFiles = ["downSlash_0000.png", "downSlash_0001.png", "downSlash_0002.png", "downSlash_0003.png", "downSlash_0004.png", "downSlash_0005.png", "downSlash_0006.png"];
+		string[] kickFiles = ["downSlash_0007.png", "downSlash_0008.png", "downSlash_0009.png"];
+		string[] recoverFiles = ["downSlash_0010.png", "downSlash_0011.png", "downSlash_0012.png"];
 
 		Texture2D[] fx = LoadNamedTextures(fxFiles);
 		Texture2D[] antic = LoadNamedTextures(anticFiles);
