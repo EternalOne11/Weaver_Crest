@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/01/2026, Afternoon)
+(last updated 10/02/2026, Evening)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -48,13 +48,14 @@ Flint slate (automatic)
 Attack cooldowns (done?)
 
 **Custom Mechanics** (not done)
-Silk Use (crudely implemented) melee attacks use 1 silk, but count silk hearts in the process of regenerating 
+Silk Use (done, with silkheart bug)
 Double silk (implemented) (Dash attack not functioning.)
 Mask damage to restore silk (done)
-Half silk spools (Not implemented) **I Will need someone else to code it**
-Half silk spools animations (Not implemented, sprites done)
-Half silk spool muckmaggots...
-Half silk spool void degredation.
+Half silk spools (done)
+Half silk spools animations (done)
+Half silk spool muckmaggots... (works, minor bug)
+Half silk spool void degredation. (not tested)
+Half silk, for acid degredation. (function yes, filter no)
 
 **Polish** (remove when completed)
 Hud animation timings.
@@ -66,13 +67,14 @@ Down attack not working (broken implementation)
 
 **Playtest Decisions**
 Silk refund on parries? 
-20-33% spell casting speed reduction?
 Bind speed too quick or too slow?
-Silk mechanics ignore silk heart slots... (and weavelight?)
 -15 to -25% spell damage? (code done) (disabled currently)
+Attack speed?
+
+**Undecided**
+Should silk use interfere with silk hearts?
 0.5 extra silk via clawline?
 Half knockback like witch?
-Attack speed?
 
 **Progression** (after mod launch)
 Memory lockets locations (Not Implemented)
@@ -82,5 +84,4 @@ Corpse bind sprite (N/A)
 
 **TBD**
 Sounds for every attack. (around playtest)
-Half silk, for acid... (for architect)
 Additional mod Compatability... (maybe with a glass soul mod)
