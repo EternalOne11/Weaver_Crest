@@ -53,9 +53,9 @@ Double silk (implemented) (Dash attack not functioning.)
 Mask damage to restore silk (done)
 Half silk spools (done)
 Half silk spools animations (done)
-Half silk spool muckmaggots... (works, minor bug)
-Half silk spool void degredation. (not tested)
-Half silk, for acid degredation. (function yes, filter no)
+Half silk spool muckmaggots... (works, bit buggy)
+Half silk spool void degredation. (works)
+Half silk, for acid degredation. (works)
 
 **Polish** (remove when completed)
 Hud animation timings.
