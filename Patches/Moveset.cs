@@ -34,6 +34,7 @@ internal static partial class Moveset {
 		DashSlash();
 		ChargedSlash();
 		MaskBreak(); //in silkMechanics
+		BindAnims(); //in Bind.cs
 
 		sharedLib.isValid = false;
 		sharedLib.ValidateLookup();
