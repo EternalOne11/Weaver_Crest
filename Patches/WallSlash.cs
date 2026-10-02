@@ -15,12 +15,12 @@ internal static partial class Moveset {
 	new(-3.6f, 0.3f), new(-3.6f, -0.3f), new(-2.8f, -1.0f), new(-1.5f, -1.3f), new(-0.3f, -0.8f),];
 
 	private static void WallSlash() {
-		string[] wallSlashHornetFiles = ["Wall_1.png", "Wall_2.png", "Wall_3.png", "Wall_4.png", "Wall_5.png"];
+		string[] wallSlashHornetFiles = ["wallSlash_0000.png", "wallSlash_0001.png", "wallSlash_0002.png", "wallSlash_0003.png", "wallSlash_0004.png", "wallSlash_0005.png", "wallSlash_0006.png"];
 		Texture2D[] wallSlashHornetTex = LoadNamedTextures(wallSlashHornetFiles);
 
 		tk2dSpriteCollectionData wallSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: wallSlashHornetTex,
-			spriteCenters: [.. wallSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f)]
+			spriteCenters: [.. wallSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(-65f, 0f))]
 		);
 		Object.DontDestroyOnLoad(wallSlashData.gameObject);
 		wallSlashData.gameObject.name = $"{YenId}_WallSlashAnim";
