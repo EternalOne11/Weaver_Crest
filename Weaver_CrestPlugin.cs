@@ -60,6 +60,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(ToolDamage));
 		Harmony.PatchAll(typeof(DownPatch));
 		Harmony.PatchAll(typeof(WallPatch));
+		Harmony.PatchAll(typeof(DashPatch));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
