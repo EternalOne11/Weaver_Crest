@@ -18,7 +18,6 @@ Lifeblood Overdose (automatic)
 
 **Bind** (complete?) 
 Triple bind (done)
-Bind cancel (done) remove?
 Multibinder (done)
 Injector band (done)
 Claw mirrors nerf (done)
@@ -70,7 +69,7 @@ Silk refund on parries?
 Bind speed too quick or too slow?
 -15 to -25% spell damage? (code done) (disabled currently)
 Attack speed?
-Remove bind cancel?
+Readd bind cancel?
 
 **Undecided**
 Should silk use interfere with silk hearts?
