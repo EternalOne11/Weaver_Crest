@@ -53,6 +53,23 @@ internal static class SilkMechanics {
 		LastWeave = Time.time;
 		HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
+	
+	private static string? lastHeroClip;
+
+	[HarmonyPatch(typeof(HeroController), "Update")]
+	[HarmonyPostfix]
+	private static void DashAttackCost(HeroController __instance) {
+		string? clip = __instance.GetComponent<tk2dSpriteAnimator>().CurrentClip?.name;
+		if (clip != lastHeroClip && YenCrest.IsEquipped) {
+			if (clip == "Dash Attack Antic 1") {
+				LastWeave = Time.time;
+				HalfSilk.RemoveHalfSilk(interruptRegen: false);
+			}
+			else if (clip == "Dash Attack Antic 2")
+				LastWeave = Time.time;
+		}
+		lastHeroClip = clip;
+	}
 
 	//Mask break code.
 	[HarmonyPatch(typeof(HeroController), "Attack")]
