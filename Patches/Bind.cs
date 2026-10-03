@@ -58,14 +58,10 @@ internal static partial class Moveset {
 
 internal static class Bind
 {
-	//speed of each bind
-    private const float DesiredDuration = 0.65f;
-
 	//bind animation length
 	private const float BindCycle = 0.81f;
 	private const float QuickCycle = 0.54f;
 
-    private static float cachedTickDuration;
     private static int cachedBindCount;
     private static bool cachedQuick;
 
@@ -74,51 +70,20 @@ internal static class Bind
         //Bind amount values
         amountHealed.Value = 1;
         numberOfBinds.Value = Gameplay.MultibindTool.IsEquipped ? 4 : 3;
+        secondsPerBind.Value = 0.65f;
 
-		// Quick bind speed, multipler... (Vanilla is 0.6) 
-		// Higher values mean slower bind, Lower values mean quicker bind.
-        bool quickBindEquipped = ToolItemManager.IsToolEquipped("Quickbind");
-        secondsPerBind.Value = DesiredDuration;
-        cachedTickDuration = DesiredDuration;
         cachedBindCount = numberOfBinds.Value;
-        cachedQuick = quickBindEquipped;
+        cachedQuick = ToolItemManager.IsToolEquipped("Quickbind");
 
-        if (BindCancel)
-            return;
-        HeroController.instance.StartCoroutine(PressTracker(bindFsm));
         HeroController.instance.StartCoroutine(PlayBindEffect(bindFsm));
     }
-    private static bool BindCancel;
 
-    private static IEnumerator PressTracker(PlayMakerFSM bindFsm)
-    {
-        BindCancel = true;
-        float BindDuration = cachedTickDuration;
-        float elapsed = 0f;
-        bool LastPressedFrame = HeroController.instance.inputHandler.inputActions.Cast.IsPressed;
-
-        while (elapsed < BindDuration)
-        {
-            bool isPressed = HeroController.instance.inputHandler.inputActions.Cast.IsPressed;
-            if (isPressed && !LastPressedFrame)
-            {
-                if (bindFsm.Fsm.ActiveStateName != "Idle")
-                    bindFsm.Fsm.SetState("End Bind");
-                BindCancel = false;
-                yield break;
-            }
-            LastPressedFrame = isPressed;
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        BindCancel = false;
-    }
     private static GameObject? effectObj;
     private static tk2dSpriteAnimator? effectAnim;
     private static bool effectPlaying;
     private static int effectRun;
 
-private static IEnumerator PlayBindEffect(PlayMakerFSM bindFsm)
+	private static IEnumerator PlayBindEffect(PlayMakerFSM bindFsm)
     {
         if (effectPlaying)
             yield break;
@@ -166,6 +131,7 @@ private static IEnumerator PlayBindEffect(PlayMakerFSM bindFsm)
         if (run == effectRun)
             SetEffect(defaultEffect, false);
     }
+
     private static void SetEffect(Transform? defaultEffect, bool hide)
     {
         if (defaultEffect == null)
