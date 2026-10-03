@@ -8,7 +8,7 @@
 ## Custom Silk mechanics
 - There 4 custom mechanics which are centeral to the this mod.
 - First, there is the introduction of half silk notches. These are akin to moss berry bands, and cannot be used for healing or silk skills.
-- Second, the use of silk in every attack, for melee attacks will always drain half a silk.
+- Second, the use of silk in every attack, always draining half a silk.
 - Third, silk gained from attack is doubled, but due to the draining effect of attacks, a succesful hit will provide 1.5 silk.
 - Fourth, when you run out of silk, hornet will break a mask to gain 3 silk.
 
@@ -56,7 +56,7 @@
 - Redfrog (Who coded the half silk.)
 - Me,(who created the concept, tweaked the art, and did most of the code)
 
-## Special Thanks to (wip)
+## Special Thanks to
 - VoidBaroness, (The Creator of Needleforge)
 - Kaycodes13, (Creator of the Queens crest for the template)
 - DerVorce, (Creator of the Void crest, which served as reference)
