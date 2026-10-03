@@ -61,7 +61,7 @@ internal static class SilkMechanics {
 	private static void DashAttackCost(HeroController __instance) {
 		string? clip = __instance.GetComponent<tk2dSpriteAnimator>().CurrentClip?.name;
 		if (clip != lastHeroClip && YenCrest.IsEquipped) {
-			if (clip == "Dash Attack Antic 1") {
+			if (clip == "Dash Attack Antic 1" || clip == "Dash Attack Antic 3") {
 				LastWeave = Time.time;
 				HalfSilk.RemoveHalfSilk(interruptRegen: false);
 			}
