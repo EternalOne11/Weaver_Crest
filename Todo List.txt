@@ -18,11 +18,11 @@ Lifeblood Overdose (automatic)
 
 **Bind** (complete?) 
 Triple bind (done)
-Bind cancel (done)
+Bind cancel (done) remove?
 Multibinder (done)
 Injector band (done)
 Claw mirrors nerf (done)
-Custom Bind animations (not done)
+Custom Bind animations (done)
 
 **Misc features** 
 Save slot icon (Done)
@@ -37,7 +37,7 @@ Up attack (animations done, basic implementation with hitboxes done)
 Down attack (animation done, WIP implemented)
 Dash attack (Not done) (short 2 slash and 4 slash varients?)
 Charge attack (done, hitbox tweaks needed)
-Wall slash... (waiting on animation, basically done)
+Wall slash... (basically done, needs some tweaks)
 
 **Moveset general checklist...**
 Attack speed set to hunter for now. 
@@ -47,8 +47,8 @@ Weighted Belt (automatic)
 Flint slate (automatic)
 Attack cooldowns (done?)
 
-**Custom Mechanics** (not done)
-Silk Use (done, with silkheart bug)
+**Custom Mechanics**  (nearly complete)
+Silk Use (done)
 Double silk (implemented) (Dash attack not functioning.)
 Mask damage to restore silk (done)
 Half silk spools (done)
@@ -70,6 +70,7 @@ Silk refund on parries?
 Bind speed too quick or too slow?
 -15 to -25% spell damage? (code done) (disabled currently)
 Attack speed?
+Remove bind cancel?
 
 **Undecided**
 Should silk use interfere with silk hearts?
