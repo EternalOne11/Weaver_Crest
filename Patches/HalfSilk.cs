@@ -79,6 +79,7 @@ public static class HalfSilk
             foreach (SilkChunk chunk in SilkSpool.Instance.silkChunks)
                 chunk.EndGlow();
         }
+        SilkSpool.Instance.RefreshSilk(default, default);
     }
 
     /// <summary>
