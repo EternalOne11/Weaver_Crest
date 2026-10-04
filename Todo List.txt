@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/02/2026, Evening)
+(last updated 10/03/2026, Night)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -16,7 +16,7 @@ Silk varient (done)
 Non steel soul varient (color wrong)
 Lifeblood Overdose (automatic)
 
-**Bind** (complete?) 
+**Bind** (complete) 
 Triple bind (done)
 Multibinder (done)
 Injector band (done)
@@ -34,7 +34,7 @@ Basic Slash (animations done, basic implementation with hitboxes done)
 Alt slash (animations done, basic implementation with hitboxes done)
 Up attack (animations done, basic implementation with hitboxes done)
 Down attack (animation done, WIP implemented)
-Dash attack (Not done) (short 2 slash and 4 slash varients?)
+Dash attack (both variants done? hitboxes WIP)
 Charge attack (done, hitbox tweaks needed)
 Wall slash... (basically done, needs some tweaks)
 
@@ -48,7 +48,7 @@ Attack cooldowns (done?)
 
 **Custom Mechanics**  (nearly complete)
 Silk Use (done)
-Double silk (implemented) (Dash attack not functioning.)
+Double silk (implemented)
 Mask damage to restore silk (done)
 Half silk spools (done)
 Half silk spools animations (done)
@@ -59,9 +59,11 @@ Half silk, for acid degredation. (works)
 **Polish** (remove when completed)
 Hud animation timings.
 Pixel alignment for save slot icon (maybe done)
+Tweak hitboxes
+properly align animations...
+Tweak animation timings.
 
 **Bugs to squash**
-Run attack not working properly... in many ways... (dashing like hunters, and repeating the same attack twice)
 Down attack not working (broken implementation)
 
 **Playtest Decisions**
@@ -69,10 +71,9 @@ Silk refund on parries?
 Bind speed too quick or too slow?
 -15 to -25% spell damage? (code done) (disabled currently)
 Attack speed?
-Readd bind cancel?
 
 **Undecided**
-Should silk use interfere with silk hearts?
+Readd bind cancel?
 0.5 extra silk via clawline?
 Half knockback like witch?
 
