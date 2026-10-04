@@ -51,16 +51,18 @@ public static class HalfSilk
     {
         if (GetHasHalfSilk())
         {
-            Log.LogInfo($"RemoveHalfSilk - Already has half silk");
             HasHalfSilk = false;
             DespawnHalfSilk();
             SilkSpool.Instance.EvaluatePositions();
         }
         else if (PlayerData.instance.silk > 0)
         {
-            Log.LogInfo($"RemoveHalfSilk - Doesn't have half silk");
             HasHalfSilk = true;
-            TransformLastSilk();
+            if (!TransformLastSilk())
+            {
+                PlayerData.instance.silk = Mathf.Max(0, PlayerData.instance.silk - 1);
+                return;
+            }
             if (interruptRegen)
                 HeroController.instance.TakeSilk(1);
             else
@@ -199,12 +201,15 @@ public static class HalfSilk
         }
     }
 
-    private static void TransformLastSilk()
+    private static bool TransformLastSilk()
     {
-        Log.LogInfo($"TransformLastSilk");
+        SilkChunk? last = SilkSpool.Instance.silkChunks.LastOrDefault(s => !s.IsRegen);
+        if (!last)
+            return false;
+
         if (CurrentHalf)
             CurrentHalf.gameObject.Recycle();
-        CurrentHalf = SilkSpool.Instance.silkChunks.Last(s => !s.IsRegen);
+        CurrentHalf = last!;
         SilkSpool.Instance.silkChunks.Remove(CurrentHalf);
         CurrentHalf.SetHalfSilk(true);
         CurrentHalf.upAnim = HalfSilkShrink.name;
@@ -223,12 +228,12 @@ public static class HalfSilk
             silkUsingFlags = HalfSilkSetUsing(silkUsingFlags);
             if (silkUsingFlags != SilkSpool.SilkUsingFlags.None)
             {
-                SilkSpool.Instance.wasUsingChunk = SilkSpool.Instance.silkChunks.Last(s => !s.IsRegen);
-                Log.LogInfo("TransformLastSilk wasUsingChunk: " + SilkSpool.Instance.wasUsingChunk);
+                SilkSpool.Instance.wasUsingChunk = SilkSpool.Instance.silkChunks.LastOrDefault(s => !s.IsRegen);
                 if (SilkSpool.Instance.wasUsingChunk)
                     SilkSpool.Instance.wasUsingChunk.SetUsing(silkUsingFlags);
             }
         }
+        return true;
     }
 
     private static void UpgradeHalfSilk()
@@ -410,7 +415,7 @@ public static class HalfSilk
 
     private static SilkSpool.SilkUsingFlags HalfSilkSetUsing(SilkSpool.SilkUsingFlags usingFlags)
     {
-        if (!GetHasHalfSilk())
+        if (!GetHasHalfSilk() || !CurrentHalf)
             return usingFlags;
         
         HalfSilkUsingFlags = usingFlags;
@@ -783,6 +788,17 @@ public static class HalfSilk
         Log.LogInfo($"ResetOnDeath");
         SetHalfSilkState(false);
 	}
+
+    [HarmonyPatch(typeof(SilkSpool), nameof(SilkSpool.DrawSpool), [typeof(int)])]
+    [HarmonyPostfix]
+    private static void AfterDrawSpool()
+    {
+        if (GetHasHalfSilk() && !CurrentHalf)
+        {
+            SpawnHalfSilk();
+            SilkSpool.Instance.EvaluatePositions();
+        }
+    }
 
     [HarmonyPatch(typeof(HeroController), nameof(HeroController.AddSilk), [typeof(int), typeof(bool), typeof(SilkSpool.SilkAddSource), typeof(bool)])]
     [HarmonyPostfix]
