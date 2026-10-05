@@ -113,13 +113,15 @@ internal static partial class Moveset {
 			HeroController.instance.StartCoroutine(ChargedMovement());
 			IEnumerator ChargedMovement() {
 				while (fsm.ActiveStateName == startState.Name || fsm.ActiveStateName == attackState.Name) {
-					float input = HeroController.instance.CheckTouchingGround() ? 0f : InputHandler.Instance.inputActions.MoveVector.Vector.x;
-					float dir = Mathf.Abs(input) > 0.3f ? Mathf.Sign(input) : 0f;
-					rb.linearVelocity = new Vector2(dir * ChargedMoveSpeed, rb.linearVelocity.y);
+					var cState = HeroController.instance.cState;
+					if (!cState.recoiling && !cState.recoilingLeft && !cState.recoilingRight) {
+						float input = HeroController.instance.CheckTouchingGround() ? 0f : InputHandler.Instance.inputActions.MoveVector.Vector.x;
+						float dir = Mathf.Abs(input) > 0.3f ? Mathf.Sign(input) : 0f;
+						rb.linearVelocity = new Vector2(dir * ChargedMoveSpeed, rb.linearVelocity.y);
+					}
 					yield return new WaitForFixedUpdate();
 				}
 			}
-
 			HeroController.instance.SpriteFlash.flashFocusHeal();
 			GameObject sphereFlash = fsm.FsmVariables.GetFsmGameObject("Sphere Flash").Value;
 			if (sphereFlash) sphereFlash.SetActive(true);
