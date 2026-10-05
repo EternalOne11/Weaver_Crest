@@ -1,7 +1,7 @@
 # Crest of the Weaver
-- The fully custom themed around the Weavers, hornets cloakless moveset, and the use of silk.
+- The fully custom themed around the Weavers, and the use of silk.
 - This is likely the first custom crest, with a fully animated unique moveset.
-- This has been a passion project that I have slowly worked on over the last 11 months
+- This has been a passion project that I have slowly worked on over the last 12 months
 - This crest is currently unlocked automatically, for now. It will have its own custom shrine eventully and potentially a config option. 
 - Please don't ask how much I have spent commisioning the art, and some code... (It wasnt cheap)
 
