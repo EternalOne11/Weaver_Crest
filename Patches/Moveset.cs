@@ -40,27 +40,28 @@ internal static partial class Moveset {
 		sharedLib.ValidateLookup();
 	}
 
-	//mask break animation
+	//mask break animation and effect
 	internal static tk2dSpriteAnimationClip MaskBreakClip { get; private set; } = null!;
+	internal static tk2dSpriteCollectionData MaskBreakCollection { get; private set; } = null!;
 
 	private static void MaskBreak() {
 		string[] maskBreakFiles = ["slash_e0000.png", "slash_e0001.png", "slash_e0002.png"];
 		Texture2D[] maskBreakTex = LoadNamedTextures(maskBreakFiles);
 
-		tk2dSpriteCollectionData maskBreakData = Tk2dUtil.CreateTk2dSpriteCollection(
+		MaskBreakCollection = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: maskBreakTex,
 			spriteCenters: [.. maskBreakTex.Select(t => new Vector2(t.width, t.height) * 0.5f)]
 		);
-		Object.DontDestroyOnLoad(maskBreakData.gameObject);
-		maskBreakData.gameObject.name = $"{YenId}_MaskBreakAnim";
-		maskBreakData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
-		heroShaderCollections.Add(maskBreakData);
+		Object.DontDestroyOnLoad(MaskBreakCollection.gameObject);
+		MaskBreakCollection.gameObject.name = $"{YenId}_MaskBreak";
+		MaskBreakCollection.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
+		heroShaderCollections.Add(MaskBreakCollection);
 
 		MaskBreakClip = new tk2dSpriteAnimationClip {
 			name = "Weaver Mask Break",
 			fps = 12,
 			wrapMode = tk2dSpriteAnimationClip.WrapMode.Once,
-			frames = maskBreakData.CreateFrames(maskBreakTex.Select(t => t.name)),
+			frames = MaskBreakCollection.CreateFrames(maskBreakTex.Select(t => t.name)),
 		};
 	}
 
