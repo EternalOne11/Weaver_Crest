@@ -1,14 +1,13 @@
 using HarmonyLib;
 using Needleforge.Attacks;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest.Patches;
+
 // This is to make melee attacks give double silk and
 // adds a press delay to avoid some issues at low silk.
-// At 0 silk, Hornet breaks a mask for silk.
 [HarmonyPatch]
 internal static class SilkMechanics {
 	[HarmonyPatch(typeof(HeroController), "Attack")]
@@ -18,13 +17,14 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-		HalfSilk.RemoveHalfSilk(interruptRegen: false);
+		MaskTrade.MaskCost();
 	}
 
 	private static float LastWeave = -1f;
+
 	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
 	[HarmonyPostfix]
-	private static void WeaveGain(HealthManager __instance, ref HitInstance hitInstance) {
+	private static void WeaveGain(ref HitInstance hitInstance) {
 		if (!YenCrest.IsEquipped)
 			return;
 
@@ -51,80 +51,68 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-		HalfSilk.RemoveHalfSilk(interruptRegen: false);
+		MaskTrade.MaskCost();
 	}
-	
+
 	private static string? lastHeroClip;
 
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
-	private static void DashAttackCost(HeroController __instance) {
-		string? clip = __instance.GetComponent<tk2dSpriteAnimator>().CurrentClip?.name;
+        private static void DashAttackCost(HeroController __instance) {
+                string? clip = __instance.GetComponent<tk2dSpriteAnimator>().CurrentClip?.name;
 		if (clip != lastHeroClip && YenCrest.IsEquipped) {
 			if (clip == "Dash Attack Antic 1" || clip == "Dash Attack Antic 3") {
 				LastWeave = Time.time;
-				HalfSilk.RemoveHalfSilk(interruptRegen: false);
+				MaskTrade.MaskCost();
 			}
 			else if (clip == "Dash Attack Antic 2")
 				LastWeave = Time.time;
 		}
 		lastHeroClip = clip;
 	}
-
-	//Mask break code.
-	[HarmonyPatch(typeof(HeroController), "Attack")]
-	[HarmonyPrefix]
-	private static bool ZeroSilk() {
-		if (!YenCrest.IsEquipped || !MaskBreak.ShouldStart())
-			return true;
-
-		HeroController.instance.StartCoroutine(MaskBreak.Play());
-		return false;
-	}
 }
 
-	internal static class MaskBreak {
-	private const int Cost = 1; //number of masks broken
-	private const int Silk = 3; //value of silk given
-	private const int Frame = 2; //Frame of animation where mask breaks
-	private static bool Breaking;
-	
-	internal static bool ShouldStart() =>
-		!Breaking
-		&& !Moveset.DownAnimLocked
-		&& PlayerData.instance.silk <= 0
-		&& !HalfSilk.GetHasHalfSilk() // Spend half silk, now. 
-		&& PlayerData.instance.health > Cost // never on her last mask
-		&& HeroController.instance.CanInput();
+	// At 0 silk, attacking will break a mask for silk
+	internal static class MaskTrade {
+		private const int Cost = 1; //number of masks broken
+		private const int Silk = 3; //value of silk given
 
+		private static GameObject? effectObj;
+		private static tk2dSpriteAnimator? effectAnim;
 
-	internal static IEnumerator Play() {
-		Breaking = true;
-		HeroController.instance.RelinquishControl();
+	internal static void Cost() {
+		if (PlayerData.instance.silk <= 0
+			&& !HalfSilk.GetHasHalfSilk()
+			&& PlayerData.instance.health > Cost) { // never on her last mask
 
-		var clip = Moveset.MaskBreakClip;
-		var heroAnim = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
-		var animCtrl = HeroController.instance.GetComponent<HeroAnimationController>();
-		animCtrl.StopControl();
-
-		float toBreak = Mathf.Min(Frame, clip.frames.Length - 1) / clip.fps;
-		float total = clip.frames.Length / clip.fps;
-		HeroController.instance.StartCoroutine(Moveset.StepFrames(heroAnim, clip, 0f));
-		yield return new WaitForSeconds(toBreak);
-		MaskForSilk();
-		yield return new WaitForSeconds(total - toBreak);
-
-		if (heroAnim.Paused)
-			heroAnim.Resume();
-		animCtrl.StartControl();
-
-		HeroController.instance.RegainControl();
-		Breaking = false;
+		//Sigh this is stupid... why can't it just work out of the box. (charge and dash freeze otherwise)
+			PlayerData.instance.TakeHealth(Cost, HeroController.instance.IsInLifebloodState, allowFracturedMaskBreak: false);
+			EventRegister.SendEvent("HEALTH UPDATE");
+			HeroController.instance.AddSilk(Silk, false, SilkSpool.SilkAddSource.Normal, false);
+			HeroController.instance.SpriteFlash.flashFocusHeal();
+			PlayEffect();
+		}
+		HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
-	private static void MaskForSilk() {
-		HeroController.instance.TakeHealth(Cost);
-		HeroController.instance.AddSilk(Silk, false, SilkSpool.SilkAddSource.Normal, false);
-		HeroController.instance.SpriteFlash.flashFocusHeal();
+	//Manual reimplementation of mask break effect...
+	private static void PlayEffect() {
+		if (!Moveset.MaskBreakCollection || Moveset.MaskBreakClip == null)
+			return;
+
+		if (!effectObj || !effectAnim) {
+			if (effectObj)
+				Object.Destroy(effectObj);
+			effectObj = new GameObject($"{YenId} Mask Break Effect");
+			effectObj.transform.SetParent(HeroController.instance.transform, false);
+			effectObj.transform.localPosition = new Vector3(0f, 0f, -0.01f);
+			tk2dBaseSprite.AddComponent<tk2dSprite>(effectObj, Moveset.MaskBreakCollection, 0);
+			effectAnim = effectObj.AddComponent<tk2dSpriteAnimator>();
+			effectAnim.AnimationCompleted = (_, _) => effectObj!.SetActive(false);
+		}
+
+		effectObj!.SetActive(true);
+		effectAnim!.Stop();
+		effectAnim.Play(Moveset.MaskBreakClip);
 	}
 }
