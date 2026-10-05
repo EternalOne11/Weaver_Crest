@@ -29,10 +29,10 @@ internal static partial class Moveset {
 	private static tk2dSpriteAnimation dashAnims = null!;
 
 	private static void DashSlash() {
-		string[] Effect1 = ["dashSlash_e0003.png", "dashSlash_e0004.png"];
-		string[] Effect2 = ["dashSlash_e0005.png", "dashSlash_e0006.png"];
-		string[] Effect3 = ["dashSlash_e0007.png", "dashSlash_e0008.png"];
-		string[] Effect4 = ["dashSlash_e0009.png", "dashSlash_e0010.png"];
+		string[] Effect1 = ["dashSlash_e0000.png", "dashSlash_e0001.png"];
+		string[] Effect2 = ["dashSlash_e0002.png", "dashSlash_e0003.png"];
+		string[] Effect3 = ["dashSlash_e0004.png", "dashSlash_e0005.png"];
+		string[] Effect4 = ["dashSlash_e0006.png", "dashSlash_e0007.png"];
 		string[] anticFrames = ["dashSlash_0000.png", "dashSlash_0001.png", "dashSlash_0002.png"];
 		string[] slash1  = ["dashSlash_0003.png", "dashSlash_0004.png"];
 		string[] slash2  = ["dashSlash_0005.png", "dashSlash_0006.png"];
@@ -63,7 +63,7 @@ internal static partial class Moveset {
 		dashAnims = dashData.gameObject.AddComponent<tk2dSpriteAnimation>();
 		dashAnims.clips = [.. ef.Select((frames, i) => new tk2dSpriteAnimationClip {
 			name = $"Weaver Dash Effect {i + 1}",
-			fps = 10,
+			fps = 8,
 			wrapMode = WrapMode.Once,
 			frames = dashData.CreateFrames(frames.Select(t => t.name)),
 		})];
