@@ -197,12 +197,6 @@
 	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0005.png" />
 	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0006.png" />
 	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0007.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0008.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0009.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0010.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0011.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0012.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0013.png" />	
 	<EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0000.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0001.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0002.png" />
