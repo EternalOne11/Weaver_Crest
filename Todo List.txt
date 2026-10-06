@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/05/2026, Afternoon)
+(last updated 10/06/2026, Afternoon)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -30,13 +30,14 @@ Normal (color wrong)
 Silk skill changes (Done) (disabled)
 
 **Moveset**
-Basic Slash (animations done, basic implementation with hitboxes done)
-Alt slash (animations done, basic implementation with hitboxes done)
-Up attack (animations done, basic implementation with hitboxes done)
+Basic Slash (Done)
+Alt slash (Done, waiting for new slash effect)
+Up attack (done)
 Down attack (animation done, WIP implemented)
-Dash attack (both variants done? hitboxes WIP)
-Charge attack (done, hitbox tweaks needed)
-Wall slash... (basically done, needs some tweaks)
+Dash attack (Done)
+Extended Dash attack (Done)
+Charge attack (Done)
+Wall slash (Done)
 
 **Moveset general checklist...**
 Attack speed set to hunter for now. 
@@ -85,4 +86,4 @@ Corpse bind sprite (N/A)
 
 **TBD**
 Sounds for every attack. (around playtest)
-Additional mod Compatability... (maybe with a glass soul mod)
+Additional mod Compatibility?
