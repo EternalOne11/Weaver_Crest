@@ -80,7 +80,7 @@ internal static class SilkMechanics {
 		private static GameObject? effectObj;
 		private static tk2dSpriteAnimator? effectAnim;
 
-	internal static void Cost() {
+	internal static void MaskCost() {
 		if (PlayerData.instance.silk <= 0
 			&& !HalfSilk.GetHasHalfSilk()
 			&& PlayerData.instance.health > Cost) { // never on her last mask
