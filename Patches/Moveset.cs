@@ -98,7 +98,7 @@ internal static partial class Moveset {
 		yenConfig.SetAttackFields(time: 0.35f, recovery: 0.15f, cooldown: 0.41f, // Regular attack speeds
 			quickSpeedMult: 1.5f, quickCooldown: 0.205f); // Flea Brew
 
-		yenConfig.SetDashStabFields(time: 0.15f, speed: -25f, bounceJumpSpeed: 8f);
+		yenConfig.SetDashStabFields(time: 0.15f, speed: -26f, bounceJumpSpeed: 20f);
 		
 		yenConfig.ChargedSlashFsmEdit = ChargedFsmEdit;
 	}
