@@ -14,6 +14,9 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
+	private static readonly Vector2[] ChargeHitbox = [new(0f, 1.2f), new(-2.3f, 1.8f), new(-4.3f, 1.4f),
+	new(-6.4f, 0.3f), new(-7.1f, -1.0f), new (-4.3f, -1.4f), new (-2.4f, -1.4f), new (0f, -1.2f),];
+
 	// Charge attack nail damage multipler
 	private const float ChargedMultiplier = 3f;
 
@@ -35,7 +38,7 @@ internal static partial class Moveset {
 		tk2dSpriteCollectionData chargedData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. chargedTex, .. chargedHornetTex],
 			spriteCenters: [
-				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(275f, 0f)),
+				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(275f, -7f)),
 				.. chargedHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(89f, 0f)),
 			]
 		);
@@ -83,8 +86,7 @@ internal static partial class Moveset {
 			Steps = [
 				new ChargedAttack.Step {
 					AnimName = "Weaver Charged Effect",
-					Hitbox = [new Vector2(0f, 1.2f),new Vector2(-2.4f, 1.9f),new Vector2(-4.3f, 1.5f),new Vector2(-7.2f, 0.4f),
-					new Vector2(-7.2f, -0.4f),new Vector2(-4.3f, -1.4f),new Vector2(-2.4f, -1.4f),new Vector2(0f, -1.2f),],
+					Hitbox = ChargeHitbox,
 				},
 			],
 		};
