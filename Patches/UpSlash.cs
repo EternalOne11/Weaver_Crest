@@ -9,6 +9,9 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
+	private static readonly Vector2[] UpHitbox = [new(-1.4f, -0.7f), new(-1.4f, 1.2f), new(-1f, 2.2f),
+	new(-0.2f, 2.8f), new(0.6f, 2.8f), new(1.1f, 1.8f), new(0.7f, -0.3f)];
+
 	private static void UpSlash() {
 		string[] upSlashFiles = ["upSlash_e0000.png", "upSlash_e0001.png", "upSlash_e0002.png"];
 		Texture2D[] upSlashTex = LoadNamedTextures(upSlashFiles);
@@ -20,7 +23,7 @@ internal static partial class Moveset {
 		tk2dSpriteCollectionData upSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. upSlashTex, .. upSlashHornetTex],
 			spriteCenters: [
-				.. upSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(25f, 85f)),
+				.. upSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(20f, 80f)),
 				.. upSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
 			]
 		);
@@ -38,7 +41,7 @@ internal static partial class Moveset {
 				wrapMode = WrapMode.Once,
 				frames = [
 					upSlashData.CreateFrame(upSlashTex[0].name, triggerEvent: true),
-					.. upSlashData.CreateFrames(upSlashTex.Skip(1).Select(t => t.name)),
+					.. upSlashData.CreateFrames(upSlashTex.Skip(1).Take(upSlashTex.Length - 2).Select(t => t.name)),
 					upSlashData.CreateFrame(upSlashTex[^1].name, triggerEvent: true),
 				],
 			},
@@ -56,8 +59,7 @@ internal static partial class Moveset {
 			Name = "WeaverUpSlash",
 			AnimName = "Weaver UpSlash Effect",
 			AnimLibrary = upSlashAnims,
-			Hitbox = [new Vector2(-1.5f, 0f),new Vector2(-1f, 2.6f),new Vector2(0f, 3f),new Vector2(1f, 2.6f),
-			new Vector2(1.5f, 0f),new Vector2(0.5f, 0f),new Vector2(-0.5f, 0f),],
+			Hitbox = UpHitbox,
 		};
 	}
 }
