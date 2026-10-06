@@ -19,10 +19,6 @@ internal static partial class Moveset {
 		new(-2.4f, 0.3f), new(-1.5f, -0.1f), new(-0.8f, -0.4f), new(0.1f, -0.7f)];
 	private static readonly Vector2[] Hitbox2 = [new(0.1f, -0.7f), new(-0.8f, -0.9f), new(-1.5f, -1.2f), new(-2.4f, -1.5f), 
 		new(-2.2f, -0.7f), new(-1.5f, 0.0f), new(-0.7f, 0.3f), new(0.3f, 0.0f)];
-	private static readonly Vector2[] Hitbox3 = [new(0.3f, -1.5f), new(-0.7f, -1.3f), new(-1.5f, -0.9f), new(-2.2f, -0.4f),
-		new(-2.4f, 0.3f), new(-1.5f, -0.1f), new(-0.8f, -0.4f), new(0.1f, -0.7f)];
-	private static readonly Vector2[] Hitbox4 = [new(0.1f, -0.7f), new(-0.8f, -0.9f), new(-1.5f, -1.2f), new(-2.4f, -1.5f), 
-		new(-2.2f, -0.7f), new(-1.5f, 0.0f), new(-0.7f, 0.3f), new(0.3f, 0.0f)];
 
 	private static tk2dSpriteAnimationClip dashRecoverClip = null!;
 	private static tk2dSpriteCollectionData dashData = null!;
@@ -51,7 +47,7 @@ internal static partial class Moveset {
 		dashData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: all,
 			spriteCenters: [
-				.. ef.SelectMany(f => f).Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(0f, 15f)), //slash offset shared by all 4... (maybe change?)
+				.. ef.SelectMany(f => f).Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(15f, 15f)), //slash offset shared by all 4... (maybe change?)
 				.. antic.Concat(slashes.SelectMany(s => s)).Concat(recover).Select(t => new Vector2(t.width, t.height) * 0.5f),
 			]
 		);
@@ -72,20 +68,20 @@ internal static partial class Moveset {
 		for (int i = 0; i < 4; i++) {
 			hornetClips.Add(new tk2dSpriteAnimationClip {
 				name = $"Dash Attack Antic {i + 1}",
-				fps = 12f,
+				fps = 15f,
 				wrapMode = WrapMode.Once,
 				frames = dashData.CreateFrames((i == 0 ? antic : slashes[i].Take(1)).Select(t => t.name)),
 			});
 			hornetClips.Add(new tk2dSpriteAnimationClip {
 				name = $"Dash Attack {i + 1}",
-				fps = 8f,
+				fps = 10f,
 				wrapMode = WrapMode.Once,
 				frames = dashData.CreateFrames(slashes[i].Select(t => t.name)),
 			});
 		}
 		dashRecoverClip = new tk2dSpriteAnimationClip {
 			name = "Weaver Dash Recover",
-			fps = 12f,
+			fps = 15f,
 			wrapMode = WrapMode.Once,
 			frames = dashData.CreateFrames(recover.Select(t => t.name)),
 		};
@@ -104,8 +100,8 @@ internal static partial class Moveset {
 			Steps = [
 				Step("Weaver Dash Effect 1", Hitbox1),
 				Step("Weaver Dash Effect 2", Hitbox2),
-				Step("Weaver Dash Effect 3", Hitbox3),
-				Step("Weaver Dash Effect 4", Hitbox4),
+				Step("Weaver Dash Effect 3", Hitbox1),
+				Step("Weaver Dash Effect 4", Hitbox2),
 			],
 		};
 	}
@@ -135,7 +131,7 @@ internal static partial class Moveset {
 		if (!effectObj) {
 			effectObj = new GameObject($"{YenId} Dash Effect");
 			effectObj.transform.SetParent(HeroController.instance.transform, false);
-			effectObj.transform.localPosition = new Vector3(0f, 0f, -0.05f);
+			effectObj.transform.localPosition = new Vector3(0f, 0f, -0.01f);
 			tk2dBaseSprite.AddComponent<tk2dSprite>(effectObj, dashData, 0);
 			effectAnim = effectObj.AddComponent<tk2dSpriteAnimator>();
 			effectAnim.Library = dashAnims;
