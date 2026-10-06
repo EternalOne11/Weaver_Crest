@@ -40,7 +40,7 @@ internal static partial class Moveset {
 				wrapMode = WrapMode.Once,
 				frames = [
 					slashData.CreateFrame(slashTex[0].name, triggerEvent: true),
-					.. slashData.CreateFrames(slashTex.Skip(1).Select(t => t.name)),
+					.. slashData.CreateFrames(slashTex.Skip(1).Take(slashTex.Length - 2).Select(t => t.name)),
 					slashData.CreateFrame(slashTex[^1].name, triggerEvent: true),
 				],
 			},
