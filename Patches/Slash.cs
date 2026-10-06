@@ -10,8 +10,11 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
+	private static readonly Vector2[] SlashHitbox = [new(0f, 0.5f), new(-1.1f, 0.9f), new(-2.1f, 0.6f), 
+	new(-2.8f, 0.1f), new(-2.8f, -0.5f), new(-2.1f, -1.1f), new(-1.0f, -1.3f), new(0.2f, -0.8f)];
+
 	private static void Slash() {
-		string[] slashFiles = ["slash_e0000.png", "slash_e0001.png", "slash_e0002.png", "slash_e0003.png", "slash_e0004.png"];
+		string[] slashFiles = ["slashAlt_e0000.png", "slashAlt_e0001.png", "slashAlt_e0002.png", "slashAlt_e0003.png", "slashAlt_e0004.png"];
 		Texture2D[] slashTex = LoadNamedTextures(slashFiles);
 		string[] slashHornetFiles = ["slash0000.png", "slash0001.png", "slash0002.png", "slash0003.png", "slash0004.png"];
 		Texture2D[] slashHornetTex = LoadNamedTextures(slashHornetFiles);
@@ -55,8 +58,7 @@ internal static partial class Moveset {
 			Name = "WeaverSlash",
 			AnimName = "Weaver Slash Effect",
 			AnimLibrary = slashAnims,
-			Hitbox = [new Vector2(0f, 0.8f),new Vector2(-1.5f, 1.3f),new Vector2(-2.8f, 1.0f),new Vector2(-3.6f, 0.3f),
-			new Vector2(-3.6f, -0.3f),new Vector2(-2.8f, -1.0f),new Vector2(-1.5f, -1.3f),new Vector2(0.2f, -0.8f),],
+			Hitbox = SlashHitbox,
 		};
 	}
 }
