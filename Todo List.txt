@@ -60,8 +60,6 @@ Half silk, for acid degredation. (works)
 **Polish** (remove when completed)
 Hud animation timings.
 Pixel alignment for save slot icon (maybe done)
-Tweak hitboxes
-properly align animations...
 Tweak animation timings.
 
 **Bugs to squash**
