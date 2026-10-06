@@ -9,8 +9,11 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
+	private static readonly Vector2[] AltHitbox = [new(0f, 0.5f), new(-1.1f, 0.9f), new(-2.1f, 0.6f), 
+	new(-2.8f, 0.1f), new(-2.8f, -0.5f), new(-2.1f, -1.1f), new(-1.0f, -1.3f), new(0.2f, -0.8f)];
+
 	private static void SlashAlt() {
-		string[] altSlashFiles = ["slashAlt_e0000.png", "slashAlt_e0001.png", "slashAlt_e0002.png", "slashAlt_e0003.png", "slashAlt_e0004.png"];
+		string[] altSlashFiles = ["slash_e0000.png", "slash_e0001.png", "slash_e0002.png", "slash_e0003.png", "slash_e0004.png"];
 		Texture2D[] altSlashTex = LoadNamedTextures(altSlashFiles);
 		string[] altSlashHornetFiles = ["slashAlt_0000.png", "slashAlt_0001.png", "slashAlt_0002.png", "slashAlt_0003.png", "slashAlt_0004.png"];
 		Texture2D[] altSlashHornetTex = LoadNamedTextures(altSlashHornetFiles);
@@ -18,7 +21,7 @@ internal static partial class Moveset {
 		tk2dSpriteCollectionData altSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. altSlashTex, .. altSlashHornetTex],
 			spriteCenters: [
-				.. altSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(80f, 0f)),
+				.. altSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(110f, -10f)),
 				.. altSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
 			]
 		);
@@ -54,8 +57,7 @@ internal static partial class Moveset {
 			Name = "Weaver SlashAlt",
 			AnimName = "Weaver SlashAlt Effect",
 			AnimLibrary = altSlashAnims,
-			Hitbox = [new Vector2(0f, 0.8f),new Vector2(-1.5f, 1.3f),new Vector2(-2.8f, 1.0f),new Vector2(-3.6f, 0.3f),
-			new Vector2(-3.6f, -0.3f),new Vector2(-2.8f, -1.0f),new Vector2(-1.5f, -1.3f),new Vector2(0.2f, -0.8f),],
+			Hitbox = AltHitbox,
 		};
 	}
 }
