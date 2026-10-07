@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/06/2026, Afternoon)
+(last updated 10/07/2026, Afternoon)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -9,11 +9,11 @@ Silhouette (done)
 Equip Glow (done)
 Bind Glow (done) (unused)
 
-**Hud** (nearly complete)
+**Hud** (complete)
 Ingame Hud animations (done)
 Ingame Hud alignment (done)
 Silk varient (done)
-Non steel soul varient (color wrong)
+Non steel soul varient (done)
 Lifeblood Overdose (automatic)
 
 **Bind** (complete) 
@@ -26,7 +26,7 @@ Custom Bind animations (done)
 **Misc features** 
 Save slot icon (Done)
 Both steel soul (done) 
-Normal (color wrong)
+Normal (done)
 Silk skill changes (Done) (disabled)
 
 **Moveset**
