@@ -31,7 +31,7 @@ internal static partial class Moveset {
 			sprites: [.. upSlashTex, .. upSlashHornetTex],
 			spriteCenters: [
 				.. upSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(20f, 80f)),
-				.. upSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
+				.. upSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(-12f, 32f)),
 			]
 		);
 		Object.DontDestroyOnLoad(upSlashData.gameObject);
