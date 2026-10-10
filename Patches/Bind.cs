@@ -2,6 +2,7 @@ using GlobalSettings;
 using HutongGames.PlayMaker;
 using Silksong.UnityHelper.Util;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
@@ -78,6 +79,8 @@ internal static class Bind
         HeroController.instance.StartCoroutine(PlayBindEffect(bindFsm));
     }
 
+	private static readonly Dictionary<ParticleSystem, (float size, float speed, float radius, Vector3 shapeScale)> particleDefaults = [];
+
     private static GameObject? effectObj;
     private static tk2dSpriteAnimator? effectAnim;
     private static bool effectPlaying;
@@ -103,6 +106,7 @@ internal static class Bind
         tk2dSpriteAnimationClip clip = cachedQuick ? Moveset.QuickBindClip : Moveset.BindClip;
         float fps = clip.frames.Length / (cachedQuick ? QuickCycle : BindCycle);
         effectObj!.SetActive(true);
+        ScaleParticles(defaultEffect, true);
 
         string lastState = "";
         int played = 0;
@@ -128,8 +132,10 @@ internal static class Bind
             SetEffect(defaultEffect, true);
             yield return null;
         }
-        if (run == effectRun)
+        if (run == effectRun) {
             SetEffect(defaultEffect, false);
+            ScaleParticles(defaultEffect, false);
+        }
     }
 
     private static void SetEffect(Transform? defaultEffect, bool hide)
@@ -137,6 +143,28 @@ internal static class Bind
         if (defaultEffect == null)
             return;
         foreach (var r in defaultEffect.GetComponentsInChildren<Renderer>(true))
-            r.enabled = !hide;
+            if (r is not ParticleSystemRenderer)
+                r.enabled = !hide;
+    }
+
+	//particle spread and size
+    private static void ScaleParticles(Transform? defaultEffect, bool shrink)
+    {
+        if (defaultEffect == null)
+            return;
+        foreach (var ps in defaultEffect.GetComponentsInChildren<ParticleSystem>(true)) {
+            var main = ps.main;
+            var shape = ps.shape;
+            if (!particleDefaults.ContainsKey(ps))
+                particleDefaults[ps] = (main.startSizeMultiplier, main.startSpeedMultiplier, shape.radius, shape.scale);
+            var d = particleDefaults[ps];
+
+            float size = shrink ? 0.7f : 1f;
+            float spread = shrink ? 0.7f : 1f;
+            main.startSizeMultiplier = d.size * size;
+            main.startSpeedMultiplier = d.speed * spread;
+            shape.radius = d.radius * spread;
+            shape.scale = d.shapeScale * spread;
+        }
     }
 }
