@@ -1,5 +1,7 @@
 using HarmonyLib;
+using HutongGames.PlayMaker;
 using Needleforge.Attacks;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
@@ -58,8 +60,8 @@ internal static class SilkMechanics {
 
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
-        private static void DashAttackCost(HeroController __instance) {
-                string? clip = __instance.GetComponent<tk2dSpriteAnimator>().CurrentClip?.name;
+	private static void DashAttackCost(HeroController __instance) {
+		string? clip = __instance.GetComponent<tk2dSpriteAnimator>().CurrentClip?.name;
 		if (clip != lastHeroClip && YenCrest.IsEquipped) {
 			if (clip == "Dash Attack Antic 1" || clip == "Dash Attack Antic 3") {
 				LastWeave = Time.time;
@@ -72,13 +74,10 @@ internal static class SilkMechanics {
 	}
 }
 
-	// At 0 silk, attacking will break a mask for silk
-	internal static class MaskTrade {
-		private const int Cost = 1; //number of masks broken
-		private const int Silk = 3; //value of silk given
-
-		private static GameObject? effectObj;
-		private static tk2dSpriteAnimator? effectAnim;
+// At 0 silk, attacking will break a mask for silk
+internal static class MaskTrade {
+	private const int Cost = 1; //number of masks broken
+	private const int Silk = 3; //value of silk given
 
 	internal static void MaskCost() {
 		if (PlayerData.instance.silk <= 0
@@ -90,29 +89,44 @@ internal static class SilkMechanics {
 			EventRegister.SendEvent("HEALTH UPDATE");
 			HeroController.instance.AddSilk(Silk, false, SilkSpool.SilkAddSource.Normal, false);
 			HeroController.instance.SpriteFlash.flashFocusHeal();
-			PlayEffect();
+			PlayFlash();
 		}
 		HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
-	//Manual reimplementation of mask break effect...
-	private static void PlayEffect() {
-		if (!Moveset.MaskBreakCollection || Moveset.MaskBreakClip == null)
-			return;
+	private static GameObject? flash;
+	private static Vector3 flashScale;
+	private static int flashRun;
 
-		if (!effectObj || !effectAnim) {
-			if (effectObj)
-				Object.Destroy(effectObj);
-			effectObj = new GameObject($"{YenId} Mask Break Effect");
-			effectObj.transform.SetParent(HeroController.instance.transform, false);
-			effectObj.transform.localPosition = new Vector3(0f, 0f, -0.01f);
-			tk2dBaseSprite.AddComponent<tk2dSprite>(effectObj, Moveset.MaskBreakCollection, 0);
-			effectAnim = effectObj.AddComponent<tk2dSpriteAnimator>();
-			effectAnim.AnimationCompleted = (_, _) => effectObj!.SetActive(false);
+	//Manual reimplementation of mask break effect...
+	private static void PlayFlash() {
+		if (!flash) {
+			flash = HeroController.instance.GetComponents<PlayMakerFSM>()
+				.Select(fsm => fsm.FsmVariables.FindFsmGameObject("Sphere Flash")?.Value)
+				.FirstOrDefault(obj => obj);
+			if (!flash)
+				return;
 		}
 
-		effectObj!.SetActive(true);
-		effectAnim!.Stop();
-		effectAnim.Play(Moveset.MaskBreakClip);
+		if (flashRun == 0 || !flashRestore)
+			flashScale = flash!.transform.localScale;
+		flash!.transform.localScale = flashScale * 0.7f;
+		flash.SetActive(false);
+		flash.SetActive(true);
+
+		flashRestore = true;
+		HeroController.instance.StartCoroutine(RestoreFlashSize(++flashRun));
+	}
+
+	private static bool flashRestore;
+
+	// disables the scale change unless for the interaction above
+	private static IEnumerator RestoreFlashSize(int run) {
+		yield return new WaitForSeconds(0.5f);
+		if (run != flashRun)
+			yield break;
+		if (flash)
+			flash!.transform.localScale = flashScale;
+		flashRestore = false;
 	}
 }
