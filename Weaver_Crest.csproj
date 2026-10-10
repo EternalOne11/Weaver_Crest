@@ -153,6 +153,11 @@
     <EmbeddedResource Include="Resources\UpSlash\upSlash0007.png" />
     <EmbeddedResource Include="Resources\UpSlash\upSlash0008.png" />
     <EmbeddedResource Include="Resources\UpSlash\upSlash0009.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0010.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0011.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0012.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0013.png" />
+    <EmbeddedResource Include="Resources\UpSlash\upSlash0014.png" />
     <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0000.png" />
     <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0001.png" />
     <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0002.png" />
