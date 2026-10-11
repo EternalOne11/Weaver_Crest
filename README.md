@@ -18,9 +18,13 @@
 - Was made by Mebi
 
 ## Moveset
-- The moveset uses silk
-- short range 
-(description wip not finalized)
+- Every attack always uses some silk.
+- The default slash's are shorter range the wanderer, but faster than hunter.
+- The up slash is an overhead kick that is slower than the rest of the attacks.
+- the down slash is a kick (not done)
+- The charge attack has both windup and a long range swipe.
+- The dash attack has 2 varients. A 2 slash varient and a 4 slash varient. (4 slash uses 1 silk)
+- Was made by KAdala
 
 ## Binding
 - To compensate with the increased silk generation, bind has been nerfed to take significantly longer.
