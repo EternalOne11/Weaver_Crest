@@ -12,25 +12,24 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
-	private static readonly Vector2[] UpHitbox = [new(-1.4f, -0.7f), new(-1.4f, 1.2f), new(-1f, 2.2f),
-	new(-0.2f, 2.8f), new(0.6f, 2.8f), new(1.1f, 1.8f), new(0.7f, -0.3f)];
+	private static readonly Vector2[] UpHitbox = [new(-1.7f,-0.7f), new(-1.7f,1.5f), new(-1.2f,2.5f),
+	new(-0.4f,3.1f), new(0.4f,3.1f), new(0.8f,2.1f), new(0.4f,-0.3f)];
 
 	// Up attack altered time, does not effect recovery.
-	internal const float UpSlashLength = 0.6f;
+	internal const float UpSlashLength = 0.55f;
 
 	private static void UpSlash() {
 		string[] upSlashFiles = ["upSlash_e0000.png", "upSlash_e0001.png", "upSlash_e0002.png"];
 		Texture2D[] upSlashTex = LoadNamedTextures(upSlashFiles);
 		string[] upSlashHornetFiles = ["upSlash0000.png", "upSlash0001.png", "upSlash0002.png", "upSlash0003.png",
 			"upSlash0004.png", "upSlash0005.png", "upSlash0006.png", "upSlash0007.png", "upSlash0008.png",
-			"upSlash0009.png", "upSlash0010.png", "upSlash0011.png", "upSlash0012.png", "upSlash0013.png",
-			"upSlash0014.png",];
+			"upSlash0009.png", "upSlash0010.png", "upSlash0011.png", "upSlash0012.png",];
 		Texture2D[] upSlashHornetTex = LoadNamedTextures(upSlashHornetFiles);
 
 		tk2dSpriteCollectionData upSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. upSlashTex, .. upSlashHornetTex],
 			spriteCenters: [
-				.. upSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(20f, 80f)),
+				.. upSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(35f, 95f)),
 				.. upSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(-12f, 32f)),
 			]
 		);
