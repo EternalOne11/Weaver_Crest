@@ -51,9 +51,10 @@
 - Second its hexigonal design is derived from hives motif due to hornets connection with them.
 
 ## Credits
-- Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools)
-- KAdala, (The artist who made the entire moveset)
-- Redfrog (Who coded the half silk.)
+- Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools) https://ko-fi.com/mebi0910/gallery
+- KAdala, (The artist who made the entire moveset) https://ko-fi.com/kadala_ka/shop
+- Redfrog, (Who coded the half silk.) 
+- ___, (Who made the attack sounds)
 - Me,(who created the concept, tweaked the art, and did most of the code)
 
 ## Special Thanks to
