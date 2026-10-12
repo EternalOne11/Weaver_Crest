@@ -26,11 +26,11 @@
   
     <ItemGroup>
     <EmbeddedResource Include="Resources\Crest.png" />
-	<EmbeddedResource Include="Resources\CrestEquipGlow.png" />
+    <EmbeddedResource Include="Resources\CrestEquipGlow.png" />
     <EmbeddedResource Include="Resources\CrestGlow.png" />
     <EmbeddedResource Include="Resources\CrestSilhouette.png" />
     <EmbeddedResource Include="Resources\CrestIcon.png" />
-	<EmbeddedResource Include="Resources\CrestIcon_S.png" />
+    <EmbeddedResource Include="Resources\CrestIcon_S.png" />
     <EmbeddedResource Include="Resources\Hud\Hud0.png" />
     <EmbeddedResource Include="Resources\Hud\Hud1.png" />
     <EmbeddedResource Include="Resources\Hud\Hud2.png" />
@@ -45,7 +45,7 @@
     <EmbeddedResource Include="Resources\Hud\Hud11.png" />
     <EmbeddedResource Include="Resources\Hud\Hud12.png" />
     <EmbeddedResource Include="Resources\Hud\Hud13.png" />
-	<EmbeddedResource Include="Resources\Hud_S\Hud0_S.png" />
+    <EmbeddedResource Include="Resources\Hud_S\Hud0_S.png" />
     <EmbeddedResource Include="Resources\Hud_S\Hud1_S.png" />
     <EmbeddedResource Include="Resources\Hud_S\Hud2_S.png" />
     <EmbeddedResource Include="Resources\Hud_S\Hud3_S.png" />
@@ -59,68 +59,68 @@
     <EmbeddedResource Include="Resources\Hud_S\Hud11_S.png" />
     <EmbeddedResource Include="Resources\Hud_S\Hud12_S.png" />
     <EmbeddedResource Include="Resources\Hud_S\Hud13_S.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0000.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0001.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0002.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0003.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0004.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0005.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0006.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0007.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0008.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0009.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0010.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0011.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0012.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0013.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0014.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0015.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0016.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0017.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0018.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0019.png" />
-	<EmbeddedResource Include="Resources\BindSilk\bindSilk_0020.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0000.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0001.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0002.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0003.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0004.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0005.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0006.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0007.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0008.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0009.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0010.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0011.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0012.png" />
-	<EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0013.png" />
-	<EmbeddedResource Include="Resources\Slash\slash0000.png" />
-	<EmbeddedResource Include="Resources\Slash\slash0001.png" />
-	<EmbeddedResource Include="Resources\Slash\slash0002.png" />
-	<EmbeddedResource Include="Resources\Slash\slash0003.png" />
-	<EmbeddedResource Include="Resources\Slash\slash0004.png" />
-	<EmbeddedResource Include="Resources\Slash Effect\slash_e0000.png" />
-	<EmbeddedResource Include="Resources\Slash Effect\slash_e0001.png" />
-	<EmbeddedResource Include="Resources\Slash Effect\slash_e0002.png" />
-	<EmbeddedResource Include="Resources\Slash Effect\slash_e0003.png" />
-	<EmbeddedResource Include="Resources\Slash Effect\slash_e0004.png" />
-	<EmbeddedResource Include="Resources\SlashAlt\slashAlt_0000.png" />
-	<EmbeddedResource Include="Resources\SlashAlt\slashAlt_0001.png" />
-	<EmbeddedResource Include="Resources\SlashAlt\slashAlt_0002.png" />
-	<EmbeddedResource Include="Resources\SlashAlt\slashAlt_0003.png" />
-	<EmbeddedResource Include="Resources\SlashAlt\slashAlt_0004.png" />
-	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0000.png" />
-	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0001.png" />
-	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0002.png" />
-	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0003.png" />
-	<EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0004.png" />
-	<EmbeddedResource Include="Resources\WallSlash\wallSlash_0000.png" />
-	<EmbeddedResource Include="Resources\WallSlash\wallSlash_0001.png" />
-	<EmbeddedResource Include="Resources\WallSlash\wallSlash_0002.png" />
-	<EmbeddedResource Include="Resources\WallSlash\wallSlash_0003.png" />
-	<EmbeddedResource Include="Resources\WallSlash\wallSlash_0004.png" />
-	<EmbeddedResource Include="Resources\WallSlash\wallSlash_0005.png" />
-	<EmbeddedResource Include="Resources\WallSlash\wallSlash_0006.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0000.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0001.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0002.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0003.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0004.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0005.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0006.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0007.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0008.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0009.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0010.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0011.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0012.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0013.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0014.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0015.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0016.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0017.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0018.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0019.png" />
+    <EmbeddedResource Include="Resources\BindSilk\bindSilk_0020.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0000.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0001.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0002.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0003.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0004.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0005.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0006.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0007.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0008.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0009.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0010.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0011.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0012.png" />
+    <EmbeddedResource Include="Resources\BindSilkQuick\bindSilkQ_0013.png" />
+    <EmbeddedResource Include="Resources\Slash\slash0000.png" />
+    <EmbeddedResource Include="Resources\Slash\slash0001.png" />
+    <EmbeddedResource Include="Resources\Slash\slash0002.png" />
+    <EmbeddedResource Include="Resources\Slash\slash0003.png" />
+    <EmbeddedResource Include="Resources\Slash\slash0004.png" />
+    <EmbeddedResource Include="Resources\Slash Effect\slash_e0000.png" />
+    <EmbeddedResource Include="Resources\Slash Effect\slash_e0001.png" />
+    <EmbeddedResource Include="Resources\Slash Effect\slash_e0002.png" />
+    <EmbeddedResource Include="Resources\Slash Effect\slash_e0003.png" />
+    <EmbeddedResource Include="Resources\Slash Effect\slash_e0004.png" />
+    <EmbeddedResource Include="Resources\SlashAlt\slashAlt_0000.png" />
+    <EmbeddedResource Include="Resources\SlashAlt\slashAlt_0001.png" />
+    <EmbeddedResource Include="Resources\SlashAlt\slashAlt_0002.png" />
+    <EmbeddedResource Include="Resources\SlashAlt\slashAlt_0003.png" />
+    <EmbeddedResource Include="Resources\SlashAlt\slashAlt_0004.png" />
+    <EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0000.png" />
+    <EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0001.png" />
+    <EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0002.png" />
+    <EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0003.png" />
+    <EmbeddedResource Include="Resources\SlashAlt Effect\slashAlt_e0004.png" />
+    <EmbeddedResource Include="Resources\WallSlash\wallSlash_0000.png" />
+    <EmbeddedResource Include="Resources\WallSlash\wallSlash_0001.png" />
+    <EmbeddedResource Include="Resources\WallSlash\wallSlash_0002.png" />
+    <EmbeddedResource Include="Resources\WallSlash\wallSlash_0003.png" />
+    <EmbeddedResource Include="Resources\WallSlash\wallSlash_0004.png" />
+    <EmbeddedResource Include="Resources\WallSlash\wallSlash_0005.png" />
+    <EmbeddedResource Include="Resources\WallSlash\wallSlash_0006.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0000.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0001.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0002.png" />
@@ -135,7 +135,7 @@
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0011.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0012.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0000.png" />
-	<EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0001.png" />
+    <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0001.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0002.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0003.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0004.png" />
@@ -161,48 +161,48 @@
     <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0000.png" />
     <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0001.png" />
     <EmbeddedResource Include="Resources\UpSlash Effect\upSlash_e0002.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0000.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0001.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0002.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0003.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0004.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0005.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0006.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0007.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0008.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0009.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0010.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0011.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0012.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0013.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0014.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0015.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0000.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0001.png" />
-	<EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0002.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0000.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0001.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0002.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0003.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0004.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0005.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0006.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0007.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0008.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0009.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0010.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0011.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0012.png" />
-	<EmbeddedResource Include="Resources\DashSlash\dashSlash_0013.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0000.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0001.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0002.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0003.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0004.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0005.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0006.png" />
-	<EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0007.png" />
-	<EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0000.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0000.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0001.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0002.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0003.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0004.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0005.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0006.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0007.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0008.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0009.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0010.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0011.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0012.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0013.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0014.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash\chargeSlash_0015.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0000.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0001.png" />
+    <EmbeddedResource Include="Resources\ChargedSlash Effect\charged_e0002.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0000.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0001.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0002.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0003.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0004.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0005.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0006.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0007.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0008.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0009.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0010.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0011.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0012.png" />
+    <EmbeddedResource Include="Resources\DashSlash\dashSlash_0013.png" />
+    <EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0000.png" />
+    <EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0001.png" />
+    <EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0002.png" />
+    <EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0003.png" />
+    <EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0004.png" />
+    <EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0005.png" />
+    <EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0006.png" />
+    <EmbeddedResource Include="Resources\DashSlash Effect\dashSlash_e0007.png" />
+    <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0000.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0001.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0002.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0003.png" />
@@ -210,8 +210,8 @@
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0005.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0006.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0007.png" />
+    <EmbeddedResource Include="Resources\Sounds\Slash1.wav" />
   </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
@@ -220,7 +220,7 @@
     <PackageReference Include="Harmonize" Version="1.0.3" PrivateAssets="all" />
     <PackageReference Include="Hamunii.BepInEx.AutoPlugin" Version="2.1.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.26.0" PrivateAssets="all" />
-	<PackageReference Include="Needleforge" Version="0.9.0" />
+    <PackageReference Include="Needleforge" Version="0.9.0" />
     <PackageReference Include="UnityEngine.Modules" Version="6000.0.50" IncludeAssets="compile"/>
     <PackageReference Include="Silksong.UnityHelper" Version="1.2.0" />
     <PackageReference Include="Silksong.GameLibs" Version="*-*" PrivateAssets="all" />
@@ -234,7 +234,7 @@
     <ItemGroup>
       <Binaries Include="$(TargetPath)" LocalDir="/" PackDir="/" />
       <Binaries Include="$(TargetDir)/$(TargetName).pdb" LocalDir="/" PackDir="/" />
-	  <Binaries Include="Languages/*.json" PackDir="/Languages/" LocalDir="/Languages/" />
+      <Binaries Include="Languages/*.json" PackDir="/Languages/" LocalDir="/Languages/" />
       <Binaries Include="Languages/*.json" PackDir="/plugins/Languages/" />
     </ItemGroup>
     <PropertyGroup>
