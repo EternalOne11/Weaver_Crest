@@ -86,7 +86,7 @@ internal static class UpPatch {
 			return;
 
 		//second value must match the "time" field in SetAttackFields in moveset.cs.
-		___attackDuration *= Moveset.UpSlashLength / 0.35f;
+		___attackDuration *= Moveset.UpSlashLength / 0.3f;
 		HeroController.instance.StartCoroutine(Moveset.RestartUpSlash());
 	}
 }
