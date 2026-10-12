@@ -1,3 +1,4 @@
+using GlobalEnums;
 using HarmonyLib;
 using HutongGames.PlayMaker;
 using Needleforge.Attacks;
@@ -13,13 +14,28 @@ namespace Weaver_Crest.Patches;
 [HarmonyPatch]
 internal static class SilkMechanics {
 	[HarmonyPatch(typeof(HeroController), "Attack")]
+	[HarmonyPrefix]
+	private static void MuteGruntForTrade() {
+		if (YenCrest.IsEquipped && MaskTrade.DuringTrade())
+			Sounds.MuteForTrade();
+	}
+
+	// Mask break sound code
+	[HarmonyPatch(typeof(HeroController), "Attack")]
 	[HarmonyPostfix]
-	private static void ThreadCost() {
+	private static void ThreadCost(AttackDirection __0, bool ___wallSlashing) {
 		if (!YenCrest.IsEquipped)
 			return;
 
 		LastWeave = Time.time;
 		MaskTrade.MaskCost();
+
+		Sounds.PlayAttack(__0 switch {
+			AttackDirection.upward => "UpSlash",
+			AttackDirection.downward => "DownSlash",
+			_ when ___wallSlashing => "WallSlash",
+			_ => HeroController.instance.cState.altAttack ? "Slash" : "AltSlash",
+		});
 	}
 
 	private static float LastWeave = -1f;
@@ -54,6 +70,7 @@ internal static class SilkMechanics {
 
 		LastWeave = Time.time;
 		MaskTrade.MaskCost();
+		Sounds.PlayAttack("ChargedSlash");
 	}
 
 	private static string? lastHeroClip;
@@ -61,44 +78,57 @@ internal static class SilkMechanics {
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
 	private static void DashAttackCost(HeroController __instance) {
-		string? clip = __instance.GetComponent<tk2dSpriteAnimator>().CurrentClip?.name;
-		if (clip != lastHeroClip && YenCrest.IsEquipped) {
-			if (clip == "Dash Attack Antic 1" || clip == "Dash Attack Antic 3") {
-				LastWeave = Time.time;
+		if (HeroController.instance != __instance || !YenCrest.IsEquipped)
+			return;
+		var heroAnim = __instance.GetComponent<tk2dSpriteAnimator>();
+		if (!heroAnim)
+			return;
+
+		string? clip = heroAnim.CurrentClip?.name;
+		if (clip != lastHeroClip && clip != null && clip.StartsWith("Dash Attack Antic ")) {
+			LastWeave = Time.time;
+
+			bool firstOrThird = clip == "Dash Attack Antic 1" || clip == "Dash Attack Antic 3";
+			Sounds.PlayAttack(firstOrThird ? "DashSlashA" : "DashSlashB");
+
+			if (firstOrThird)
 				MaskTrade.MaskCost();
-			}
-			else if (clip == "Dash Attack Antic 2")
-				LastWeave = Time.time;
 		}
 		lastHeroClip = clip;
 	}
 }
 
-// At 0 silk, attacking will break a mask for silk
+// At 0 silk, attacking breaks a mask for silk
 internal static class MaskTrade {
 	private const int Cost = 1; //number of masks broken
 	private const int Silk = 3; //value of silk given
 
+	internal static bool DuringTrade() =>
+		PlayerData.instance.silk <= 0
+		&& !HalfSilk.GetHasHalfSilk()
+		&& PlayerData.instance.health > Cost; // never on her last mask
+
 	internal static void MaskCost() {
-		if (PlayerData.instance.silk <= 0
-			&& !HalfSilk.GetHasHalfSilk()
-			&& PlayerData.instance.health > Cost) { // never on her last mask
+		if (DuringTrade()) {
+			Sounds.MuteForTrade(); //Pain grunt replaces normal attack grunt
 
 		//Sigh this is stupid... why can't it just work out of the box. (charge and dash freeze otherwise)
 			PlayerData.instance.TakeHealth(Cost, HeroController.instance.IsInLifebloodState, allowFracturedMaskBreak: false);
 			EventRegister.SendEvent("HEALTH UPDATE");
 			HeroController.instance.AddSilk(Silk, false, SilkSpool.SilkAddSource.Normal, false);
 			HeroController.instance.SpriteFlash.flashFocusHeal();
+			Sounds.PlayHurt();
 			PlayFlash();
 		}
 		HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
+	// A flash played is played when a mask is broken/traded.
 	private static GameObject? flash;
 	private static Vector3 flashScale;
 	private static int flashRun;
+	private static bool flashRestore;
 
-	//Manual reimplementation of mask break effect...
 	private static void PlayFlash() {
 		if (!flash) {
 			flash = HeroController.instance.GetComponents<PlayMakerFSM>()
@@ -117,8 +147,6 @@ internal static class MaskTrade {
 		flashRestore = true;
 		HeroController.instance.StartCoroutine(RestoreFlashSize(++flashRun));
 	}
-
-	private static bool flashRestore;
 
 	// disables the scale change unless for the interaction above
 	private static IEnumerator RestoreFlashSize(int run) {
