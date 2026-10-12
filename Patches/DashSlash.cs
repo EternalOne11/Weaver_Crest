@@ -110,9 +110,9 @@ internal static partial class Moveset {
 		var heroAnim = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
 		var animCtrl = HeroController.instance.GetComponent<HeroAnimationController>();
 		animCtrl.StopControl();
-		yield return StepFrames(heroAnim, dashRecoverClip, 0f);
-		if (heroAnim.Paused)
-			heroAnim.Resume();
+		heroAnim.Stop();
+		heroAnim.Play(dashRecoverClip);
+		yield return new WaitForSeconds(dashRecoverClip.frames.Length / dashRecoverClip.fps);
 		animCtrl.StartControl();
 	}
 
@@ -166,17 +166,17 @@ internal static class DashPatch {
 
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
-	private static void DashAttack() {
-		if (!YenCrest.IsEquipped)
+	private static void DashAttack(HeroController __instance) {
+		if (HeroController.instance != __instance || !YenCrest.IsEquipped)
 			return;
 
-		PlayMakerFSM fsm = HeroController.instance.sprintFSM;
+		PlayMakerFSM fsm = __instance.sprintFSM;
 		string state = fsm.Fsm.ActiveStateName;
 		FsmInt totalSlashes = fsm.FsmVariables.GetFsmInt("Attack Steps");
 		FsmInt currentSlash = fsm.FsmVariables.GetFsmInt("Attack Step");
 
 		if (inDashAttack && state == "Attack Dash" && currentSlash.Value == 2)
-			totalSlashes.Value = HeroController.instance.inputHandler.inputActions.Attack.IsPressed ? 4 : 2;
+			totalSlashes.Value = __instance.inputHandler.inputActions.Attack.IsPressed ? 4 : 2;
 
 		Moveset.HideSprint(inDashAttack);
 		if (inDashAttack)
@@ -196,7 +196,7 @@ internal static class DashPatch {
 		else if (state == "Skid Anims?" && inDashAttack) {
 			inDashAttack = false;
 			Moveset.PlayBurst();
-			HeroController.instance.StartCoroutine(Moveset.DashRecovery());
+			__instance.StartCoroutine(Moveset.DashRecovery());
 		}
 		else if (state != "Attack Antic" && state != "Loop?") {
 			inDashAttack = false;
@@ -206,8 +206,8 @@ internal static class DashPatch {
 
 	[HarmonyPatch(typeof(HeroController), nameof(HeroController.Start))]
 	[HarmonyPostfix]
-	private static void FixDashGravity() {
-		PlayMakerFSM fsm = HeroController.instance.sprintFSM;
+	private static void FixDashGravity(HeroController __instance) {
+		PlayMakerFSM fsm = __instance.sprintFSM;
 		if (!fsm.Fsm.preprocessed)
 			fsm.Preprocess();
 
