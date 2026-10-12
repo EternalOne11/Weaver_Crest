@@ -89,17 +89,17 @@ internal static partial class Moveset {
 
 		yenConfig.downSlashType = HeroControllerConfig.DownSlashTypes.DownSpike;
 		yenConfig.SetDownspikeFields(
-			anticTime: DownAnticTime, time: DownThrustTime, recoveryTime: DownRecoveryTime,
+			anticTime: DownAnticTime, time: DownKickTime, recoveryTime: DownFollowUpTime,
 			doesThrust: false, velocity: Vector2.zero, doesBurstEffect: false
 		);
 
 		yenConfig.canBind = true;
 		yenConfig.SetCanUseAbilities(true);
-		yenConfig.SetAttackFields(time: 0.35f, recovery: 0.15f, cooldown: 0.41f, // Regular attack speeds
+		yenConfig.SetAttackFields(time: 0.3f, recovery: 0.15f, cooldown: 0.36f, // Regular attack speeds
 			quickSpeedMult: 1.5f, quickCooldown: 0.205f); // Flea Brew
 
 		yenConfig.SetDashStabFields(time: 0.15f, speed: -26f, bounceJumpSpeed: 20f);
-		
+
 		yenConfig.ChargedSlashFsmEdit = ChargedFsmEdit;
 	}
 
