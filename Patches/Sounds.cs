@@ -18,6 +18,7 @@ internal static class Sounds {
 		["DashSlashA"] = "Slash1.wav", //for dash slashes 1 and 3
 		["DashSlashB"] = "Slash1.wav", //for dash slashes 2 and 4
 		["ChargedSlash"] = "Slash1.wav",
+		["ChargedWindup"] = "Slash1.wav",
 	};
 
 	private static readonly Dictionary<string, AudioClip?> clips = [];
