@@ -42,8 +42,8 @@
 - Weighted belt, flint slate, and longclaw are all functional
 
 ## Map changes/implementation
-- A chapel of the weaver is planned for MT Fay
-- (Not yet done)
+- (Not yet done) The chapel of the Weaver in Mt fay
+- (Not yet done) 4 Memory lockets
 
 ## Design
 - The Hud's design is a combination of 3 themes.
@@ -59,7 +59,7 @@
 - KAdala, (The artist who made the entire moveset) https://ko-fi.com/kadala_ka/shop
 - Redfrog, (Who coded the half silk.) 
 - General Beria, (Who made the attack sounds)
-- Me,(who created the concept, tweaked the art, and did most of the code)
+- Myself, (who created the concept, tweaked the art, and did most of the code)
 
 ## Special Thanks to
 - VoidBaroness, (The Creator of Needleforge)
@@ -71,4 +71,4 @@
 
 ## If anyone wants to take or reuse any of these ideas feel free to. 
 
-# If this mod ever reaches the notice team cherry, feel free to implement any of these ideas.
+# If this mod ever reaches the notice Team Cherry, feel free to implement any of these ideas.
