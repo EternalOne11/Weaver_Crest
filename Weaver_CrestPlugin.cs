@@ -62,13 +62,16 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(WallPatch));
 		Harmony.PatchAll(typeof(DashPatch));
 		Harmony.PatchAll(typeof(DownPatch));
+		Harmony.PatchAll(typeof(AttackGrunts));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
 
 		Moveset.ImportAnimations();
-	
+
 		Moveset.SetupSlashes();
+
+		Sounds.Load();
 
 		YenCrest.Moveset.OnInitialized += () =>
 		{
@@ -76,7 +79,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 			// Hornet shaders
 			Moveset.ApplyHeroShader();
-			
+
 			// Charge damage mulitpler
 			Moveset.ChargedDamage();
 
