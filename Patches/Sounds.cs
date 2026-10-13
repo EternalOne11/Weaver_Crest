@@ -11,10 +11,10 @@ namespace Weaver_Crest.Patches;
 internal static class Sounds {
 	private static readonly Dictionary<string, string> AttackSounds = new() {
 		["Slash"] = "Slash1.wav",
-		["AltSlash"] = "Slash1.wav",
-		["WallSlash"] = "Slash1.wav", //Usually the same as alt attack
-		["UpSlash"] = "Slash1.wav",
-		["DownSlash"] = "Slash1.wav",
+		["AltSlash"] = "Slash2.wav",
+		["WallSlash"] = "Slash2.wav", //Usually the same as alt attack
+		["UpSlash"] = "Slash3_up.wav",
+		["DownSlash"] = "Slash4_down.wav",
 		["DashSlashA"] = "Slash1.wav", //for dash slashes 1 and 3
 		["DashSlashB"] = "Slash1.wav", //for dash slashes 2 and 4
 		["ChargedSlash"] = "Slash1.wav",
