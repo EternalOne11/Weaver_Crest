@@ -107,6 +107,9 @@ internal static partial class Moveset {
 
 
 		startState.AddMethod(() => {
+			// Windup sound
+			Sounds.PlayAttack("ChargedWindup");
+
 			HeroController.instance.RelinquishControl();
 			HeroController.instance.AffectedByGravity(true);
 			Rigidbody2D rb = HeroController.instance.GetComponent<Rigidbody2D>();
