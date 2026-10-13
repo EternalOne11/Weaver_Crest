@@ -209,6 +209,9 @@
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0006.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0007.png" />
     <EmbeddedResource Include="Resources\Sounds\Slash1.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Slash2.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Slash3_up.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Slash4_down.wav" />
   </ItemGroup>
 
   <ItemGroup>
