@@ -65,7 +65,7 @@ internal static class SilkMechanics {
 		if (!YenCrest.IsEquipped)
 			return;
 
-		if (!(YenCrest.Moveset.ChargedSlash?.Steps.Contains(__instance) ?? false))
+		if (__instance != Moveset.ChargedMain)
 			return;
 
 		LastWeave = Time.time;
