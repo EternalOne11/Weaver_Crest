@@ -212,6 +212,10 @@
     <EmbeddedResource Include="Resources\Sounds\Slash2.wav" />
     <EmbeddedResource Include="Resources\Sounds\Slash3_up.wav" />
     <EmbeddedResource Include="Resources\Sounds\Slash4_down.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Charge_slash_attack.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Charge_slash_windup.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Dash_slash1.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Dash_slash2.wav" />
   </ItemGroup>
 
   <ItemGroup>
