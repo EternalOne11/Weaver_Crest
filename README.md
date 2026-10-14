@@ -22,7 +22,7 @@
 - The default slash's are shorter range the wanderer, but faster than hunter.
 - The up slash is an overhead kick that is slower than the rest of the attacks.
 - the down slash is a kick (not done)
-- The charge attack has both windup and a long range swipe.
+- The charge attack has both windup and a long range swipe. (with seperate 2 hitboxes)
 - The dash attack has 2 varients. A 2 slash varient and a 4 slash varient. (4 slash uses 1 silk)
 - Was made by KAdala
 
