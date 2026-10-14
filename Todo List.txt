@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/07/2026, Afternoon)
+(last updated 10/13/2026, Evening)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -40,22 +40,26 @@ Charge attack (Done)
 Wall slash (Done)
 
 **Moveset general checklist...**
-Attack speed set to hunter for now. 
+Attack Speed (done?)
 Ensure Speed and duration of slash effects are the same as vanilla.
 Longclaw (Done) [values not finalized]
 Weighted Belt (automatic)
 Flint slate (automatic)
-Attack cooldowns (done?)
 
 **Custom Mechanics**  (complete)
 Silk Use (done)
 Double silk (done)
-Mask damage to restore silk (done) (waiting on animation)
+Mask damage to restore silk (done)
 Half silk spools (done)
 Half silk spools animations (done)
 Half silk spool muckmaggots... (works) (visual bug?)
 Half silk spool void degredation. (works)
 Half silk, for acid degredation. (works)
+
+**Sounds**
+Attacks (Done)
+Dash attack (Done?)
+Mask break (Done)
 
 **Polish** (remove when completed)
 Hud animation timings.
@@ -73,7 +77,6 @@ Attack speed?
 
 **Undecided**
 Readd bind cancel?
-0.5 extra silk via clawline?
 Half knockback like witch?
 
 **Progression** (after mod launch)
@@ -83,5 +86,4 @@ Weaver Crest shrine/Room. **(more complex)**
 Corpse bind sprite (N/A)
 
 **TBD**
-Sounds for every attack. (around playtest)
 Additional mod Compatibility?
