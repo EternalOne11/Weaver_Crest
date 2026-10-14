@@ -17,14 +17,24 @@ internal static partial class Moveset {
 	private static readonly Vector2[] ChargeHitbox = [new(0f, 1.2f), new(-2.3f, 1.8f), new(-4.3f, 1.4f),
 	new(-6.4f, 0.3f), new(-7.1f, -1.0f), new (-4.3f, -1.4f), new (-2.4f, -1.4f), new (0f, -1.2f),];
 
-	// Charge attack nail damage multipler
-	private const float ChargedMultiplier = 3f;
+	private static readonly Vector2[] WindupHitbox = [new(1.8f,0.3f), new(-0.7f,0.3f), new(-1.5f,-0.4f),
+	new(-1f,-1.2f), new(2.0f,-1.3f), new(2.4f,-0.3f)];
+
+	// Main attack modifer
+	private const float ChargedMultiplier = 2.75f;
+	// Windup attack modifer
+	private const float WindupMultiplier = 0.75f;
 
 	// left and right air movement speed
 	private const float ChargedMoveSpeed = 8f;
 
 	//frame where the animation is split (into windup and slash)
 	private const int ChargedSplit = 11;
+
+	private const int WindupStartHit = 1, WindupEndHit = ChargedSplit - 4;
+
+	internal static ChargedAttack.Step? ChargedMain => YenCrest.Moveset.ChargedSlash?.Steps[0];
+	internal static ChargedAttack.Step? WindupStep => YenCrest.Moveset.ChargedSlash?.Steps[1];
 
 	private static void ChargedSlash() {
 		string[] chargedFiles = ["charged_e0000.png", "charged_e0001.png", "charged_e0002.png"];
@@ -35,11 +45,16 @@ internal static partial class Moveset {
 			"chargeSlash_0012.png", "chargeSlash_0013.png", "chargeSlash_0014.png", "chargeSlash_0015.png",];
 		Texture2D[] chargedHornetTex = LoadNamedTextures(chargedHornetFiles);
 
+		Texture2D blank = new(1, 1) { name = "charged_windup_blank" };
+		blank.SetPixel(0, 0, Color.clear);
+		blank.Apply();
+
 		tk2dSpriteCollectionData chargedData = Tk2dUtil.CreateTk2dSpriteCollection(
-			sprites: [.. chargedTex, .. chargedHornetTex],
+			sprites: [.. chargedTex, .. chargedHornetTex, blank],
 			spriteCenters: [
 				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(275f, -7f)),
 				.. chargedHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(89f, 0f)),
+				new Vector2(0.5f, 0.5f),
 			]
 		);
 		Object.DontDestroyOnLoad(chargedData.gameObject);
@@ -75,6 +90,17 @@ internal static partial class Moveset {
 				wrapMode = WrapMode.Once,
 				frames = chargedData.CreateFrames(chargedHornetTex.Skip(ChargedSplit).Select(t => t.name)),
 			},
+			new tk2dSpriteAnimationClip {
+				name = "Weaver Windup Effect",
+				fps = 20f,
+				wrapMode = WrapMode.Once,
+				frames = [
+					.. chargedData.CreateFrames(Enumerable.Repeat(blank.name, WindupStartHit)),
+					chargedData.CreateFrame(blank.name, triggerEvent: true),
+					.. chargedData.CreateFrames(Enumerable.Repeat(blank.name, WindupEndHit - WindupStartHit - 1)),
+					chargedData.CreateFrame(blank.name, triggerEvent: true),
+				],
+			},
 		];
 		chargedAnims.ValidateLookup();
 		sharedLib.clips = [.. sharedLib.clips, chargedAnims.clips[1], chargedAnims.clips[2]];
@@ -88,17 +114,22 @@ internal static partial class Moveset {
 					AnimName = "Weaver Charged Effect",
 					Hitbox = ChargeHitbox,
 				},
+				new ChargedAttack.Step {
+					AnimName = "Weaver Windup Effect",
+					Hitbox = WindupHitbox,
+				},
 			],
 		};
 		YenCrest.Moveset.ChargedSlash.SetAnimLibrary(chargedAnims);
 	}
 
 	internal static void ChargedDamage() {
-		GameObject? chargedObj = YenCrest.Moveset.ChargedSlash?.GameObject;
-		if (chargedObj == null) return;
-
-		foreach (var de in chargedObj.GetComponentsInChildren<DamageEnemies>(true))
-			de.nailDamageMultiplier = ChargedMultiplier;
+		if (ChargedMain?.GameObject is GameObject main)
+			foreach (var de in main.GetComponentsInChildren<DamageEnemies>(true))
+				de.nailDamageMultiplier = ChargedMultiplier;
+		if (WindupStep?.GameObject is GameObject windup)
+			foreach (var de in windup.GetComponentsInChildren<DamageEnemies>(true))
+				de.nailDamageMultiplier = WindupMultiplier;
 	}
 
 	private static void ChargedFsmEdit(PlayMakerFSM fsm, FsmState startState, out FsmState[] endStates) {
@@ -133,6 +164,8 @@ internal static partial class Moveset {
 			YenCrest.Moveset.ChargedSlash!.GameObject!.SetActive(true);
 			foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
 				step.EndAttack();
+
+			WindupStep?.StartAttack();
 		});
 		startState.AddActions(
 			new Tk2dPlayAnimationWithEvents {
@@ -147,15 +180,8 @@ internal static partial class Moveset {
 			// Removes small the recoil
 			fsm.FsmVariables.GetFsmString("Recoil Method").Value = "";
 
-			HeroController.instance.StartCoroutine(PlayStepsFaster());
-			IEnumerator PlayStepsFaster()
-			{
-				foreach (var step in YenCrest.Moveset.ChargedSlash!.Steps)
-				{
-					step.StartAttack();
-					yield return new WaitForSeconds(0.15f);
-				}
-			}
+			WindupStep?.EndAttack();
+			ChargedMain?.StartAttack();
 		});
 		attackState.AddAction(new Tk2dPlayAnimationWithEvents {
 			gameObject = new(),
