@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest.Patches;
 
@@ -15,10 +16,10 @@ internal static class Sounds {
 		["WallSlash"] = "Slash2.wav", //Usually the same as alt attack
 		["UpSlash"] = "Slash3_up.wav",
 		["DownSlash"] = "Slash4_down.wav",
-		["DashSlashA"] = "Slash1.wav", //for dash slashes 1 and 3
-		["DashSlashB"] = "Slash1.wav", //for dash slashes 2 and 4
-		["ChargedSlash"] = "Slash1.wav",
-		["ChargedWindup"] = "Slash1.wav",
+		["DashSlashA"] = "Dash_slash1.wav", //for dash slashes 1 and 3
+		["DashSlashB"] = "Dash_slash2.wav", //for dash slashes 2 and 4
+		["ChargedSlash"] = "Charge_slash_attack.wav",
+		["ChargedWindup"] = "Charge_slash_windup.wav",
 	};
 
 	private static readonly Dictionary<string, AudioClip?> clips = [];
@@ -62,11 +63,57 @@ internal static class Sounds {
 	private static float MuteUntil = -1f;
 
 	internal static void MuteForTrade() => MuteUntil = Time.time + MuteTime;
-
 	internal static bool MuteActive => Time.time < MuteUntil;
 
-	internal static bool shouldMute(AudioClip? clip) =>
-		MuteActive && clip != null && GruntNames.Contains(clip.name);
+	private static bool IsVoice(string name) =>
+		name.Length > 1 && name[0] == 'a' && name.Skip(1).All(char.IsDigit);
+	private static bool Replacement;
+
+	internal static bool shouldMute(AudioClip? clip) {
+		if (Replacement || clip == null || !IsVoice(clip.name))
+			return false;
+		if (MuteActive && GruntNames.Contains(clip.name))
+			return true;
+
+		int dashSlash = DashVoice();
+		if (dashSlash == 0)
+			return false;
+		if (dashSlash == 1 || dashSlash == 3)
+			PlayReplacement(RandomFound(ref normalGrunts, GruntNames, ref nextGrunt));
+		else
+			PlayReplacement(RandomFound(ref dashFoley, DashFoleyName, ref nextFoleySearch));
+		return true;
+	}
+
+	private static int DashVoice() {
+		if (!HeroController.instance || !YenCrest.IsEquipped || HeroController.instance.sprintFSM.Fsm.ActiveStateName != "Attack Dash Start")
+			return 0;
+		return HeroController.instance.sprintFSM.FsmVariables.GetFsmInt("Attack Step").Value;
+	}
+
+	private static readonly HashSet<string> DashFoleyName = ["hornet_beast_dash_attack_foley"];
+	private static AudioClip[]? normalGrunts, dashFoley;
+	private static float nextGrunt, nextFoleySearch;
+
+	private static AudioClip? RandomFound(ref AudioClip[]? found, HashSet<string> names, ref float nextSearch) {
+		if ((found == null || found.Length == 0) && Time.unscaledTime >= nextSearch) {
+			nextSearch = Time.unscaledTime + 5f;
+			found = [.. Resources.FindObjectsOfTypeAll<AudioClip>()
+				.Where(c => names.Contains(c.name))
+				.GroupBy(c => c.name).Select(g => g.First())];
+		}
+		return found != null && found.Length > 0 ? found[UnityEngine.Random.Range(0, found.Length)] : null;
+	}
+
+	private static void PlayReplacement(AudioClip? clip) {
+		Replacement = true;
+		try {
+			Play(clip);
+		}
+		finally {
+			Replacement = false;
+		}
+	}
 
 	internal static void Play(AudioClip? clip, float volume = 1f) {
 		try {
@@ -125,6 +172,7 @@ internal static class Sounds {
 }
 
 // Replaces normal attack grunt during mask silk trade.
+// Plus mutes half the grunts during run attack
 [HarmonyPatch]
 internal static class AttackGrunts {
 	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.PlayOneShot), [typeof(AudioClip), typeof(float)])]
@@ -133,6 +181,5 @@ internal static class AttackGrunts {
 
 	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.Play), [])]
 	[HarmonyPrefix]
-	private static bool SkipPlay(AudioSource __instance) =>
-		!Sounds.MuteActive || !Sounds.shouldMute(__instance.clip);
+	private static bool SkipPlay(AudioSource __instance) => !Sounds.shouldMute(__instance.clip);
 }
