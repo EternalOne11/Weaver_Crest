@@ -20,8 +20,8 @@ internal static class ToolDamage {
 		[ToolItemManager.GetToolByName("Silk Boss Needle")] = 1.0f,
 		
 		//Clawmirror nerfs
-		[ToolItemManager.GetToolByName("Dazzle Bind")] = 0.5f,
-		[ToolItemManager.GetToolByName("Dazzle Bind Upgraded")] = 0.5f,
+		[ToolItemManager.GetToolByName("Dazzle Bind")] = 0.45f,
+		[ToolItemManager.GetToolByName("Dazzle Bind Upgraded")] = 0.45f,
 	};
 
 	[HarmonyPrefix]
