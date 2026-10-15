@@ -284,14 +284,12 @@ public static class HalfSilk
 
     private static void DespawnHalfSilk()
     {
-        Log.LogInfo($"DespawnLastSilk");
         if (!CurrentHalf)
             return;
         //if (CurrentHalf)
         //    CurrentHalf.gameObject.Recycle();
         CurrentHalf.FinishHalfSilk(false);
         CurrentHalf.removeCounter = HalfSilkDisappear.Duration;
-        Log.LogInfo("RemoveCounter: " + CurrentHalf.removeCounter);
         //CurrentHalf.animator.AnimationCompletedEvent += DespawnHalfSilkAnimComplete;
         CurrentHalf = null!;
         SilkSpool.SilkUsingFlags silkUsingFlags = SilkSpool.SilkUsingFlags.None;
@@ -420,9 +418,6 @@ public static class HalfSilk
         
         HalfSilkUsingFlags = usingFlags;
 
-        Log.LogInfo($"SilkSpool.Instance.wasUsingChunk: {SilkSpool.Instance.wasUsingChunk}");
-        //SilkSpool.Instance.wasUsingChunk = null;
-
         SilkSpool.SilkUsingFlags ret = SilkSpool.SilkUsingFlags.None;
         
         // if using a full silk, pass that to the next silk. I don't know what the silk drain effect is, so I'm passing it to the next silk too
@@ -464,20 +459,14 @@ public static class HalfSilk
     [HarmonyPostfix]
     private static void AfterSilkChunkUpdate(SilkChunk __instance)
     {
-        //Log.LogInfo($"AfterSilkChunkUpdate");
-        
-        if (GetHasHalfSilk() && __instance == CurrentHalf)
+        if (!GetHasHalfSilk() || __instance != CurrentHalf)
+            return;
+
+        bool maggoted = HeroController.instance.cState.isMaggoted;
+        if (__instance.isMaggoted != maggoted)
         {
-            if (HeroController.instance.cState.isMaggoted && !__instance.isMaggoted)
-            {
-                __instance.isMaggoted = true;
-                __instance.FadeToCorrectColor();
-            }
-            else if (__instance.isMaggoted)
-            {
-                __instance.isMaggoted = false;
-                __instance.FadeToCorrectColor();
-            }
+            __instance.isMaggoted = maggoted;
+            __instance.FadeToCorrectColor();
         }
     }
 
@@ -812,7 +801,6 @@ public static class HalfSilk
     [HarmonyPostfix]
     private static void AfterAddSilk(HeroController __instance)
     {
-        Log.LogInfo($"After Add Silk");
         int silkTotal = __instance.playerData.silk;
         if (__instance.playerData.silkParts > 0)
             silkTotal++;
