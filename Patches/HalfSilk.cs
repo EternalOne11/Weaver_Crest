@@ -182,7 +182,10 @@ public static class HalfSilk
     {
         Log.LogInfo($"SpawnHalfSilk");
         if (CurrentHalf)
+        {
+            ClearHalfMaggot();
             CurrentHalf.gameObject.Recycle();
+        }
         CurrentHalf = SilkSpool.Instance.SpawnNewChunk(false);
         CurrentHalf.SetHalfSilk();
         TryAddAnims();
@@ -241,6 +244,7 @@ public static class HalfSilk
         if (!CurrentHalf)
             return;
         Log.LogInfo($"UpgradeHalfSilk");
+        ResetHalfSilkUsing();
         CurrentHalf.FinishHalfSilk();
         SilkSpool.Instance.silkChunks.Add(CurrentHalf);
         CurrentHalf.animator.AnimationCompletedEvent += UpgradeHalfSilkAnimComplete;
@@ -282,12 +286,19 @@ public static class HalfSilk
         // revert void
     }
 
+    private static void ClearHalfMaggot()
+    {
+        if (!CurrentHalf)
+            return;
+        ResetHalfSilkUsing();
+        CurrentHalf.isMaggoted = false;
+    }
+
     private static void DespawnHalfSilk()
     {
         if (!CurrentHalf)
             return;
-        //if (CurrentHalf)
-        //    CurrentHalf.gameObject.Recycle();
+        ClearHalfMaggot();
         CurrentHalf.FinishHalfSilk(false);
         CurrentHalf.removeCounter = HalfSilkDisappear.Duration;
         //CurrentHalf.animator.AnimationCompletedEvent += DespawnHalfSilkAnimComplete;
