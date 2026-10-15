@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/13/2026, Evening)
+(last updated 10/14/2026, Evening)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -52,9 +52,9 @@ Double silk (done)
 Mask damage to restore silk (done)
 Half silk spools (done)
 Half silk spools animations (done)
-Half silk spool muckmaggots... (works) (visual bug?)
-Half silk spool void degredation. (works)
-Half silk, for acid degredation. (works)
+Half silk spool muckmaggots... (done)
+Half silk spool void degredation. (done)
+Half silk, for acid degredation. (done)
 
 **Sounds**
 Attacks (Done)
