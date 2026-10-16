@@ -15,10 +15,10 @@ namespace Weaver_Crest.Patches;
 //Split into short and extended variants
 internal static partial class Moveset {
 
-	private static readonly Vector2[] Hitbox1 = [new(0.3f, -1.5f), new(-0.7f, -1.3f), new(-1.5f, -0.9f), new(-2.2f, -0.4f),
-		new(-2.4f, 0.6f), new(-1.5f, 0f), new(-0.8f, -0.4f), new(0.1f, -0.7f)];
-	private static readonly Vector2[] Hitbox2 = [new(0.1f, -0.7f), new(-0.8f, -0.9f), new(-1.5f, -1.2f), new(-2.4f, -1.5f), 
-		new(-2.2f, -0.7f), new(-1.5f, 0.0f), new(-0.7f, 0.3f), new(0.3f, 0.0f)];
+	private static readonly Vector2[] Hitbox1 = [new(0.3f, -1.3f), new(-0.9f, -1.1f), new(-1.7f, -0.7f), new(-2.4f, -0.2f),
+		new(-2.6f, 0.8f), new(-1.7f, 0.2f), new(-1.0f, -0.2f), new(0.0f, -0.5f)];
+	private static readonly Vector2[] Hitbox2 = [new(0.0f, -0.5f), new(-1.0f, -0.7f), new(-1.7f, -1.0f), new(-2.6f, -1.3f), 
+		new(-2.4f, -0.5f), new(-1.7f, 0.2f), new(-0.9f, 0.5f), new(0.3f, 0.2f)];
 
 	private static tk2dSpriteAnimationClip dashRecoverClip = null!;
 	private static tk2dSpriteCollectionData dashData = null!;
@@ -47,8 +47,8 @@ internal static partial class Moveset {
 		dashData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: all,
 			spriteCenters: [
-				.. ef.SelectMany(f => f).Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(15f, 15f)), //slash offset shared by all 4... (maybe change?)
-				.. antic.Concat(slashes.SelectMany(s => s)).Concat(recover).Select(t => new Vector2(t.width, t.height) * 0.5f),
+				.. ef.SelectMany(f => f).Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(45f, 10f)), //slash offset shared by all 4... (maybe change?)
+				.. antic.Concat(slashes.SelectMany(s => s)).Concat(recover).Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(0f, 10f)),
 			]
 		);
 		Object.DontDestroyOnLoad(dashData.gameObject);
