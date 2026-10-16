@@ -11,7 +11,7 @@ namespace Weaver_Crest.Patches;
 internal static partial class Moveset {
 
 	private static readonly Vector2[] SlashHitbox = [new(0f,0.3f), new(-1.2f,0.6f), new(-2.1f,0.7f),
-	new(-2.6f,0.1f), new(-2.6f,-0.6f), new(-2.2f,-1.3f), new(-1.3f,-1.5f), new(0.2f,-0.8f)];
+	new(-2.7f,0.1f), new(-2.7f,-0.6f), new(-2.2f,-1.3f), new(-1.3f,-1.5f), new(0.2f,-0.8f)];
 
 	private static void Slash() {
 		string[] slashFiles = ["slashAlt_e0000.png", "slashAlt_e0001.png", "slashAlt_e0002.png", "slashAlt_e0003.png", "slashAlt_e0004.png"]; //sigh
@@ -22,7 +22,7 @@ internal static partial class Moveset {
 		tk2dSpriteCollectionData slashData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. slashTex, .. slashHornetTex],
 			spriteCenters: [
-				.. slashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(122f, -30f)),
+				.. slashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(128f, -30f)),
 				.. slashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
 			]
 		);
