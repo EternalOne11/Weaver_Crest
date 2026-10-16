@@ -12,7 +12,7 @@ namespace Weaver_Crest.Patches;
 internal static partial class Moveset {
 
 	private static readonly Vector2[] WallHitbox = [new(0f,0.3f), new(-1.2f,0.6f), new(-2.1f,0.7f),
-	new(-2.6f,0.1f), new(-2.6f,-0.6f), new(-2.2f,-1.3f), new(-1.3f,-1.5f), new(0.2f,-0.8f)];
+	new(-2.7f,0.1f), new(-2.7f,-0.6f), new(-2.2f,-1.3f), new(-1.3f,-1.5f), new(0.2f,-0.8f)];
 
 	private static void WallSlash() {
 		string[] wallSlashHornetFiles = ["wallSlash_0000.png", "wallSlash_0001.png", "wallSlash_0002.png", "wallSlash_0003.png", "wallSlash_0004.png", "wallSlash_0005.png", "wallSlash_0006.png"];
