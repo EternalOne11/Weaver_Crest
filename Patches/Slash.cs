@@ -10,11 +10,11 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
-	private static readonly Vector2[] SlashHitbox = [new(0f, 0.5f), new(-1.1f, 0.9f), new(-2.1f, 0.6f), 
-	new(-2.8f, 0.1f), new(-2.8f, -0.5f), new(-2.1f, -1.1f), new(-1.0f, -1.3f), new(0.2f, -0.8f)];
+	private static readonly Vector2[] SlashHitbox = [new(0f,0.3f), new(-1.2f,0.6f), new(-2.1f,0.7f),
+	new(-2.6f,0.1f), new(-2.6f,-0.6f), new(-2.2f,-1.3f), new(-1.3f,-1.5f), new(0.2f,-0.8f)];
 
 	private static void Slash() {
-		string[] slashFiles = ["slashAlt_e0000.png", "slashAlt_e0001.png", "slashAlt_e0002.png", "slashAlt_e0003.png", "slashAlt_e0004.png"];
+		string[] slashFiles = ["slashAlt_e0000.png", "slashAlt_e0001.png", "slashAlt_e0002.png", "slashAlt_e0003.png", "slashAlt_e0004.png"]; //sigh
 		Texture2D[] slashTex = LoadNamedTextures(slashFiles);
 		string[] slashHornetFiles = ["slash0000.png", "slash0001.png", "slash0002.png", "slash0003.png", "slash0004.png"];
 		Texture2D[] slashHornetTex = LoadNamedTextures(slashHornetFiles);
@@ -22,7 +22,7 @@ internal static partial class Moveset {
 		tk2dSpriteCollectionData slashData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. slashTex, .. slashHornetTex],
 			spriteCenters: [
-				.. slashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(100f, 0f)),
+				.. slashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(122f, -30f)),
 				.. slashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
 			]
 		);
