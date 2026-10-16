@@ -62,7 +62,13 @@ internal static class Sounds {
 	private const float MuteTime = 0.2f;
 	private static float MuteUntil = -1f;
 
-	internal static void MuteForTrade() => MuteUntil = Time.time + MuteTime;
+	private const float TradeGruntWindow = 0.4f;
+	private static float LastTrade = -1f;
+
+	internal static void MuteForTrade() {
+		MuteUntil = Time.time + MuteTime;
+		LastTrade = Time.time;
+	}
 	internal static bool MuteActive => Time.time < MuteUntil;
 
 	private static bool IsVoice(string name) =>
@@ -78,9 +84,10 @@ internal static class Sounds {
 		int dashSlash = DashVoice();
 		if (dashSlash == 0)
 			return false;
-		if (dashSlash == 1 || dashSlash == 3)
-			PlayReplacement(RandomFound(ref normalGrunts, GruntNames, ref nextGrunt));
-		else
+		if (dashSlash == 1 || dashSlash == 3) {
+			if (Time.time - LastTrade >= TradeGruntWindow)
+				PlayReplacement(RandomFound(ref normalGrunts, GruntNames, ref nextGrunt));
+		}
 			PlayReplacement(RandomFound(ref dashFoley, DashFoleyName, ref nextFoleySearch));
 		return true;
 	}
