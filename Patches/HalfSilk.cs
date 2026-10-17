@@ -360,7 +360,6 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectSilkSpoolChangeSilk(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectSilkSpoolChangeSilk");
         ILCursor cursor = new ILCursor(il);
 
         if (cursor.TryGotoNext(MoveType.After,
@@ -369,7 +368,6 @@ public static class HalfSilk
             x => x.MatchCallvirt(typeof(List<SilkChunk>), "get_Count")))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 1");
         }
 
         if (cursor.TryGotoNext(MoveType.AfterLabel,
@@ -378,7 +376,6 @@ public static class HalfSilk
             x => x.MatchBle(out ILLabel _)))
         {
             cursor.EmitDelegate(ResetHalfSilkUsing);
-            Log.LogInfo($"Injected 2");
         }
     }
 
@@ -409,7 +406,6 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectSilkSpoolRefreshSilk(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectSilkSpoolRefreshSilk");
         ILCursor cursor = new ILCursor(il);
 
         if (cursor.TryGotoNext(MoveType.AfterLabel,
@@ -418,7 +414,6 @@ public static class HalfSilk
         {
             cursor.Index++;
             cursor.EmitDelegate(HalfSilkSetUsing);
-            Log.LogInfo($"Injected");
         }
     }
 
@@ -485,7 +480,6 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectSilkColor(ILContext il)
     {
-        Log.LogInfo($"InjectSilkColor");
         ILCursor cursor = new ILCursor(il);
 
         if (cursor.TryGotoNext(MoveType.AfterLabel,
@@ -493,7 +487,6 @@ public static class HalfSilk
         {
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.EmitDelegate(SetHalfSilkColor);
-            Log.LogInfo($"Injected");
         }
     }
 
@@ -518,7 +511,6 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectSilkAnimPrevent1(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectSilkAnimPrevent1");
         ILCursor cursor = new ILCursor(il);
 
         if (cursor.TryGotoNext(MoveType.AfterLabel,
@@ -526,7 +518,6 @@ public static class HalfSilk
         {
             cursor.EmitDelegate(SilkChunkIdleFade);
             cursor.Remove();
-            Log.LogInfo($"Injected 2");
         }
 
         InjectSilkAnimPrevent(cursor);
@@ -548,7 +539,6 @@ public static class HalfSilk
     private static void InjectSilkAnimPrevent6(ILContext il, MethodBase original) => InjectSilkAnimPrevent(new ILCursor(il));
     private static void InjectSilkAnimPrevent(ILCursor cursor)
     {
-        Log.LogInfo($"InjectSilkAnimPrevent");
 
         while (cursor.TryGotoNext(MoveType.AfterLabel,
             x => x.MatchCallvirt(typeof(tk2dSpriteAnimator), nameof(tk2dSpriteAnimator.Play))))
@@ -556,7 +546,6 @@ public static class HalfSilk
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.EmitDelegate(SilkChunkPlayAnim);
             cursor.Remove();
-            Log.LogInfo($"Injected");
         }
     }
 
@@ -575,14 +564,12 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectAcidUpdate(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectAcidUpdate");
         ILCursor cursor = new ILCursor(il);
 
         while (cursor.TryGotoNext(MoveType.After,
             x => x.MatchLdfld(typeof(PlayerData), nameof(PlayerData.silk))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 1");
         }
 
         cursor.Index = 0;
@@ -592,7 +579,6 @@ public static class HalfSilk
             x => x.MatchCallvirt(typeof(PlayerData), nameof(PlayerData.GetInt))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 2");
         }
     }
 
@@ -600,14 +586,12 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectAcidStartSizzle(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectAcidStartSizzle");
         ILCursor cursor = new ILCursor(il);
 
         while (cursor.TryGotoNext(MoveType.After,
             x => x.MatchLdfld(typeof(PlayerData), nameof(PlayerData.silk))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 1");
         }
 
         cursor.Index = 0;
@@ -617,7 +601,6 @@ public static class HalfSilk
             x => x.MatchCallvirt(typeof(PlayerData), nameof(PlayerData.GetInt))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 2");
         }
     }
 
@@ -625,7 +608,6 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectAcidTakeSilk(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectAcidTakeSilk");
         ILCursor cursor = new ILCursor(il);
 
         if (cursor.TryGotoNext(MoveType.AfterLabel,
@@ -634,7 +616,6 @@ public static class HalfSilk
         {
             cursor.EmitDelegate(TakeSilkOrHalf);
             cursor.RemoveRange(2);
-            Log.LogInfo($"Injected 1");
         }
 
         cursor.Index = 0;
@@ -643,7 +624,6 @@ public static class HalfSilk
             x => x.MatchLdfld(typeof(PlayerData), nameof(PlayerData.silk))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 2");
         }
 
         cursor.Index = 0;
@@ -653,7 +633,6 @@ public static class HalfSilk
             x => x.MatchCallvirt(typeof(PlayerData), nameof(PlayerData.GetInt))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 3");
         }
     }
 
@@ -661,7 +640,6 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectHeroMaggot1(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectHeroMaggot1");
         ILCursor cursor = new ILCursor(il);
 
         if (cursor.TryGotoNext(MoveType.AfterLabel,
@@ -669,7 +647,6 @@ public static class HalfSilk
         {
             cursor.EmitDelegate(TakeMaggotSilk);
             cursor.Remove();
-            Log.LogInfo($"Injected 1");
         }
 
         if (cursor.TryGotoNext(MoveType.Before,
@@ -679,7 +656,6 @@ public static class HalfSilk
         {
             cursor.Index++;
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 2");
         }
 
         cursor.Index = 0;
@@ -689,7 +665,6 @@ public static class HalfSilk
             x => x.MatchCallvirt(typeof(PlayerData), nameof(PlayerData.GetInt))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 3");
         }
     }
 
@@ -705,14 +680,12 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectHeroMaggot2(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectHeroMaggot2");
         ILCursor cursor = new ILCursor(il);
 
         while (cursor.TryGotoNext(MoveType.After,
             x => x.MatchLdfld(typeof(PlayerData), nameof(PlayerData.silk))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 1");
         }
 
         cursor.Index = 0;
@@ -722,7 +695,6 @@ public static class HalfSilk
             x => x.MatchCallvirt(typeof(PlayerData), nameof(PlayerData.GetInt))))
         {
             cursor.EmitDelegate(IncreaseSilkIfHalfSilk);
-            Log.LogInfo($"Injected 2");
         }
     }
 
@@ -732,7 +704,6 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectMaggot(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectMaggot");
         ILCursor cursor = new ILCursor(il);
 
         if (cursor.TryGotoNext(MoveType.AfterLabel,
@@ -741,7 +712,6 @@ public static class HalfSilk
         {
             cursor.EmitDelegate(TakeSilkOrHalf);
             cursor.RemoveRange(2);
-            Log.LogInfo($"Injected");
         }
     }
 
@@ -757,7 +727,6 @@ public static class HalfSilk
     [HarmonyILManipulator]
     private static void InjectPosition(ILContext il, MethodBase original)
     {
-        Log.LogInfo($"InjectPosition");
         ILCursor cursor = new ILCursor(il);
 
         if (cursor.TryGotoNext(MoveType.AfterLabel,
@@ -767,7 +736,6 @@ public static class HalfSilk
             cursor.Emit(OpCodes.Ldloc_0);
             cursor.EmitDelegate(SetHalfSilkPosition);
             cursor.Emit(OpCodes.Stloc_0);
-            Log.LogInfo($"Injected");
         }
     }
 
