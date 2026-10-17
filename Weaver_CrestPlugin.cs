@@ -60,6 +60,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(ToolDamage));
 		Harmony.PatchAll(typeof(UpPatch));
 		Harmony.PatchAll(typeof(WallPatch));
+		Harmony.PatchAll(typeof(ChargedPatch));
 		Harmony.PatchAll(typeof(DashPatch));
 		Harmony.PatchAll(typeof(DownPatch));
 		Harmony.PatchAll(typeof(AttackGrunts));
@@ -82,6 +83,9 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 			// Charge damage mulitpler
 			Moveset.ChargedDamage();
+
+			// One terrain hit per swing... needleforge oversight.
+			Moveset.TerrainHitCooldown();
 
 			// Longclaw
 			var m = YenCrest.Moveset;
