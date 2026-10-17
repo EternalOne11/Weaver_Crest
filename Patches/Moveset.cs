@@ -1,3 +1,4 @@
+using HarmonyLib;
 using Needleforge.Data;
 using Needleforge.Attacks;
 using Silksong.UnityHelper.Util;
@@ -101,6 +102,20 @@ internal static partial class Moveset {
 		yenConfig.SetDashStabFields(time: 0.15f, speed: -26f, bounceJumpSpeed: 20f);
 
 		yenConfig.ChargedSlashFsmEdit = ChargedFsmEdit;
+	}
+
+	// Needleforge oversight... (you need to manually readd the NailSlashTerrainThunk, to not double hit the wall.
+	private static readonly AccessTools.FieldRef<NailSlashTerrainThunk, float> ThunkCooldown =
+		AccessTools.FieldRefAccess<NailSlashTerrainThunk, float>("cooldown");
+
+	internal static void TerrainHitCooldown() {
+		var m = YenCrest.Moveset;
+		GameObject?[] attacks = [m.Slash?.GameObject, m.AltSlash?.GameObject, m.UpSlash?.GameObject,
+			m.WallSlash?.GameObject, m.DownSlash?.GameObject, m.DashSlash?.GameObject, m.ChargedSlash?.GameObject];
+		foreach (GameObject? attack in attacks)
+			if (attack)
+				foreach (var thunk in attack!.GetComponentsInChildren<NailSlashTerrainThunk>(true))
+					ThunkCooldown(thunk) = 0.3f;
 	}
 
 	private static Texture2D[] LoadNamedTextures(string[] files) =>
