@@ -132,6 +132,14 @@ internal static partial class Moveset {
 				de.nailDamageMultiplier = WindupMultiplier;
 	}
 
+	// Manual reimplementation of of recoil...
+	private const int ChargedRecoilSteps = 5;
+	private const float ChargedRecoilSpeed = 10f;
+
+	internal static void ChargedKnockback() {
+		HeroController.instance.Recoil(!HeroController.instance.cState.facingRight, ChargedRecoilSteps, ChargedRecoilSpeed);
+	}
+
 	private static void ChargedFsmEdit(PlayMakerFSM fsm, FsmState startState, out FsmState[] endStates) {
 		FsmState attackState = fsm.AddState("Weaver Slash");
 		endStates = [attackState];
@@ -188,5 +196,24 @@ internal static partial class Moveset {
 			clipName = "Slash_Charged",
 			animationCompleteEvent = FsmEvent.Finished,
 		});
+	}
+}
+
+[HarmonyPatch]
+internal static class ChargedPatch {
+	private static float lastKnockback = -1f;
+
+	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
+	[HarmonyPostfix]
+	private static void KnockbackOnHit(ref HitInstance hitInstance) {
+		if (!YenCrest.IsEquipped || Time.time - lastKnockback < 0.25f || !hitInstance.Source)
+			return;
+
+		GameObject? charged = YenCrest.Moveset.ChargedSlash?.GameObject;
+		if (!charged || !hitInstance.Source.transform.IsChildOf(charged!.transform))
+			return;
+
+		lastKnockback = Time.time;
+		Moveset.ChargedKnockback();
 	}
 }
