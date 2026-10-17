@@ -82,7 +82,7 @@ internal static partial class Moveset {
 		}
 		dashRecoverClip = new tk2dSpriteAnimationClip {
 			name = "Weaver Dash Recover",
-			fps = 5f,
+			fps = 15f,
 			wrapMode = WrapMode.Once,
 			frames = dashData.CreateFrames(recover.Select(t => t.name)),
 		};
