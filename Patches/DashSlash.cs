@@ -5,6 +5,7 @@ using Needleforge.Attacks;
 using Silksong.FsmUtil;
 using Silksong.UnityHelper.Util;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
@@ -64,7 +65,7 @@ internal static partial class Moveset {
 			frames = dashData.CreateFrames(frames.Select(t => t.name)),
 		})];
 
-		var hornetClips = new System.Collections.Generic.List<tk2dSpriteAnimationClip>();
+		var hornetClips = new List<tk2dSpriteAnimationClip>();
 		for (int i = 0; i < 4; i++) {
 			hornetClips.Add(new tk2dSpriteAnimationClip {
 				name = $"Dash Attack Antic {i + 1}",
@@ -81,7 +82,7 @@ internal static partial class Moveset {
 		}
 		dashRecoverClip = new tk2dSpriteAnimationClip {
 			name = "Weaver Dash Recover",
-			fps = 15f,
+			fps = 5f,
 			wrapMode = WrapMode.Once,
 			frames = dashData.CreateFrames(recover.Select(t => t.name)),
 		};
@@ -114,6 +115,15 @@ internal static partial class Moveset {
 		heroAnim.Play(dashRecoverClip);
 		yield return new WaitForSeconds(dashRecoverClip.frames.Length / dashRecoverClip.fps);
 		animCtrl.StartControl();
+	}
+
+	internal static IEnumerator DashSwipes(System.Func<bool> attacking) {
+		Rigidbody2D rb = HeroController.instance.GetComponent<Rigidbody2D>();
+		float forward = HeroController.instance.cState.facingRight ? 1f : -1f;
+		while (attacking()) {
+			rb.linearVelocity = new Vector2(forward * 16f, rb.linearVelocity.y);
+			yield return new WaitForFixedUpdate();
+		}
 	}
 
 	internal static void HideSprint(bool hide) {
@@ -163,11 +173,15 @@ internal static partial class Moveset {
 internal static class DashPatch {
 	private static string? lastState;
 	private static bool inDashAttack;
+	private static bool swiping; // the first slash has started (until the attack ends)
 
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
 	private static void DashAttack(HeroController __instance) {
-		if (HeroController.instance != __instance || !YenCrest.IsEquipped)
+		if (HeroController.instance != __instance)
+			return;
+
+		if (!YenCrest.IsEquipped)
 			return;
 
 		PlayMakerFSM fsm = __instance.sprintFSM;
@@ -192,14 +206,21 @@ internal static class DashPatch {
 		}
 		else if (state == "Attack Dash" && inDashAttack) {
 			Moveset.HideBurst(currentSlash.Value);
+			// For steady movement
+			if (!swiping) {
+				swiping = true;
+				__instance.StartCoroutine(Moveset.DashSwipes(() => swiping));
+			}
 		}
 		else if (state == "Skid Anims?" && inDashAttack) {
 			inDashAttack = false;
+			swiping = false;
 			Moveset.PlayBurst();
 			__instance.StartCoroutine(Moveset.DashRecovery());
 		}
 		else if (state != "Attack Antic" && state != "Loop?") {
 			inDashAttack = false;
+			swiping = false;
 			Moveset.PlayBurst();
 		}
 	}
