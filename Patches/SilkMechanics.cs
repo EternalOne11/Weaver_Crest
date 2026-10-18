@@ -40,16 +40,10 @@ internal static class SilkMechanics {
 
 	private static float LastWeave = -1f;
 
-	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.SilkGain), [typeof(HitInstance)])]
 	[HarmonyPostfix]
-	private static void WeaveGain(ref HitInstance hitInstance) {
+	private static void WeaveGain() {
 		if (!YenCrest.IsEquipped)
-			return;
-
-		bool isNailHit =
-			hitInstance.AttackType == AttackTypes.Nail
-			|| (hitInstance.AttackType == AttackTypes.Heavy && hitInstance.IsNailTag);
-		if (!isNailHit)
 			return;
 
 		const float WeaveWindow = 0.5f;
