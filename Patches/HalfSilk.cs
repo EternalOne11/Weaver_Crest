@@ -676,6 +676,62 @@ public static class HalfSilk
             hc.TakeSilk(1, takeSource);
     }
 
+//Half Silk degredation speed
+    private static bool maggotHalf;
+
+    [HarmonyPatch(typeof(HeroController), nameof(HeroController.TickSilkEat))]
+    [HarmonyPrefix]
+    private static void MaggotHalfTiming(bool shouldEatSilk, ref HeroController.SilkEatTracker tracker,
+        SilkSpool.SilkUsingFlags usingType, float delay)
+    {
+        if ((usingType & SilkSpool.SilkUsingFlags.Maggot) == 0)
+            return;
+
+        bool hasHalf = GetHasHalfSilk();
+        bool halfAppeared = hasHalf && !maggotHalf;
+        maggotHalf = hasHalf;
+        if (!shouldEatSilk || !hasHalf)
+            return;
+
+        if (halfAppeared && (tracker.EatDelayLeft > 0f || tracker.EatDurationLeft > 0f))
+        {
+            if (tracker.EatDurationLeft > 0f)
+                SilkSpool.Instance.RemoveUsing(usingType);
+            tracker.EatDurationLeft = 0f;
+            tracker.EatDelayLeft = delay;
+        }
+
+        float extra = Time.deltaTime * (2f - 1f);
+        if (tracker.EatDurationLeft > 0f)
+            tracker.EatDurationLeft = Mathf.Max(tracker.EatDurationLeft - extra, 0.001f);
+        else if (tracker.EatDelayLeft > 0f)
+            tracker.EatDelayLeft = Mathf.Max(tracker.EatDelayLeft - extra, 0.001f);
+    }
+
+    // Silk heart interaction
+    private static bool regenHalf;
+
+    [HarmonyPatch(typeof(HeroController), nameof(HeroController.StartSilkRegen))]
+    [HarmonyPostfix]
+    private static void StartHalfRegen(HeroController __instance, ref float ___silkRegenDurationLeft)
+    {
+        PlayerData pd = __instance.playerData;
+        regenHalf = ___silkRegenDurationLeft > 0f && GetHasHalfSilk()
+            && pd.silk + 1 >= pd.CurrentSilkRegenMax;
+        if (regenHalf)
+            ___silkRegenDurationLeft /= 2f;
+    }
+
+    [HarmonyPatch(typeof(HeroController), nameof(HeroController.DoSilkRegen))]
+    [HarmonyPostfix]
+    private static void HalfSilkRegenDone()
+    {
+
+        if (regenHalf && GetHasHalfSilk())
+            SetHalfSilkState(false);
+        regenHalf = false;
+    }
+
     [HarmonyPatch(typeof(HeroController), nameof(HeroController.Update))]
     [HarmonyILManipulator]
     private static void InjectHeroMaggot2(ILContext il, MethodBase original)
@@ -774,6 +830,25 @@ public static class HalfSilk
             SpawnHalfSilk();
             SilkSpool.Instance.EvaluatePositions();
         }
+    }
+
+    private static bool AtBench;
+    private static int silkSit;
+
+    [HarmonyPatch(typeof(HeroController), nameof(HeroController.Update))]
+    [HarmonyPostfix]
+    private static void HalfBench(HeroController __instance)
+    {
+        if (HeroController.instance != __instance)
+            return;
+
+        PlayerData pd = __instance.playerData;
+        if (pd.atBench && !AtBench)
+            silkSit = pd.silk;
+        AtBench = pd.atBench;
+
+        if (pd.atBench && GetHasHalfSilk() && pd.silk > silkSit)
+            SetHalfSilkState(false);
     }
 
     [HarmonyPatch(typeof(HeroController), nameof(HeroController.AddSilk), [typeof(int), typeof(bool), typeof(SilkSpool.SilkAddSource), typeof(bool)])]
