@@ -56,7 +56,7 @@ internal static class SilkMechanics {
 		if (Time.time - LastWeave >= WeaveWindow)
 			return;
 
-		HeroController.instance.AddSilk(1, true, SilkSpool.SilkAddSource.Normal, false);
+		HeroController.instance.AddSilk(1, false, SilkSpool.SilkAddSource.Normal, false);
 	}
 
 	[HarmonyPatch(typeof(AttackBase), nameof(AttackBase.StartAttack))]
