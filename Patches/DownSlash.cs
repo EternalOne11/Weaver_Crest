@@ -1,3 +1,4 @@
+using GlobalEnums;
 using HarmonyLib;
 using Needleforge.Attacks;
 using Silksong.UnityHelper.Util;
@@ -11,165 +12,189 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
-	private const float DownFps = 20f;
-	private const int DownAnticFrames = 3, DownKickFrames = 6, DownFollowUpFrames = 4;
+	private const float DownAnticFps = 12f;
+	private const float DownKickFps = 16f;
+	private const float DownRecoveryFps = 17f;
+	private const int DownAnticFrames = 2, DownKickFrames = 3, DownRecoveryFrames = 4;
 
-	internal const float DownAnticTime = DownAnticFrames / DownFps;
-	internal const float DownKickTime = DownKickFrames / DownFps;
-	internal const float DownFollowUpTime = DownFollowUpFrames / DownFps;
+	internal const float DownAnticTime = DownAnticFrames / DownAnticFps;
+	internal const float DownKickTime = DownKickFrames / DownKickFps;
+	internal const float DownRecoveryTime = DownRecoveryFrames / DownRecoveryFps;
 
-	private const float DownFlipTime = (DownKickFrames + DownFollowUpFrames) / DownFps;
+	internal const float ThrustAngle = 30f;
+	internal const float ThrustSpeed = 25f;
 
-	private static tk2dSpriteAnimationClip downFollowUpClip = null!;
+	internal static Vector2 DownThrustVelocity => new(
+		-ThrustSpeed * Mathf.Sin(ThrustAngle * Mathf.Deg2Rad),
+		-ThrustSpeed * Mathf.Cos(ThrustAngle * Mathf.Deg2Rad));
 
-	private static readonly Vector2[] DownHitbox = [new(0.6f, -0.9f), new(-0.9f, -0.9f), new(-1.9f, 1.0f),
-		new(-2.4f, 0.8f), new(-1.3f, -1.4f), new(0.6f, -1.4f)];
+	internal const float DownCooldown = DownAnticTime + DownKickTime + DownRecoveryTime + 0.05f;
+
+	private static readonly float[] DownEffectOffsetY = [-60f, -39f, -21f, -18f, -14f];
+
+	private static readonly Vector2[] DownHitbox = [new(0.6f, -0.2f), new(-0.9f, -0.2f), new(-1.2f, 1.0f),
+		new(-2.6f, 1.0f), new(-1.6f, -1.6f), new(0.6f, -1.6f)];
+
+	private static tk2dSpriteCollectionData downData = null!;
+	private static tk2dSpriteAnimation downAnims = null!;
+	private static tk2dSpriteAnimationClip downRecoveryClip = null!;
+	private static GameObject? downEffectObj;
+	private static tk2dSpriteAnimator? downEffectAnim;
 
 	private static void DownSlash() {
 		string[] fxFiles = ["downSlash_e0000.png", "downSlash_e0001.png", "downSlash_e0002.png",
-			"downSlash_e0003.png", "downSlash_e0004.png", "downSlash_e0005.png"];
-		string[] anticFiles = ["downSlash_0000.png", "downSlash_0001.png", "downSlash_0002.png"];
-		string[] kickFiles = ["downSlash_0003.png", "downSlash_0004.png", "downSlash_0005.png",
-			"downSlash_0006.png", "downSlash_0007.png", "downSlash_0008.png"];
-		string[] followUpFiles = ["downSlash_0009.png", "downSlash_0010.png", "downSlash_0011.png", "downSlash_0012.png"];
+			"downSlash_e0003.png", "downSlash_e0004.png"];
+		string[] hornetFiles = ["downSlash_0000.png", "downSlash_0001.png", "downSlash_0002.png", "downSlash_0003.png",
+		"downSlash_0004.png", "downSlash_0005.png", "downSlash_0006.png", "downSlash_0007.png", "downSlash_0008.png"];
 
 		Texture2D[] fx = LoadNamedTextures(fxFiles);
-		Texture2D[] antic = LoadNamedTextures(anticFiles);
-		Texture2D[] kick = LoadNamedTextures(kickFiles);
-		Texture2D[] followUp = LoadNamedTextures(followUpFiles);
-		Texture2D[] all = [.. fx, .. antic, .. kick, .. followUp];
+		Texture2D[] hornet = LoadNamedTextures(hornetFiles);
+		Texture2D[] antic = [.. hornet.Take(DownAnticFrames)];
+		Texture2D[] kick = [.. hornet.Skip(DownAnticFrames).Take(DownKickFrames)];
+		Texture2D[] followUp = [.. hornet.Skip(DownAnticFrames + DownKickFrames).Take(DownRecoveryFrames)];
+		Texture2D[] all = [.. fx, .. hornet];
 
-		tk2dSpriteCollectionData data = Tk2dUtil.CreateTk2dSpriteCollection(
+		downData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: all,
-			spriteCenters: [.. all.Select(t => new Vector2(t.width, t.height) * 0.5f)]
+			spriteCenters: [
+				.. fx.Select((t, i) => new Vector2(t.width, t.height) * 0.5f
+					+ new Vector2(30f, DownEffectOffsetY[i])),
+				.. hornet.Select(t => new Vector2(t.width, t.height) * 0.5f),
+			]
 		);
-		Object.DontDestroyOnLoad(data.gameObject);
-		data.gameObject.name = $"{YenId}_DownSlashAnim";
-		data.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
-		heroShaderCollections.Add(data);
+		Object.DontDestroyOnLoad(downData.gameObject);
+		downData.gameObject.name = $"{YenId}_DownSlashAnim";
+		downData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
+		heroShaderCollections.Add(downData);
 
-		tk2dSpriteAnimation anims = data.gameObject.AddComponent<tk2dSpriteAnimation>();
-		anims.clips = [
+		downAnims = downData.gameObject.AddComponent<tk2dSpriteAnimation>();
+		downAnims.clips = [
 			new tk2dSpriteAnimationClip {
 				name = "Weaver DownSlash Effect",
-				fps = DownFps,
+				fps = fx.Length / DownKickTime,
 				wrapMode = WrapMode.Once,
-				frames = [
-					data.CreateFrame(fx[0].name, triggerEvent: true),
-					.. data.CreateFrames(fx.Skip(1).Take(fx.Length - 2).Select(t => t.name)),
-					data.CreateFrame(fx[^1].name, triggerEvent: true),
-				],
+				frames = downData.CreateFrames(fx.Select(t => t.name)),
 			},
 			new tk2dSpriteAnimationClip {
 				name = "DownSpike Antic",
-				fps = DownFps,
+				fps = DownAnticFps,
 				wrapMode = WrapMode.Once,
-				frames = data.CreateFrames(antic.Select(t => t.name)),
+				frames = downData.CreateFrames(antic.Select(t => t.name)),
 			},
 			new tk2dSpriteAnimationClip {
 				name = "DownSpike",
-				fps = DownFps,
+				fps = DownKickFps,
 				wrapMode = WrapMode.Once,
-				frames = data.CreateFrames(kick.Select(t => t.name)),
+				frames = downData.CreateFrames(kick.Select(t => t.name)),
 			},
 			new tk2dSpriteAnimationClip {
 				name = "Downspike Recovery",
-				fps = DownFps,
+				fps = DownRecoveryFps,
 				wrapMode = WrapMode.Once,
-				frames = data.CreateFrames(followUp.Select(t => t.name)),
+				frames = downData.CreateFrames(followUp.Select(t => t.name)),
 			},
 		];
-		anims.ValidateLookup();
-		sharedLib.clips = [.. sharedLib.clips, .. anims.clips.Skip(1)];
-		downFollowUpClip = anims.clips[3];
+		downAnims.ValidateLookup();
+		sharedLib.clips = [.. sharedLib.clips, .. downAnims.clips.Skip(1)];
+		downRecoveryClip = downAnims.GetClipByName("Downspike Recovery");
 
 		YenCrest.Moveset.DownSlash = new DownAttack {
 			Name = "WeaverDownSlash",
 			AnimName = "Weaver DownSlash Effect",
-			AnimLibrary = anims,
+			AnimLibrary = downAnims,
 			Hitbox = DownHitbox,
 		};
 	}
 
-	internal static bool Flipping { get; private set; }
+	// Attaches hitbox to account for velocity
+	internal static void PlayDownEffect() {
+		if (!downEffectObj) {
+			downEffectObj = new GameObject($"{YenId} DownSlash Effect");
+			downEffectObj.transform.SetParent(HeroController.instance.transform, false);
+			downEffectObj.transform.localPosition = new Vector3(0f, 0f, -0.01f);
+			tk2dBaseSprite.AddComponent<tk2dSprite>(downEffectObj, downData, 0);
+			downEffectAnim = downEffectObj.AddComponent<tk2dSpriteAnimator>();
+			downEffectAnim.Library = downAnims;
+			downEffectAnim.AnimationCompleted = (_, _) => downEffectObj!.SetActive(false);
+		}
 
-	internal static string? PreAttackClip;
+		downEffectObj!.SetActive(true);
+		downEffectAnim!.Stop();
+		downEffectAnim.Play(downAnims.GetClipByName("Weaver DownSlash Effect"));
+	}
 
-	internal static IEnumerator DownKickFlip() {
-		Flipping = true;
-		Rigidbody2D rb = HeroController.instance.GetComponent<Rigidbody2D>();
+	internal static IEnumerator DownRecovery() {
+		HeroController.instance.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+
 		var heroAnim = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
 		var animCtrl = HeroController.instance.GetComponent<HeroAnimationController>();
-		float forward = HeroController.instance.cState.facingRight ? 1f : -1f;
-		Vector2 drift = new(forward * 5f, 0f);
-		bool followUpStarted = false;
-
-		DownPatch.KeepDownAttack = true;
-		HeroController.instance.RelinquishControlNotVelocity();
-		DownPatch.KeepDownAttack = false;
+		animCtrl.StopControl();
 		try {
-			for (float t = 0f; t < DownFlipTime; t += Time.deltaTime) {
-				if (HeroController.instance.cState.onGround)
-					yield break;
-
-				if (!followUpStarted && t >= DownKickTime) {
-					followUpStarted = true;
-					animCtrl.StopControl();
-					heroAnim.Stop();
-					heroAnim.Play(downFollowUpClip);
+			float duration = downRecoveryClip.frames.Length / downRecoveryClip.fps;
+			for (float t = 0f; t < duration; t += Time.deltaTime) {
+				if (heroAnim.CurrentClip != downRecoveryClip) {
+					int frame = Mathf.Min((int)(t * downRecoveryClip.fps), downRecoveryClip.frames.Length - 1);
+					heroAnim.PlayFromFrame(downRecoveryClip, frame);
 				}
-
-				float angle = Mathf.Lerp(30f, 270f, t / DownFlipTime) * Mathf.Deg2Rad;
-				float up = Mathf.Sin(angle);
-				if (up > 0f)
-					up *= 1.5f;
-				Vector2 loop = new Vector2(Mathf.Cos(angle) * forward, up) * 7f;
-				rb.linearVelocity = drift + loop + Vector2.down * (25f * t);
 				yield return null;
 			}
 		}
 		finally {
-			HeroController.instance.RegainControl();
-			HeroController.instance.RelinquishControlNotVelocity();
-			if (followUpStarted)
-				animCtrl.StartControl();
-			HeroController.instance.RegainControl();
-			if (!HeroController.instance.cState.onGround && PreAttackClip != null)
-				heroAnim.Play(PreAttackClip);
-			Flipping = false;
+			animCtrl.StartControl();
 		}
+	}
+
+	internal static void HideSprite() {
+		GameObject? down = YenCrest.Moveset.DownSlash?.GameObject;
+		if (!down)
+			return;
+		foreach (var r in down!.GetComponentsInChildren<Renderer>(true))
+			r.enabled = false;
+	}
+
+	private static readonly AccessTools.FieldRef<NailSlashTravel, HeroController> TravelHero =
+		AccessTools.FieldRefAccess<NailSlashTravel, HeroController>("hc");
+
+	//recoil fix
+	internal static void FixDownKB() {
+		GameObject? down = YenCrest.Moveset.DownSlash?.GameObject;
+		if (!down)
+			return;
+		foreach (var travel in down!.GetComponentsInChildren<NailSlashTravel>(true))
+			TravelHero(travel) = HeroController.instance;
 	}
 }
 
 [HarmonyPatch]
 internal static class DownPatch {
 	private static string? lastClip;
-	private static bool anticSeen;
-
-	internal static bool KeepDownAttack;
-
-	[HarmonyPatch(typeof(HeroController), "CancelDownSpike")]
-	[HarmonyPrefix]
-	private static bool SkipCancelDownSpike() => !KeepDownAttack;
-
-	[HarmonyPatch(typeof(HeroController), "ResetAttacks")]
-	[HarmonyPrefix]
-	private static bool SkipResetAttacks() => !KeepDownAttack;
 
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
-	private static void PushOnKick(HeroController __instance) {
-		string? clip = __instance.GetComponent<tk2dSpriteAnimator>().CurrentClip?.name;
-		if (clip != lastClip && YenCrest.IsEquipped) {
-			if (clip == "DownSpike Antic") {
-				Moveset.PreAttackClip = lastClip;
-				anticSeen = true;
-			}
-			else if (clip == "DownSpike" && anticSeen && !Moveset.Flipping) {
-				anticSeen = false;
-				__instance.StartCoroutine(Moveset.DownKickFlip());
-			}
+	private static void EffectOnThrust(HeroController __instance) {
+		if (HeroController.instance != __instance || !YenCrest.IsEquipped)
+			return;
+		var heroAnim = __instance.GetComponent<tk2dSpriteAnimator>();
+		if (!heroAnim)
+			return;
+
+		Moveset.HideSprite();
+
+		string? clip = heroAnim.CurrentClip?.name;
+		if (clip != lastClip) {
+			if (clip == "DownSpike")
+				Moveset.PlayDownEffect();
+			else if (clip == "Downspike Recovery")
+				__instance.StartCoroutine(Moveset.DownRecovery());
 		}
 		lastClip = clip;
+	}
+
+	// Manual cooldown
+	[HarmonyPatch(typeof(HeroController), "Attack")]
+	[HarmonyPostfix]
+	private static void DownAttackCooldown(AttackDirection __0, ref float ___attack_cooldown) {
+		if (YenCrest.IsEquipped && __0 == AttackDirection.downward)
+			___attack_cooldown = Moveset.DownCooldown;
 	}
 }
