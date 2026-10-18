@@ -114,6 +114,7 @@ internal static class MaskTrade {
 
 		//Sigh this is stupid... why can't it just work out of the box. (charge and dash freeze otherwise)
 			PlayerData.instance.TakeHealth(Cost, HeroController.instance.IsInLifebloodState, allowFracturedMaskBreak: false);
+			HeroController.instance.damageEffectFSM.SendEvent("DAMAGE"); // the black damage vignette
 			EventRegister.SendEvent("HEALTH UPDATE");
 			HeroController.instance.AddSilk(Silk, false, SilkSpool.SilkAddSource.Normal, false);
 			HeroController.instance.SpriteFlash.flashFocusHeal();
