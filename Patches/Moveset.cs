@@ -64,7 +64,7 @@ internal static partial class Moveset {
 
 		yenConfig.downSlashType = HeroControllerConfig.DownSlashTypes.DownSpike;
 		yenConfig.SetDownspikeFields(
-			anticTime: DownAnticTime, time: DownKickTime, recoveryTime: DownFollowUpTime,
+			anticTime: DownAnticTime, time: DownKickTime, recoveryTime: DownRecoveryTime,
 			doesThrust: true, velocity: DownThrustVelocity, doesBurstEffect: false
 		);
 
