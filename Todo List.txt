@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/14/2026, Evening)
+(last updated 10/17/2026, Evening)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -31,9 +31,9 @@ Silk skill changes (Done) (disabled)
 
 **Moveset**
 Basic Slash (Done)
-Alt slash (Done, waiting for new slash effect)
-Up attack (done)
-Down attack (animation done, WIP implemented)
+Alt slash (Done)
+Up attack (Done)
+Down attack  (Done besides hitbox)
 Dash attack (Done)
 Extended Dash attack (Done)
 Charge attack (Done)
@@ -41,8 +41,7 @@ Wall slash (Done)
 
 **Moveset general checklist...**
 Attack Speed (done?)
-Ensure Speed and duration of slash effects are the same as vanilla.
-Longclaw (Done) [values not finalized]
+Longclaw (Done)
 Weighted Belt (automatic)
 Flint slate (automatic)
 
@@ -62,12 +61,8 @@ Dash attack (Done?)
 Mask break (Done)
 
 **Polish** (remove when completed)
-Hud animation timings.
-Pixel alignment for save slot icon (maybe done)
-Tweak animation timings.
-
-**Bugs to squash**
-Down attack not working (broken implementation)
+Hud animation timings. (done?)
+Pixel alignment for save slot icon (done?)
 
 **Playtest Decisions**
 Silk refund on parries? 
