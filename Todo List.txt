@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/17/2026, Evening)
+(last updated 10/18/2026, Noon)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -33,7 +33,7 @@ Silk skill changes (Done) (disabled)
 Basic Slash (Done)
 Alt slash (Done)
 Up attack (Done)
-Down attack  (Done besides hitbox)
+Down attack (Done)
 Dash attack (Done)
 Extended Dash attack (Done)
 Charge attack (Done)
@@ -63,12 +63,6 @@ Mask break (Done)
 **Polish** (remove when completed)
 Hud animation timings. (done?)
 Pixel alignment for save slot icon (done?)
-
-**Playtest Decisions**
-Silk refund on parries? 
-Bind speed too quick or too slow?
--15 to -25% spell damage? (code done) (disabled currently)
-Attack speed?
 
 **Undecided**
 Readd bind cancel?
