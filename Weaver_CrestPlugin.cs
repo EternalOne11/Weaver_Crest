@@ -84,6 +84,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			// Charge damage mulitpler
 			Moveset.ChargedDamage();
 
+			Moveset.FixDownKB();
+
 			// One terrain hit per swing... needleforge oversight.
 			Moveset.TerrainHitCooldown();
 
@@ -95,7 +97,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 				foreach (var nab in attack.GameObject.GetComponentsInChildren<NailAttackBase>(true))
 				{
 					nab.overrideLongNeedleScale = true;
-					nab.longNeedleScale = Vector3.Scale(nab.scale, new Vector3(1.2f, 1.2f, 1f));
+					nab.longNeedleScale = Vector3.Scale(nab.scale, new Vector3(1.2f, 1.075f, 1f));
 				}
 			}
 		};
@@ -115,7 +117,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		float slotOffset = (0.5f - pivot.y) * (linework.rect.height / linework.pixelsPerUnit);
 
 		YenCrest = NeedleforgePlugin.AddCrest(YenId, YenName, YenDesc, linework, silhouette, glow);
-		YenCrest.HudFrame.ProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon.png");        // Save profile for normal save
+		YenCrest.HudFrame.ProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon.png");// Save profile for normal save
 		YenCrest.HudFrame.SteelProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon_S.png"); // Save profile for Steel soul
 
 		//Tool slot locations (x,y)
