@@ -139,6 +139,9 @@ internal static class MaskTrade {
 			PlayerData.instance.healthBlue += lifeblood;
 			HeroController.instance.damageEffectFSM.SendEvent("DAMAGE"); // the black damage vignette
 			EventRegister.SendEvent("HEALTH UPDATE");
+
+			if (PlayerData.instance.health == 1)
+				EventRegister.SendEvent("HERO DAMAGED");
 			HeroController.instance.AddSilk(Silk, false, SilkSpool.SilkAddSource.Normal, false);
 			HeroController.instance.SpriteFlash.flashFocusHeal();
 			Sounds.PlayHurt();
@@ -198,7 +201,8 @@ internal static class MaskTrade {
 		if (flashRun == 0 || !flashRestore)
 			flashScale = flash!.transform.localScale;
 		flash!.transform.localScale = flashScale * 0.7f;
-		flash.SetActive(false);
+		flash.SetActive(false
+	);
 		flash.SetActive(true);
 
 		flashRestore = true;
