@@ -28,7 +28,7 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-		MaskTrade.MaskCost();
+		MaskTrade.MaskCost(normalAttack: true);
 
 		Sounds.PlayAttack(__0 switch {
 			AttackDirection.upward => "UpSlash",
@@ -46,11 +46,22 @@ internal static class SilkMechanics {
 		if (!YenCrest.IsEquipped)
 			return;
 
-		const float WeaveWindow = 0.5f;
-		if (Time.time - LastWeave >= WeaveWindow)
+		if (Time.time - LastWeave >= MaskTrade.WeaveWindow)
 			return;
 
+		if (MaskTrade.CancelCost()) {
+			HalfSilk.AddHalfSilk(heroEffect: false);
+			return;
+		}
+
 		HeroController.instance.AddSilk(1, false, SilkSpool.SilkAddSource.Normal, false);
+	}
+
+	[HarmonyPatch(typeof(HeroController), "Update")]
+	[HarmonyPostfix]
+	private static void PayMissed(HeroController __instance) {
+		if (HeroController.instance == __instance)
+			MaskTrade.PayCosts();
 	}
 
 	[HarmonyPatch(typeof(AttackBase), nameof(AttackBase.StartAttack))]
@@ -102,7 +113,7 @@ internal static class MaskTrade {
 		&& !HalfSilk.GetHasHalfSilk()
 		&& PlayerData.instance.health > Cost; // never on her last mask
 
-	internal static void MaskCost() {
+	internal static void MaskCost(bool normalAttack = false) {
 		if (DuringTrade()) {
 			Sounds.MuteForTrade(); //Pain grunt replaces normal attack grunt
 
@@ -115,7 +126,40 @@ internal static class MaskTrade {
 			Sounds.PlayHurt();
 			PlayFlash();
 		}
-		HalfSilk.RemoveHalfSilk(interruptRegen: false);
+	//visual delay at 9 silk to prevent a greater visual annoyance
+		bool DipBelowBind = PlayerData.instance.silk == SilkSpool.BindCost && !HalfSilk.GetHasHalfSilk();
+		if (DipBelowBind)
+			pendingCosts.Enqueue((Time.time, normalAttack));
+		else
+			HalfSilk.RemoveHalfSilk(interruptRegen: false);
+	}
+
+	internal const float WeaveWindow = 0.5f;
+	private static readonly System.Collections.Generic.Queue<(float time, bool normalAttack)> pendingCosts = new();
+
+	internal static bool CancelCost() {
+		if (pendingCosts.Count == 0)
+			return false;
+		pendingCosts.Dequeue();
+		return true;
+	}
+
+	internal static void PayCosts() {
+		if (!YenCrest.IsEquipped) {
+			pendingCosts.Clear();
+			return;
+		}
+		var state = HeroController.instance.cState;
+		bool swinging = state.attacking || state.downSpikeAntic || state.downSpiking || state.downAttacking;
+		while (pendingCosts.Count > 0) {
+			var (time, normalAttack) = pendingCosts.Peek();
+			float waited = Time.time - time;
+			bool canStillHit = waited < WeaveWindow && (!normalAttack || swinging);
+			if (canStillHit)
+				break;
+			pendingCosts.Dequeue();
+			HalfSilk.RemoveHalfSilk(interruptRegen: false);
+		}
 	}
 
 	// A flash played is played when a mask is broken/traded.
