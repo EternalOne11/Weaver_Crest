@@ -832,6 +832,82 @@ public static class HalfSilk
         }
     }
 
+    //Mossberry Interaction
+    private static float mossMerge = -1f;
+    private static int mossRingsMerged;
+
+    [HarmonyPatch(typeof(HeroController), nameof(HeroController.Update))]
+    [HarmonyPostfix]
+    private static void MergeMossWithHalf(HeroController __instance, ref int ___mossCreep1Hits, ref int ___mossCreep2Hits)
+    {
+        if (HeroController.instance != __instance)
+            return;
+
+        if (___mossCreep2Hits != 1)
+            mossRingsMerged = 0;
+
+        bool ring1 = ___mossCreep1Hits == 1;
+        bool ring2 = ___mossCreep2Hits == 1 && mossRingsMerged < 2;
+        if ((!ring1 && !ring2) || !GetHasHalfSilk() || __instance.playerData.silk >= __instance.playerData.CurrentSilkMax)
+        {
+            mossMerge = -1f;
+            return;
+        }
+
+        if (mossMerge < 0f)
+        {
+            mossMerge = Time.time + 0.3f;
+            return;
+        }
+        if (Time.time < mossMerge)
+            return;
+        mossMerge = -1f;
+
+        // Mossberry one ring merge
+        if (ring1)
+            ___mossCreep1Hits = 0;
+        else if (++mossRingsMerged >= 2)
+        {
+            ___mossCreep2Hits = 0; // both of its rings are used up
+            mossRingsMerged = 0;
+        }
+        RemoveOneMossRing();
+        AddHalfSilk(heroEffect: false);
+    }
+
+    private static void RemoveOneMossRing()
+    {
+        SilkSpool spool = GameCameras.instance.silkSpool;
+        if (spool.mossChunks == null || spool.mossChunks.Count <= 1)
+        {
+            spool.SetMossState(0);
+            return;
+        }
+        SilkChunk ring = spool.mossChunks[spool.mossChunks.Count - 1];
+        spool.mossChunks.RemoveAt(spool.mossChunks.Count - 1);
+        ring.gameObject.Recycle();
+        spool.EvaluatePositions();
+    }
+
+    [HarmonyPatch(typeof(HeroController), nameof(HeroController.AddSilk), [typeof(int), typeof(bool), typeof(SilkSpool.SilkAddSource), typeof(bool)])]
+    [HarmonyPostfix]
+    private static void AfterMossCompletes(HeroController __instance, SilkSpool.SilkAddSource source, ref int ___mossCreep2Hits)
+    {
+        if (source != SilkSpool.SilkAddSource.Moss || ___mossCreep2Hits != 0 || mossRingsMerged == 0)
+            return;
+        if (__instance.playerData.silk >= __instance.playerData.CurrentSilkMax)
+        {
+            mossRingsMerged = 0;
+            return;
+        }
+
+        __instance.TakeSilk(1);
+        ___mossCreep2Hits = 1;
+        mossRingsMerged = 1;
+        GameCameras.instance.silkSpool.SetMossState(1, 2);
+        RemoveOneMossRing();
+    }
+
     private static bool AtBench;
     private static int silkSit;
 
