@@ -76,7 +76,33 @@ internal static class Bind
         cachedBindCount = numberOfBinds.Value;
         cachedQuick = ToolItemManager.IsToolEquipped("Quickbind");
 
+        //Config setting
+        if (HoldToBindSetting.Value && !holdCheckRunning)
+            HeroController.instance.StartCoroutine(HoldToBind(bindFsm));
         HeroController.instance.StartCoroutine(PlayBindEffect(bindFsm));
+    }
+
+    private static bool holdCheckRunning;
+
+    private static IEnumerator HoldToBind(PlayMakerFSM bindFsm)
+    {
+        holdCheckRunning = true;
+        try {
+            while (true) {
+                string state = bindFsm.Fsm.ActiveStateName;
+                if (state == "End Bind" || state == "Cooldown" || state == "Idle")
+                    yield break;
+
+                if (!HeroController.instance.inputHandler.inputActions.Cast.IsPressed) {
+                    bindFsm.Fsm.SetState("End Bind");
+                    yield break;
+                }
+                yield return null;
+            }
+        }
+        finally {
+            holdCheckRunning = false;
+        }
     }
 
 	private static readonly Dictionary<ParticleSystem, (float size, float speed, float radius, Vector3 shapeScale)> particleDefaults = [];
