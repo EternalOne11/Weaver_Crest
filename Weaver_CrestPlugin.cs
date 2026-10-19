@@ -1,4 +1,5 @@
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using Needleforge;
@@ -37,6 +38,9 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static SlotInfo BlueSlot1 { get; private set; }
 	internal static SlotInfo BlueSlot2 { get; private set; }
 
+//Config settings
+	internal static ConfigEntry<bool> HoldToBindSetting { get; private set; } = null!;
+
 	internal const string
 		YenId = "Weaver";
 	internal static readonly LocalisedString
@@ -52,6 +56,9 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	{
 		Log = Logger;
 		Logger.LogInfo($"Plugin {Name} ({Id}) has loaded!");
+
+		HoldToBindSetting = Config.Bind("Bind", "Hold bind", false,
+			"Bind now requires holding the button down, the entire time, letting go early cancels it.");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
