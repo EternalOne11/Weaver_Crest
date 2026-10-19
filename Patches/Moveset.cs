@@ -70,7 +70,7 @@ internal static partial class Moveset {
 
 		yenConfig.canBind = true;
 		yenConfig.SetCanUseAbilities(true);
-		yenConfig.SetAttackFields(time: 0.3f, recovery: 0.15f, cooldown: 0.36f, // Regular attack speeds
+		yenConfig.SetAttackFields(time: 0.33f, recovery: 0.15f, cooldown: 0.39f, // Regular attack speeds
 			quickSpeedMult: 1.5f, quickCooldown: 0.205f); // Flea Brew
 
 		yenConfig.SetDashStabFields(time: 0.15f, speed: -26f, bounceJumpSpeed: 20f);
