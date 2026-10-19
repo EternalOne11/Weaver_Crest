@@ -84,19 +84,31 @@ internal static class Bind
 
     private static bool holdCheckRunning;
 
+    private static bool IsBindCycle(string state) => state.StartsWith("Bind ") && state != "Bind Burst";
+
     private static IEnumerator HoldToBind(PlayMakerFSM bindFsm)
     {
         holdCheckRunning = true;
         try {
+            string lastState = "";
+            int cyclesStarted = 0;
+            int lastCycle = -1;
             while (true) {
                 string state = bindFsm.Fsm.ActiveStateName;
                 if (state == "End Bind" || state == "Cooldown" || state == "Idle")
                     yield break;
 
-                if (!HeroController.instance.inputHandler.inputActions.Cast.IsPressed) {
-                    bindFsm.Fsm.SetState("End Bind");
-                    yield break;
+                if (state != lastState && IsBindCycle(state)) {
+                    cyclesStarted++;
+                    if (lastCycle >= 0 && cyclesStarted > lastCycle) {
+                        bindFsm.Fsm.SetState("End Bind");
+                        yield break;
+                    }
                 }
+                lastState = state;
+
+                if (lastCycle < 0 && !HeroController.instance.inputHandler.inputActions.Cast.IsPressed)
+                    lastCycle = Mathf.Max(cyclesStarted, 1);
                 yield return null;
             }
         }
@@ -153,8 +165,8 @@ internal static class Bind
         }
         effectObj.SetActive(false);
         effectPlaying = false;
-        for (float t = 0f; t < 1f && run == effectRun && defaultEffect != null
-            && defaultEffect.Cast<Transform>().Any(c => c.gameObject.activeInHierarchy); t += Time.deltaTime) {
+        while (run == effectRun && defaultEffect != null && YenCrest.IsEquipped
+            && defaultEffect.Cast<Transform>().Any(c => c.gameObject.activeInHierarchy)) {
             SetEffect(defaultEffect, true);
             yield return null;
         }
