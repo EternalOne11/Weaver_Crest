@@ -38,8 +38,10 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static SlotInfo BlueSlot1 { get; private set; }
 	internal static SlotInfo BlueSlot2 { get; private set; }
 
-//Config settings
+        // Config Settings
 	internal static ConfigEntry<bool> HoldToBindSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> LifebloodTradeSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -59,6 +61,10 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 		HoldToBindSetting = Config.Bind("Bind", "Hold bind", false,
 			"Bind now requires holding the button down, the entire time, letting go early cancels it.");
+		LifebloodTradeSetting = Config.Bind("Mask trade", "Trade lifeblood masks", true,
+			"Allow lifeblood masks to be converted into silk during the 0 silk trade.");
+		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", false,
+			"When reaching 0 silk after a bind, you gain half a silk. For full playthroughs");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
