@@ -125,7 +125,7 @@ internal static class MaskTrade {
 	internal static bool DuringTrade() =>
 		PlayerData.instance.silk <= 0
 		&& !HalfSilk.GetHasHalfSilk()
-                && PlayerData.instance.health > Cost; // never on her last (normal) mask
+        && PlayerData.instance.health > Cost; // never on her last mask
 
 	internal static void MaskCost(bool normalAttack = false) {
 		if (DuringTrade()) {
