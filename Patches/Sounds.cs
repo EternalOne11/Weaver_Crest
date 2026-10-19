@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest.Patches;
 
@@ -43,83 +42,39 @@ internal static class Sounds {
 	}
 
 	internal static void PlayHurt() {
+		if (!GameManager.instance.gameSettings.playerVoiceEnabled)
+			return;
+
 		if ((gameHurtClips == null || gameHurtClips.Length == 0) && Time.unscaledTime >= NextHurt) {
 			NextHurt = Time.unscaledTime + 5f;
 			gameHurtClips = [.. Resources.FindObjectsOfTypeAll<AudioClip>()
 				.Where(c => c.name is "w1" or "w2" or "w3" or "w4" or "w5" or "w6" or "w7")
 				.GroupBy(c => c.name).Select(g => g.First())];
-
 		}
 
 		if (gameHurtClips != null && gameHurtClips.Length > 0)
 			Play(gameHurtClips[UnityEngine.Random.Range(0, gameHurtClips.Length)]);
 	}
 
-	private static readonly HashSet<string> GruntNames = [
-		"a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", "a12", "a13",
-		"a17", "a19", "a20", "a23",
-	];
-	private const float MuteTime = 0.2f;
+	private const float MuteTime = 0.35f;
 	private static float MuteUntil = -1f;
-
-	private const float TradeGruntWindow = 0.4f;
-	private static float LastTrade = -1f;
+	private static int skippedFrame = -1;
 
 	internal static void MuteForTrade() {
+		if (Time.frameCount == skippedFrame)
+			return;
 		MuteUntil = Time.time + MuteTime;
-		LastTrade = Time.time;
 	}
-	internal static bool MuteActive => Time.time < MuteUntil;
 
 	private static bool IsVoice(string name) =>
 		name.Length > 1 && name[0] == 'a' && name.Skip(1).All(char.IsDigit);
-	private static bool Replacement;
 
 	internal static bool shouldMute(AudioClip? clip) {
-		if (Replacement || clip == null || !IsVoice(clip.name))
+		if (clip == null || Time.time >= MuteUntil || !IsVoice(clip.name))
 			return false;
-		if (MuteActive && GruntNames.Contains(clip.name))
-			return true;
-
-		int dashSlash = DashVoice();
-		if (dashSlash == 0)
-			return false;
-		if (dashSlash == 1 || dashSlash == 3) {
-			if (Time.time - LastTrade >= TradeGruntWindow)
-				PlayReplacement(RandomFound(ref normalGrunts, GruntNames, ref nextGrunt));
-		}
-			PlayReplacement(RandomFound(ref dashFoley, DashFoleyName, ref nextFoleySearch));
+		MuteUntil = -1f;
+		skippedFrame = Time.frameCount;
 		return true;
-	}
-
-	private static int DashVoice() {
-		if (!HeroController.instance || !YenCrest.IsEquipped || HeroController.instance.sprintFSM.Fsm.ActiveStateName != "Attack Dash Start")
-			return 0;
-		return HeroController.instance.sprintFSM.FsmVariables.GetFsmInt("Attack Step").Value;
-	}
-
-	private static readonly HashSet<string> DashFoleyName = ["hornet_beast_dash_attack_foley"];
-	private static AudioClip[]? normalGrunts, dashFoley;
-	private static float nextGrunt, nextFoleySearch;
-
-	private static AudioClip? RandomFound(ref AudioClip[]? found, HashSet<string> names, ref float nextSearch) {
-		if ((found == null || found.Length == 0) && Time.unscaledTime >= nextSearch) {
-			nextSearch = Time.unscaledTime + 5f;
-			found = [.. Resources.FindObjectsOfTypeAll<AudioClip>()
-				.Where(c => names.Contains(c.name))
-				.GroupBy(c => c.name).Select(g => g.First())];
-		}
-		return found != null && found.Length > 0 ? found[UnityEngine.Random.Range(0, found.Length)] : null;
-	}
-
-	private static void PlayReplacement(AudioClip? clip) {
-		Replacement = true;
-		try {
-			Play(clip);
-		}
-		finally {
-			Replacement = false;
-		}
 	}
 
 	internal static void Play(AudioClip? clip, float volume = 1f) {
@@ -127,10 +82,14 @@ internal static class Sounds {
 			if (clip == null)
 				return;
 			if (!source) {
-				source = HeroController.instance.gameObject.AddComponent<AudioSource>();
-				source.playOnAwake = false;
-				source.outputAudioMixerGroup = HeroController.instance.GetComponentsInChildren<AudioSource>(true)
-					.FirstOrDefault(s => s != source && s.outputAudioMixerGroup)?.outputAudioMixerGroup;
+				var hero = HeroController.instance;
+				source = hero.GetComponent<AudioSource>();
+				if (!source) {
+					source = hero.gameObject.AddComponent<AudioSource>();
+					source.playOnAwake = false;
+					source.outputAudioMixerGroup = hero.GetComponentsInChildren<AudioSource>(true)
+						.FirstOrDefault(s => s != source && s.outputAudioMixerGroup)?.outputAudioMixerGroup;
+				}
 			}
 			source!.PlayOneShot(clip, volume);
 		}
@@ -179,7 +138,6 @@ internal static class Sounds {
 }
 
 // Replaces normal attack grunt during mask silk trade.
-// Plus mutes half the grunts during run attack
 [HarmonyPatch]
 internal static class AttackGrunts {
 	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.PlayOneShot), [typeof(AudioClip), typeof(float)])]
