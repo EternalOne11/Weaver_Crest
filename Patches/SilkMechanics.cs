@@ -57,8 +57,22 @@ internal static class SilkMechanics {
 		HeroController.instance.AddSilk(1, false, SilkSpool.SilkAddSource.Normal, false);
 	}
 
-	[HarmonyPatch(typeof(HeroController), "Update")]
-	[HarmonyPostfix]
+        private static bool wasBinding;
+
+        [HarmonyPatch(typeof(HeroController), "Update")]
+        [HarmonyPostfix]
+        private static void HalfSilkAfterBind(HeroController __instance) {
+                if (HeroController.instance != __instance)
+                        return;
+                bool binding = __instance.cState.isBinding;
+                if (wasBinding && !binding && YenCrest.IsEquipped && BindHalfSilkSetting.Value
+                        && PlayerData.instance.silk <= 0 && !HalfSilk.GetHasHalfSilk())
+                        HalfSilk.AddHalfSilk(heroEffect: false);
+                wasBinding = binding;
+        }
+        [HarmonyPatch(typeof(HeroController), "Update")]
+        [HarmonyPostfix]
+
 	private static void PayMissed(HeroController __instance) {
 		if (HeroController.instance == __instance)
 			MaskTrade.PayCosts();
@@ -111,14 +125,18 @@ internal static class MaskTrade {
 	internal static bool DuringTrade() =>
 		PlayerData.instance.silk <= 0
 		&& !HalfSilk.GetHasHalfSilk()
-		&& PlayerData.instance.health > Cost; // never on her last mask
+                && PlayerData.instance.health > Cost; // never on her last (normal) mask
 
 	internal static void MaskCost(bool normalAttack = false) {
 		if (DuringTrade()) {
 			Sounds.MuteForTrade(); //Pain grunt replaces normal attack grunt
 
-		//Sigh this is stupid... why can't it just work out of the box. (charge and dash freeze otherwise)
+		// Lifeblood Exclusion
+
+			int lifeblood = LifebloodTradeSetting.Value ? 0 : PlayerData.instance.healthBlue;
+			PlayerData.instance.healthBlue -= lifeblood;
 			PlayerData.instance.TakeHealth(Cost, HeroController.instance.IsInLifebloodState, allowFracturedMaskBreak: false);
+			PlayerData.instance.healthBlue += lifeblood;
 			HeroController.instance.damageEffectFSM.SendEvent("DAMAGE"); // the black damage vignette
 			EventRegister.SendEvent("HEALTH UPDATE");
 			HeroController.instance.AddSilk(Silk, false, SilkSpool.SilkAddSource.Normal, false);
