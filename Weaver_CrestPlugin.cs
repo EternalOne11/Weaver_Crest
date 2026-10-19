@@ -42,6 +42,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> HoldToBindSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> LifebloodTradeSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> SilkDamageSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -65,6 +66,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"Allow lifeblood masks to be converted into silk during the 0 silk trade.");
 		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", false,
 			"When reaching 0 silk after a bind, you gain half a silk. For full playthroughs");
+                SilkDamageSetting = Config.Bind("Balance", "Reduces silk skill damage", false,
+                        "Silk skills now deal 85% of their usual damage when using the the Weaver crest.");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
