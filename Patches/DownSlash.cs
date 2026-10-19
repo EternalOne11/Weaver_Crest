@@ -28,7 +28,7 @@ internal static partial class Moveset {
 		-ThrustSpeed * Mathf.Sin(ThrustAngle * Mathf.Deg2Rad),
 		-ThrustSpeed * Mathf.Cos(ThrustAngle * Mathf.Deg2Rad));
 
-	internal const float DownCooldown = DownAnticTime + DownKickTime + DownRecoveryTime + 0.05f;
+	internal const float DownCooldown = DownAnticTime + DownKickTime + DownRecoveryTime + 0.01f;
 
 	private static readonly float[] DownEffectOffsetY = [-60f, -39f, -21f, -18f, -14f];
 
