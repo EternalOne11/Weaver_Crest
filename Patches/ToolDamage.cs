@@ -7,18 +7,21 @@ namespace Weaver_Crest.Patches;
 
 // silk spell damage modifer (other tools can be added)
 // 1 = 100%, 1.5 = 150% and 0.5 = 50%
-// For this crest, it will be 0.75-1 during playtests...
+// 100% by default 85% from config.
 internal static class ToolDamage {
+
+	private static HashSet<ToolItem>? silkSkills;
+	private static HashSet<ToolItem> SilkSkills => silkSkills ??= [
+		ToolItemManager.GetToolByName("Silk Spear"),
+		ToolItemManager.GetToolByName("Thread Sphere"),
+		ToolItemManager.GetToolByName("Parry"),
+		ToolItemManager.GetToolByName("Silk Charge"),
+		ToolItemManager.GetToolByName("Silk Bomb"),
+		ToolItemManager.GetToolByName("Silk Boss Needle"),
+	];
 
 	private static Dictionary<ToolItem, float>? targetedTools;
 	private static Dictionary<ToolItem, float> TargetedTools => targetedTools ??= new() {
-		[ToolItemManager.GetToolByName("Silk Spear")] = 1.0f,
-		[ToolItemManager.GetToolByName("Thread Sphere")] = 1.0f,
-		[ToolItemManager.GetToolByName("Parry")] = 1.0f,
-		[ToolItemManager.GetToolByName("Silk Charge")] = 1.0f,
-		[ToolItemManager.GetToolByName("Silk Bomb")] = 1.0f,
-		[ToolItemManager.GetToolByName("Silk Boss Needle")] = 1.0f,
-		
 		//Clawmirror nerfs
 		[ToolItemManager.GetToolByName("Dazzle Bind")] = 0.45f,
 		[ToolItemManager.GetToolByName("Dazzle Bind Upgraded")] = 0.45f,
@@ -32,10 +35,12 @@ internal static class ToolDamage {
 		if (hitInstance.RepresentingTool == null)
 			return;
 
-		if (!TargetedTools.TryGetValue(hitInstance.RepresentingTool, out float DamageMultiplier))
+		float DamageMultiplier;
+		if (SilkSkills.Contains(hitInstance.RepresentingTool))
+			DamageMultiplier = SilkDamageSetting.Value ? 0.85f : 1f;
+		else if (!TargetedTools.TryGetValue(hitInstance.RepresentingTool, out DamageMultiplier))
 			return;
 
 		hitInstance.Multiplier *= DamageMultiplier;
 	}
 }
-// Potential silk skill casting speed modifer.
