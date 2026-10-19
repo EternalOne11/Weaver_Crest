@@ -201,8 +201,7 @@ internal static class MaskTrade {
 		if (flashRun == 0 || !flashRestore)
 			flashScale = flash!.transform.localScale;
 		flash!.transform.localScale = flashScale * 0.7f;
-		flash.SetActive(false
-	);
+		flash.SetActive(false);
 		flash.SetActive(true);
 
 		flashRestore = true;
