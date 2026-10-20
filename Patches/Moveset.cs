@@ -98,6 +98,14 @@ internal static partial class Moveset {
 	//Stupid Barnacles
 	internal static readonly HashSet<DamageEnemies> OurDamagers = [];
 
+        internal static bool IsOurAttack(GameObject? obj) {
+                if (!obj)
+                        return false;
+                foreach (GameObject? attack in AttackObjects())
+                        if (attack && obj!.transform.IsChildOf(attack!.transform))
+                                return true;
+                return false;
+        }
 	internal static void DetectBarnacle() {
 		int attackLayer = LayerMask.NameToLayer("Attack");
 		OurDamagers.Clear();
