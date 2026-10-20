@@ -44,6 +44,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> SilkDamageSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
+        internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -71,6 +72,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"Silk skills now deal 85% of their usual damage when using the the Weaver crest.");
 		KnockbackSetting = Config.Bind("Balance", "Half knockback", false,
 			"Reduces knockback in half, making it the same as witch crest.");
+                RefundSetting = Config.Bind("Silk", "Silk Refunds", true,
+                        "Attacks that break objects, like doors, and other ones the player can bounce off get refunded. (shellshard walls included)");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
@@ -86,6 +89,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(HalfKnockback));
 		Harmony.PatchAll(typeof(BarnacleHit));
 		Harmony.PatchAll(typeof(NeedolinHalfSilk));
+		Harmony.PatchAll(typeof(BreakableRefund));
+		Harmony.PatchAll(typeof(ShardWallRefund));
 
 
 		RegisterCrest();
