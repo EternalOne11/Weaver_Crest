@@ -78,18 +78,44 @@ internal static partial class Moveset {
 		yenConfig.ChargedSlashFsmEdit = ChargedFsmEdit;
 	}
 
+	private static GameObject?[] AttackObjects() {
+		var m = YenCrest.Moveset;
+		return [m.Slash?.GameObject, m.AltSlash?.GameObject, m.UpSlash?.GameObject,
+			m.WallSlash?.GameObject, m.DownSlash?.GameObject, m.DashSlash?.GameObject, m.ChargedSlash?.GameObject];
+	}
+
 	// Needleforge oversight... (you need to manually readd the NailSlashTerrainThunk, to not double hit the wall.
 	private static readonly AccessTools.FieldRef<NailSlashTerrainThunk, float> ThunkCooldown =
 		AccessTools.FieldRefAccess<NailSlashTerrainThunk, float>("cooldown");
 
 	internal static void TerrainHitCooldown() {
-		var m = YenCrest.Moveset;
-		GameObject?[] attacks = [m.Slash?.GameObject, m.AltSlash?.GameObject, m.UpSlash?.GameObject,
-			m.WallSlash?.GameObject, m.DownSlash?.GameObject, m.DashSlash?.GameObject, m.ChargedSlash?.GameObject];
-		foreach (GameObject? attack in attacks)
+		foreach (GameObject? attack in AttackObjects())
 			if (attack)
 				foreach (var thunk in attack!.GetComponentsInChildren<NailSlashTerrainThunk>(true))
 					ThunkCooldown(thunk) = 0.3f;
+	}
+
+	//Stupid Barnacles
+	internal static readonly HashSet<DamageEnemies> OurDamagers = [];
+
+	internal static void DetectBarnacle() {
+		int attackLayer = LayerMask.NameToLayer("Attack");
+		OurDamagers.Clear();
+		foreach (GameObject? attack in AttackObjects()) {
+			if (!attack)
+				continue;
+			foreach (var damager in attack!.GetComponentsInChildren<DamageEnemies>(true)) {
+				OurDamagers.Add(damager);
+				GameObject hitbox = damager.gameObject;
+				if (attackLayer >= 0)
+					hitbox.layer = attackLayer;
+				if (!hitbox.GetComponent<Rigidbody2D>()) {
+					var body = hitbox.AddComponent<Rigidbody2D>();
+					body.bodyType = RigidbodyType2D.Kinematic;
+					body.simulated = true;
+				}
+			}
+		}
 	}
 
 	private static Texture2D[] LoadNamedTextures(string[] files) =>
@@ -107,6 +133,16 @@ internal static partial class Moveset {
 		var animLib = animLibObj.AddComponent<tk2dSpriteAnimation>();
 		animLib.clips = [];
 		return animLib;
+	}
+}
+
+[HarmonyPatch]
+internal static class BarnacleHit {
+	[HarmonyPatch(typeof(DamageEnemies), nameof(DamageEnemies.GetDamageDealt))]
+	[HarmonyPostfix]
+	private static void ReportNeedleDamage(DamageEnemies __instance, ref int __result) {
+		if (__result <= 0 && Moveset.OurDamagers.Contains(__instance))
+			__result = Mathf.Max(1, PlayerData.instance.nailDamage);
 	}
 }
 
