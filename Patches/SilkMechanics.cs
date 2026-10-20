@@ -28,7 +28,7 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-		MaskTrade.MaskCost(normalAttack: true);
+		BreakableRefund.StartSwing(deferredCost: MaskTrade.MaskCost(normalAttack: true));
 
 		Sounds.PlayAttack(__0 switch {
 			AttackDirection.upward => "UpSlash",
@@ -49,6 +49,8 @@ internal static class SilkMechanics {
 		if (Time.time - LastWeave >= MaskTrade.WeaveWindow)
 			return;
 
+		BreakableRefund.HitEnemy();
+
 		if (MaskTrade.CancelCost()) {
 			HalfSilk.AddHalfSilk(heroEffect: false);
 			return;
@@ -57,25 +59,27 @@ internal static class SilkMechanics {
 		HeroController.instance.AddSilk(1, false, SilkSpool.SilkAddSource.Normal, false);
 	}
 
-        private static bool wasBinding;
+	private static bool wasBinding;
 
-        [HarmonyPatch(typeof(HeroController), "Update")]
-        [HarmonyPostfix]
-        private static void HalfSilkAfterBind(HeroController __instance) {
-                if (HeroController.instance != __instance)
-                        return;
-                bool binding = __instance.cState.isBinding;
-                if (wasBinding && !binding && YenCrest.IsEquipped && BindHalfSilkSetting.Value
-                        && PlayerData.instance.silk <= 0 && !HalfSilk.GetHasHalfSilk())
-                        HalfSilk.AddHalfSilk(heroEffect: false);
-                wasBinding = binding;
-        }
-        [HarmonyPatch(typeof(HeroController), "Update")]
-        [HarmonyPostfix]
+	[HarmonyPatch(typeof(HeroController), "Update")]
+	[HarmonyPostfix]
+	private static void HalfSilkAfterBind(HeroController __instance) {
+		if (HeroController.instance != __instance)
+			return;
+		bool binding = __instance.cState.isBinding;
+		if (wasBinding && !binding && YenCrest.IsEquipped && BindHalfSilkSetting.Value
+			&& PlayerData.instance.silk <= 0 && !HalfSilk.GetHasHalfSilk())
+			HalfSilk.AddHalfSilk(heroEffect: false);
+		wasBinding = binding;
+	}
 
+	[HarmonyPatch(typeof(HeroController), "Update")]
+	[HarmonyPostfix]
 	private static void PayMissed(HeroController __instance) {
-		if (HeroController.instance == __instance)
-			MaskTrade.PayCosts();
+		if (HeroController.instance != __instance)
+			return;
+		BreakableRefund.EndSwingIfOver();
+		MaskTrade.PayCosts();
 	}
 
 	[HarmonyPatch(typeof(AttackBase), nameof(AttackBase.StartAttack))]
@@ -88,7 +92,7 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-		Sounds.MuteVoice();
+                Sounds.MuteVoice();
 		MaskTrade.MaskCost();
 		Sounds.PlayAttack("ChargedSlash");
 	}
@@ -126,14 +130,13 @@ internal static class MaskTrade {
 	internal static bool DuringTrade() =>
 		PlayerData.instance.silk <= 0
 		&& !HalfSilk.GetHasHalfSilk()
-        && PlayerData.instance.health > Cost; // never on her last mask
+		&& PlayerData.instance.health > Cost; // never on her last mask
 
-	internal static void MaskCost(bool normalAttack = false) {
+	internal static bool MaskCost(bool normalAttack = false) {
 		if (DuringTrade()) {
 			Sounds.MuteForTrade(); //Pain grunt replaces normal attack grunt
 
-		// Lifeblood Exclusion
-
+                // Lifeblood Exclusion
 			int lifeblood = LifebloodTradeSetting.Value ? 0 : PlayerData.instance.healthBlue;
 			PlayerData.instance.healthBlue -= lifeblood;
 			PlayerData.instance.TakeHealth(Cost, HeroController.instance.IsInLifebloodState, allowFracturedMaskBreak: false);
@@ -148,12 +151,19 @@ internal static class MaskTrade {
 			Sounds.PlayHurt();
 			PlayFlash();
 		}
-	//visual delay at 9 silk to prevent a greater visual annoyance
+		//visual delay at 9 silk to prevent a greater visual annoyance
 		bool DipBelowBind = PlayerData.instance.silk == SilkSpool.BindCost && !HalfSilk.GetHasHalfSilk();
-		if (DipBelowBind)
+		if (DipBelowBind) {
 			pendingCosts.Enqueue((Time.time, normalAttack));
-		else
-			HalfSilk.RemoveHalfSilk(interruptRegen: false);
+			return true;
+		}
+		HalfSilk.RemoveHalfSilk(interruptRegen: false);
+		return false;
+	}
+
+	internal static bool Swinging() {
+		var state = HeroController.instance.cState;
+		return state.attacking || state.downSpikeAntic || state.downSpiking || state.downAttacking;
 	}
 
 	internal const float WeaveWindow = 0.5f;
@@ -171,8 +181,7 @@ internal static class MaskTrade {
 			pendingCosts.Clear();
 			return;
 		}
-		var state = HeroController.instance.cState;
-		bool swinging = state.attacking || state.downSpikeAntic || state.downSpiking || state.downAttacking;
+		bool swinging = Swinging();
 		while (pendingCosts.Count > 0) {
 			var (time, normalAttack) = pendingCosts.Peek();
 			float waited = Time.time - time;
