@@ -38,12 +38,12 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static SlotInfo BlueSlot1 { get; private set; }
 	internal static SlotInfo BlueSlot2 { get; private set; }
 
-        // Config Settings
+	// Config Settings
 	internal static ConfigEntry<bool> HoldToBindSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> LifebloodTradeSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> SilkDamageSetting { get; private set; } = null!;
-        internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -69,8 +69,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"When reaching 0 silk after a bind, you gain half a silk. For full playthroughs");
 		SilkDamageSetting = Config.Bind("Balance", "Reduces silk skill damage", false,
 			"Silk skills now deal 85% of their usual damage when using the the Weaver crest.");
-                KnockbackSetting = Config.Bind("Balance", "Half knockback", false,
-                        "Reduces knockback in half, making it the same as witch crest.");
+		KnockbackSetting = Config.Bind("Balance", "Half knockback", false,
+			"Reduces knockback in half, making it the same as witch crest.");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
@@ -83,7 +83,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(DashPatch));
 		Harmony.PatchAll(typeof(DownPatch));
 		Harmony.PatchAll(typeof(AttackGrunts));
-                Harmony.PatchAll(typeof(HalfKnockback));
+		Harmony.PatchAll(typeof(HalfKnockback));
+		Harmony.PatchAll(typeof(BarnacleHit));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
@@ -108,6 +109,9 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 			// One terrain hit per swing... needleforge oversight.
 			Moveset.TerrainHitCooldown();
+
+			//... Stupid Barnacles
+			Moveset.DetectBarnacle();
 
 			// Longclaw
 			var m = YenCrest.Moveset;
