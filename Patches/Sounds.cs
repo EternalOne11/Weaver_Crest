@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest.Patches;
 
@@ -79,23 +78,15 @@ internal static class Sounds {
 	private static float ChargedMuteUntil = -1f;
 
 	internal static void MuteVoice() => ChargedMuteUntil = Time.time + 1f;
-        internal static void ClearMute() => ChargedMuteUntil = -1f;
-	internal static bool InTransition;
-	internal static bool ActiveMute => InTransition || Time.time < ChargedMuteUntil || Time.time < MuteUntil;
+
+	internal static bool ActiveMute => Time.time < ChargedMuteUntil || Time.time < MuteUntil;
 
 	internal static bool shouldMute(AudioClip? clip) {
-		float now = Time.time;
-		bool chargedMute = now < MuteUntil;
-		bool tradeMute = now < ChargedMuteUntil;
-		if (!chargedMute && !tradeMute && !InTransition)
-			return false;
 		if (clip == null || !IsVoice(clip.name))
 			return false;
-
-		if (InTransition || (chargedMute && YenCrest.IsEquipped))
+		if (Time.time < ChargedMuteUntil)
 			return true;
-		if (!tradeMute)
-			return false;
+
 		MuteUntil = -1f;
 		skippedFrame = Time.frameCount;
 		return true;
@@ -171,18 +162,4 @@ internal static class AttackGrunts {
 	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.Play), [])]
 	[HarmonyPrefix]
 	private static bool SkipPlay(AudioSource __instance) => !(Sounds.ActiveMute && Sounds.shouldMute(__instance.clip));
-
-	[HarmonyPatch(typeof(HeroController), "Update")]
-	[HarmonyPostfix]
-	private static void TrackHeroState(HeroController __instance, float ___nailChargeTimer) {
-		if (HeroController.instance != __instance)
-			return;
-		bool equipped = Weaver_Crest.Weaver_CrestPlugin.YenCrest.IsEquipped;
-		Sounds.InTransition = equipped && (__instance.cState.transitioning
-			|| __instance.transitionState != GlobalEnums.HeroTransitionState.WAITING_TO_TRANSITION);
-		if (!equipped)
-			Sounds.ClearMute();
-		else if (__instance.cState.nailCharging && ___nailChargeTimer >= __instance.CurrentNailChargeTime)
-			Sounds.MuteVoice();
-	}
 }
