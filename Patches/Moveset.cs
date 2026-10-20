@@ -109,3 +109,18 @@ internal static partial class Moveset {
 		return animLib;
 	}
 }
+
+[HarmonyPatch]
+internal static class HalfKnockback {
+	private const float KnockbackMult = 0.5f;
+
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.Recoil), [typeof(bool), typeof(int), typeof(float)])]
+	[HarmonyPrefix]
+	private static void HalveRecoil(ref float __2) {
+		if (!YenCrest.IsEquipped || !KnockbackSetting.Value)
+			return;
+
+		ToolItem belt = GlobalSettings.Gameplay.WeightedAnkletTool;
+		__2 *= belt && belt.IsEquipped ? 0f : KnockbackMult;
+	}
+}
