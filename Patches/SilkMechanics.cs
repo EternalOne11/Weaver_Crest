@@ -59,6 +59,16 @@ internal static class SilkMechanics {
 		HeroController.instance.AddSilk(1, false, SilkSpool.SilkAddSource.Normal, false);
 	}
 
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.AddSilk), [typeof(int), typeof(bool), typeof(SilkSpool.SilkAddSource), typeof(bool)])]
+	[HarmonyPostfix]
+	private static void GainSettlesHeldCost(int __0) {
+		if (__0 <= 0 || !YenCrest.IsEquipped || !MaskTrade.CancelCost())
+			return; // nothing gained, or no cost on hold
+		BreakableRefund.HitEnemy();
+                if (PlayerData.instance.silk > SilkSpool.BindCost)
+                        HalfSilk.RemoveHalfSilk(interruptRegen: false);
+        }
+
 	private static bool wasBinding;
 
 	[HarmonyPatch(typeof(HeroController), "Update")]
