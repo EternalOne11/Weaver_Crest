@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest.Patches;
 
@@ -66,11 +67,34 @@ internal static class Sounds {
 		MuteUntil = Time.time + MuteTime;
 	}
 
-	private static bool IsVoice(string name) =>
-		name.Length > 1 && name[0] == 'a' && name.Skip(1).All(char.IsDigit);
+	private static bool IsVoice(string name) {
+		if (name.Length < 2 || name[0] != 'a')
+			return false;
+		for (int i = 1; i < name.Length; i++)
+			if (!char.IsDigit(name[i]))
+				return false;
+		return true;
+	}
+
+	private static float ChargedMuteUntil = -1f;
+
+	internal static void MuteVoice() => ChargedMuteUntil = Time.time + 1f;
+        internal static void ClearMute() => ChargedMuteUntil = -1f;
+	internal static bool InTransition;
+	internal static bool ActiveMute => InTransition || Time.time < ChargedMuteUntil || Time.time < MuteUntil;
 
 	internal static bool shouldMute(AudioClip? clip) {
-		if (clip == null || Time.time >= MuteUntil || !IsVoice(clip.name))
+		float now = Time.time;
+		bool chargedMute = now < MuteUntil;
+		bool tradeMute = now < ChargedMuteUntil;
+		if (!chargedMute && !tradeMute && !InTransition)
+			return false;
+		if (clip == null || !IsVoice(clip.name))
+			return false;
+
+		if (InTransition || (chargedMute && YenCrest.IsEquipped))
+			return true;
+		if (!tradeMute)
 			return false;
 		MuteUntil = -1f;
 		skippedFrame = Time.frameCount;
@@ -142,9 +166,23 @@ internal static class Sounds {
 internal static class AttackGrunts {
 	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.PlayOneShot), [typeof(AudioClip), typeof(float)])]
 	[HarmonyPrefix]
-	private static bool SkipOneShot(AudioClip clip) => !Sounds.shouldMute(clip);
+	private static bool SkipOneShot(AudioClip clip) => !(Sounds.ActiveMute && Sounds.shouldMute(clip));
 
 	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.Play), [])]
 	[HarmonyPrefix]
-	private static bool SkipPlay(AudioSource __instance) => !Sounds.shouldMute(__instance.clip);
+	private static bool SkipPlay(AudioSource __instance) => !(Sounds.ActiveMute && Sounds.shouldMute(__instance.clip));
+
+	[HarmonyPatch(typeof(HeroController), "Update")]
+	[HarmonyPostfix]
+	private static void TrackHeroState(HeroController __instance, float ___nailChargeTimer) {
+		if (HeroController.instance != __instance)
+			return;
+		bool equipped = Weaver_Crest.Weaver_CrestPlugin.YenCrest.IsEquipped;
+		Sounds.InTransition = equipped && (__instance.cState.transitioning
+			|| __instance.transitionState != GlobalEnums.HeroTransitionState.WAITING_TO_TRANSITION);
+		if (!equipped)
+			Sounds.ClearMute();
+		else if (__instance.cState.nailCharging && ___nailChargeTimer >= __instance.CurrentNailChargeTime)
+			Sounds.MuteVoice();
+	}
 }
