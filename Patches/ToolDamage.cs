@@ -23,8 +23,8 @@ internal static class ToolDamage {
 	private static Dictionary<ToolItem, float>? targetedTools;
 	private static Dictionary<ToolItem, float> TargetedTools => targetedTools ??= new() {
 		//Clawmirror nerfs
-		[ToolItemManager.GetToolByName("Dazzle Bind")] = 0.45f,
-		[ToolItemManager.GetToolByName("Dazzle Bind Upgraded")] = 0.45f,
+		[ToolItemManager.GetToolByName("Dazzle Bind")] = 0.5f,
+		[ToolItemManager.GetToolByName("Dazzle Bind Upgraded")] = 0.5f,
 	};
 
 	[HarmonyPrefix]
