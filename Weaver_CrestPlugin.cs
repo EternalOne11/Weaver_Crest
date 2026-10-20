@@ -43,6 +43,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> LifebloodTradeSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> SilkDamageSetting { get; private set; } = null!;
+        internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -60,14 +61,16 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Log = Logger;
 		Logger.LogInfo($"Plugin {Name} ({Id}) has loaded!");
 
-		HoldToBindSetting = Config.Bind("Bind", "Hold bind", false,
+		HoldToBindSetting = Config.Bind("Bind", "Hold bind", true,
 			"Bind now requires holding the button down, the entire time, letting go early cancels it.");
 		LifebloodTradeSetting = Config.Bind("Mask trade", "Trade lifeblood masks", true,
 			"Allow lifeblood masks to be converted into silk during the 0 silk trade.");
 		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", false,
 			"When reaching 0 silk after a bind, you gain half a silk. For full playthroughs");
-                SilkDamageSetting = Config.Bind("Balance", "Reduces silk skill damage", false,
-                        "Silk skills now deal 85% of their usual damage when using the the Weaver crest.");
+		SilkDamageSetting = Config.Bind("Balance", "Reduces silk skill damage", false,
+			"Silk skills now deal 85% of their usual damage when using the the Weaver crest.");
+                KnockbackSetting = Config.Bind("Balance", "Half knockback", false,
+                        "Reduces knockback in half, making it the same as witch crest.");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
@@ -80,6 +83,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(DashPatch));
 		Harmony.PatchAll(typeof(DownPatch));
 		Harmony.PatchAll(typeof(AttackGrunts));
+                Harmony.PatchAll(typeof(HalfKnockback));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
