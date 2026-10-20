@@ -164,6 +164,15 @@ public static class HalfSilk
     private static tk2dSpriteCollectionData SpriteCollection = null!;
     private static bool AddedAnimations = false;
 
+    // Tempoarary filter for half silk Needolin
+    private const bool NeedolinAcid = true;
+
+    internal static void RefreshColor()
+    {
+        if (GetHasHalfSilk() && CurrentHalf)
+            CurrentHalf.FadeToCorrectColor();
+    }
+
     private static SilkChunk CurrentHalf = null!;
     private static bool HasHalfSilk = false;
     private static SilkSpool.SilkUsingFlags HalfSilkUsingFlags = SilkSpool.SilkUsingFlags.None;
@@ -251,9 +260,7 @@ public static class HalfSilk
         CurrentHalf.animator.AnimationChanged += UpgradeHalfSilkAnimChanged;
         CurrentHalf.SetAnims();
         CurrentHalf.upAnim = HalfSilkGrow.name;
-
-        if (SilkSpool.Instance.silkChunks.Count(s => !s.IsRegen) == SilkSpool.BindCost)
-            CurrentHalf.StartGlow();
+        SilkChunk upgraded = CurrentHalf;
 
         if (SilkSpool.Instance.wasUsingChunk)
         {
@@ -266,6 +273,9 @@ public static class HalfSilk
             CurrentHalf.SetUsing(silkUsingFlags);
         }
         CurrentHalf = null!;
+
+        if (SilkSpool.Instance.silkChunks.Count(s => !s.IsRegen) >= SilkSpool.BindCost)
+            upgraded.StartGlow();
 	}
 
     private static void UpgradeHalfSilkAnimComplete(tk2dSpriteAnimator animator, tk2dSpriteAnimationClip clip)
@@ -426,8 +436,12 @@ public static class HalfSilk
 
         SilkSpool.SilkUsingFlags ret = SilkSpool.SilkUsingFlags.None;
         
-        // if using a full silk, pass that to the next silk. I don't know what the silk drain effect is, so I'm passing it to the next silk too
-        if (usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal) || usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Drain))
+        if (!usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal))
+            NeedolinHalfSilk.UsingHalf = false;
+
+        // if using a full silk, pass that to the next silk. I don't know what the silk drain effect is, so I'm passing it to the next silk too.
+        bool needolinOnHalf = NeedolinHalfSilk.UsingHalf && usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal);
+        if (!needolinOnHalf && (usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal) || usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Drain)))
             ret = usingFlags;
 
         // Acid seems to be unused?
@@ -499,6 +513,10 @@ public static class HalfSilk
             orig *= 1.5f;
 			
         if (HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Acid))
+            orig = self.acidUseColor;
+
+        // Temporary Acid look (remove once you get proper frames)
+        if (NeedolinHalfSilk.UsingHalf && NeedolinAcid)
             orig = self.acidUseColor;
         
         if (HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Void))
@@ -817,6 +835,7 @@ public static class HalfSilk
     [HarmonyPostfix]
     private static void ResetOnLoad()
     {
+        NeedolinHalfSilk.UsingHalf = false;
         HasHalfSilk = false;
         CurrentHalf = null!;
     }
