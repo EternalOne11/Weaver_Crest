@@ -44,7 +44,10 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> SilkDamageSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
-        internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> ParrySetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> BreakableSetting { get; private set; } = null!;
+	internal static ConfigEntry<SkillSlotChoice> SkillSlotSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -72,8 +75,15 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"Silk skills now deal 85% of their usual damage when using the the Weaver crest.");
 		KnockbackSetting = Config.Bind("Balance", "Half knockback", false,
 			"Reduces knockback in half, making it the same as witch crest.");
-                RefundSetting = Config.Bind("Silk", "Silk Refunds", true,
-                        "Attacks that break objects, like doors, and other ones the player can bounce off get refunded. (shellshard walls included)");
+		RefundSetting = Config.Bind("Silk", "Silk Refunds", true,
+				"Attacks that on breable walls, doors, spikes, and shellshard walls refund silk");
+		ParrySetting = Config.Bind("Silk", "Refund on parries", false,
+			"When you clash with enemy projectiles, or an enemies parry, the attacks half silk will be refunded. (even if it hits an enemy)");
+		BreakableSetting = Config.Bind("Silk", "Refund on breakables", false,
+			"Attacks that break objects and other ones the player can bounce off get refunded.");
+		SkillSlotSetting = Config.Bind("Crest", "Silk skill bind slot", SkillSlotChoice.Top,
+			"When binding a silk skill, on weaver crest, it will autoequip it to the selected slot, none means middle, which in this case leaves it empty.");
+
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
@@ -91,7 +101,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(NeedolinHalfSilk));
 		Harmony.PatchAll(typeof(BreakableRefund));
 		Harmony.PatchAll(typeof(ShardWallRefund));
-
+		Harmony.PatchAll(typeof(ParryRefund));
+		Harmony.PatchAll(typeof(SkillAutoEquip));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
