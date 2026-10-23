@@ -7,6 +7,8 @@ using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
 
+#pragma warning disable HARMONIZE004
+
 namespace Weaver_Crest.Patches;
 
 // This is to make melee attacks give double silk and
@@ -65,22 +67,8 @@ internal static class SilkMechanics {
 		if (__0 <= 0 || !YenCrest.IsEquipped || !MaskTrade.CancelCost())
 			return; // nothing gained, or no cost on hold
 		BreakableRefund.HitEnemy();
-                if (PlayerData.instance.silk > SilkSpool.BindCost)
-                        HalfSilk.RemoveHalfSilk(interruptRegen: false);
-        }
-
-	private static bool wasBinding;
-
-	[HarmonyPatch(typeof(HeroController), "Update")]
-	[HarmonyPostfix]
-	private static void HalfSilkAfterBind(HeroController __instance) {
-		if (HeroController.instance != __instance)
-			return;
-		bool binding = __instance.cState.isBinding;
-		if (wasBinding && !binding && YenCrest.IsEquipped && BindHalfSilkSetting.Value
-			&& PlayerData.instance.silk <= 0 && !HalfSilk.GetHasHalfSilk())
-			HalfSilk.AddHalfSilk(heroEffect: false);
-		wasBinding = binding;
+		if (PlayerData.instance.silk > SilkSpool.BindCost)
+			HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
 	[HarmonyPatch(typeof(HeroController), "Update")]
@@ -234,5 +222,79 @@ internal static class MaskTrade {
 		if (flash)
 			flash!.transform.localScale = flashScale;
 		flashRestore = false;
+	}
+}
+
+// Built in half silk heart, when you have no silk hearts. (only at 0 silk, and at normal regen speed)
+[HarmonyPatch]
+internal static class HalfSilkHeart {
+	private static bool regenerating;
+
+	private static bool Applies(PlayerData pd) =>
+		YenCrest.IsEquipped && pd.CurrentSilkRegenMax <= 0 && pd.silk <= 0
+		&& !HalfSilk.GetHasHalfSilk() && pd.CurrentSilkMax > 0;
+
+	private static float WithWhiteRing(float time) =>
+		GlobalSettings.Gameplay.WhiteRingTool.IsEquipped ? time * GlobalSettings.Gameplay.WhiteRingSilkRegenTimeMultiplier : time;
+
+	[HarmonyPatch(typeof(HeroController), "StartSilkRegen")]
+	[HarmonyPrefix]
+	private static bool StartHalfRegen() {
+		regenerating = false;
+		if (!Applies(PlayerData.instance))
+			return true;
+		SilkSpool.Instance.SetRegen(1, false);
+		regenerating = true;
+		return false;
+	}
+
+	[HarmonyPatch(typeof(HeroController), "StartSilkRegen")]
+	[HarmonyPostfix]
+	[HarmonyPriority(Priority.Last)]
+	private static void SetHalfRegenTime(ref float ___silkRegenDurationLeft, float ___SILK_REGEN_DURATION) {
+		if (regenerating)
+			___silkRegenDurationLeft = WithWhiteRing(___SILK_REGEN_DURATION);
+	}
+
+	[HarmonyPatch(typeof(HeroController), "DoSilkRegen")]
+	[HarmonyPrefix]
+	private static bool SkipFullSilk() => !regenerating;
+
+	[HarmonyPatch(typeof(HeroController), "DoSilkRegen")]
+	[HarmonyPostfix]
+	[HarmonyPriority(Priority.Last)]
+	private static void GiveHalfSilk() {
+		if (!regenerating)
+			return;
+		regenerating = false;
+		SilkSpool.Instance.SetRegen(0, false);
+		if (!HalfSilk.GetHasHalfSilk())
+			HalfSilk.AddHalfSilk(heroEffect: false);
+	}
+
+	[HarmonyPatch(typeof(HeroController), "ResetSilkRegen")]
+	[HarmonyPostfix]
+	[HarmonyPriority(Priority.Last)]
+	private static void CancelHalfRegen(ref float ___silkRegenDelayLeft, float ___SILK_REGEN_DELAY) {
+		regenerating = false;
+		if (Applies(PlayerData.instance))
+			___silkRegenDelayLeft = WithWhiteRing(___SILK_REGEN_DELAY);
+	}
+
+	private static bool hadHalf;
+
+	[HarmonyPatch(typeof(HeroController), "Update")]
+	[HarmonyPostfix]
+	private static void RestartAfterUse(HeroController __instance, ref float ___silkRegenDelayLeft,
+		ref float ___silkRegenDurationLeft, float ___SILK_REGEN_DELAY) {
+		if (HeroController.instance != __instance)
+			return;
+		bool hasHalf = HalfSilk.GetHasHalfSilk();
+		if (hadHalf && !hasHalf && !regenerating && Applies(PlayerData.instance)) {
+			___silkRegenDelayLeft = WithWhiteRing(___SILK_REGEN_DELAY);
+			___silkRegenDurationLeft = 0f;
+			SilkSpool.Instance.SetRegen(0, false);
+		}
+		hadHalf = hasHalf;
 	}
 }
