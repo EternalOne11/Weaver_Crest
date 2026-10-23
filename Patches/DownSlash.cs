@@ -123,6 +123,28 @@ internal static partial class Moveset {
 		downEffectAnim.Play(downAnims.GetClipByName("Weaver DownSlash Effect"));
 	}
 
+	// Water bugfix... Maybe not vanilla behavior.
+	private static readonly Collider2D[] waterHits = new Collider2D[16];
+	private static ContactFilter2D waterFilter = new() { useTriggers = true };
+
+	internal static bool InWater(HeroController hc) {
+		int count = Physics2D.OverlapCircle(hc.transform.position, 0.6f, waterFilter, waterHits);
+		for (int i = 0; i < count; i++)
+			if (waterHits[i] && waterHits[i].CompareTag("Water Surface"))
+				return true;
+		return false;
+	}
+
+	private static readonly System.Reflection.MethodInfo? finishDownspike =
+		AccessTools.Method(typeof(HeroController), "FinishDownspike", [])
+		?? AccessTools.Method(typeof(HeroController), "CancelDownspike", [])
+		?? AccessTools.Method(typeof(HeroController), "CancelDownAttack", []);
+
+	internal static void EndAttackInWater(HeroController hc) {
+		finishDownspike?.Invoke(hc, null);
+		HeroController.instance.GetComponent<HeroAnimationController>().StartControl();
+	}
+
 	internal static IEnumerator DownRecovery() {
 		HeroController.instance.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
 
@@ -132,6 +154,8 @@ internal static partial class Moveset {
 		try {
 			float duration = downRecoveryClip.frames.Length / downRecoveryClip.fps;
 			for (float t = 0f; t < duration; t += Time.deltaTime) {
+				if (InWater(HeroController.instance))
+					yield break;
 				if (heroAnim.CurrentClip != downRecoveryClip) {
 					int frame = Mathf.Min((int)(t * downRecoveryClip.fps), downRecoveryClip.frames.Length - 1);
 					heroAnim.PlayFromFrame(downRecoveryClip, frame);
@@ -179,6 +203,14 @@ internal static class DownPatch {
 			return;
 
 		Moveset.HideSprite();
+		var state = __instance.cState;
+		bool downAttacking = state.downSpikeAntic || state.downSpiking || state.downAttacking
+			|| heroAnim.CurrentClip?.name == "Downspike Recovery";
+		if (downAttacking && Moveset.InWater(__instance)) {
+			Moveset.EndAttackInWater(__instance);
+			lastClip = null;
+			return;
+		}
 
 		string? clip = heroAnim.CurrentClip?.name;
 		if (clip != lastClip) {
