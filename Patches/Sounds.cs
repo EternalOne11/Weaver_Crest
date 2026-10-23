@@ -75,21 +75,25 @@ internal static class Sounds {
 		return true;
 	}
 
-	private static float ChargedMuteUntil = -1f;
-
-	internal static void MuteVoice() => ChargedMuteUntil = Time.time + 1f;
-
-	internal static bool ActiveMute => Time.time < ChargedMuteUntil || Time.time < MuteUntil;
+	internal static bool ActiveMute => Time.time < MuteUntil;
 
 	internal static bool shouldMute(AudioClip? clip) {
 		if (clip == null || !IsVoice(clip.name))
 			return false;
-		if (Time.time < ChargedMuteUntil)
-			return true;
-
 		MuteUntil = -1f;
 		skippedFrame = Time.frameCount;
 		return true;
+	}
+
+	private static UnityEngine.Audio.AudioMixerGroup? heroGroup;
+
+	internal static void FixVolume(AudioSource source, AudioClip? clip) {
+		if (source.outputAudioMixerGroup || clip == null || !IsVoice(clip.name))
+			return;
+		if (!heroGroup && HeroController.instance)
+			heroGroup = HeroController.instance.GetComponent<AudioSource>()?.outputAudioMixerGroup;
+		if (heroGroup)
+			source.outputAudioMixerGroup = heroGroup;
 	}
 
 	internal static void Play(AudioClip? clip, float volume = 1f) {
@@ -157,9 +161,16 @@ internal static class Sounds {
 internal static class AttackGrunts {
 	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.PlayOneShot), [typeof(AudioClip), typeof(float)])]
 	[HarmonyPrefix]
-	private static bool SkipOneShot(AudioClip clip) => !(Sounds.ActiveMute && Sounds.shouldMute(clip));
+	private static bool SkipOneShot(AudioSource __instance, AudioClip clip) {
+		Sounds.FixVolume(__instance, clip);
+		return !(Sounds.ActiveMute && Sounds.shouldMute(clip));
+	}
 
 	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.Play), [])]
 	[HarmonyPrefix]
-	private static bool SkipPlay(AudioSource __instance) => !(Sounds.ActiveMute && Sounds.shouldMute(__instance.clip));
+	private static bool SkipPlay(AudioSource __instance) {
+		if (!__instance.outputAudioMixerGroup) // only then is the clip looked at
+			Sounds.FixVolume(__instance, __instance.clip);
+		return !(Sounds.ActiveMute && Sounds.shouldMute(__instance.clip));
+	}
 }
