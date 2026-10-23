@@ -40,13 +40,11 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 	// Config Settings
 	internal static ConfigEntry<bool> HoldToBindSetting { get; private set; } = null!;
-	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
-	internal static ConfigEntry<bool> SilkDamageSetting { get; private set; } = null!;
+	internal static ConfigEntry<SkillSlotChoice> SkillSlotSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> ParrySetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> BreakableSetting { get; private set; } = null!;
-	internal static ConfigEntry<SkillSlotChoice> SkillSlotSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -66,10 +64,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 		HoldToBindSetting = Config.Bind("Bind", "Hold bind", true,
 			"Bind now requires holding the button down, the entire time, letting go early cancels it.");
-		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", false,
-			"When reaching 0 silk after a bind, you gain half a silk. For full playthroughs");
-		SilkDamageSetting = Config.Bind("Balance", "Reduces silk skill damage", false,
-			"Silk skills now deal 85% of their usual damage when using the the Weaver crest.");
+		SkillSlotSetting = Config.Bind("Crest", "Silk skill bind slot", SkillSlotChoice.Top,
+			"When binding a silk skill, on weaver crest, it will autoequip it to the selected slot, none means middle, which in this case leaves it empty.");
 		KnockbackSetting = Config.Bind("Balance", "Half knockback", false,
 			"Reduces knockback in half, making it the same as witch crest.");
 		RefundSetting = Config.Bind("Silk", "Silk Refunds", true,
@@ -78,14 +74,13 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"When you clash with enemy projectiles, or an enemies parry, the attacks half silk will be refunded. (even if it hits an enemy)");
 		BreakableSetting = Config.Bind("Silk", "Refund on breakables", false,
 			"Attacks that break objects and other ones the player can bounce off get refunded.");
-		SkillSlotSetting = Config.Bind("Crest", "Silk skill bind slot", SkillSlotChoice.Top,
-			"When binding a silk skill, on weaver crest, it will autoequip it to the selected slot, none means middle, which in this case leaves it empty.");
 
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
 		Harmony.PatchAll(typeof(EvaOptOut));
 		Harmony.PatchAll(typeof(SilkMechanics));
+		Harmony.PatchAll(typeof(HalfSilkHeart));
 		Harmony.PatchAll(typeof(ToolDamage));
 		Harmony.PatchAll(typeof(UpPatch));
 		Harmony.PatchAll(typeof(WallPatch));
