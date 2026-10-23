@@ -1106,3 +1106,47 @@ internal static class SpaHalfSilk {
 			HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 }
+
+// Wraiths and claw maidens can now drain your last half silk :P
+[HarmonyPatch]
+internal static class EnemySilkDrain {
+	private static readonly string[] Drainers = ["Wraith", "Claw"];
+
+	private static bool IsDrainer(FsmStateAction action) {
+		GameObject owner = action.Fsm.GameObject;
+		if (!owner || !YenCrest.IsEquipped || !HalfSilk.GetHasHalfSilk())
+			return false;
+		string name = owner.transform.root.name + "/" + owner.name;
+		return System.Array.Exists(Drainers, d => name.IndexOf(d, System.StringComparison.OrdinalIgnoreCase) >= 0);
+	}
+
+	private static bool HandleLastHalf(FsmStateAction action, bool take) {
+		if (PlayerData.instance.silk > 0 || !IsDrainer(action))
+			return true;
+		if (take)
+			HalfSilk.RemoveHalfSilk();
+		action.Finish();
+		return false;
+	}
+
+	[HarmonyPatch(typeof(CallMethodProper), nameof(CallMethodProper.OnEnter))]
+	[HarmonyPrefix]
+	private static bool WraithTake(CallMethodProper __instance) =>
+		__instance.methodName?.Value != "TakeSilk" || HandleLastHalf(__instance, take: true);
+
+	[HarmonyPatch(typeof(TakeSilk), nameof(TakeSilk.OnEnter))]
+	[HarmonyPrefix]
+	private static bool ClawTake(TakeSilk __instance) => HandleLastHalf(__instance, take: true);
+
+	[HarmonyPatch(typeof(PlayerdataIntCompare), nameof(PlayerdataIntCompare.OnEnter))]
+	[HarmonyPrefix]
+	private static bool ClawCheck(PlayerdataIntCompare __instance) =>
+		__instance.playerdataInt?.Value != "silk" || HandleLastHalf(__instance, take: false);
+
+	[HarmonyPatch(typeof(GetPlayerDataInt), nameof(GetPlayerDataInt.OnEnter))]
+	[HarmonyPostfix]
+	private static void WraithCheck(GetPlayerDataInt __instance) {
+		if (__instance.intName?.Value == "silk" && IsDrainer(__instance))
+			__instance.storeValue.Value += 1;
+	}
+}
