@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
+using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -439,10 +440,11 @@ public static class HalfSilk
 
         SilkSpool.SilkUsingFlags ret = SilkSpool.SilkUsingFlags.None;
         
-        if (!usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal))
+        bool needolinStyleUse = usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal);
+        if (!needolinStyleUse)
             NeedolinUsingHalf = false;
 
-        bool needolinOnHalf = NeedolinUsingHalf && usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal);
+        bool needolinOnHalf = NeedolinUsingHalf && needolinStyleUse;
         if (!needolinOnHalf && (usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal) || usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Drain)))
             ret = usingFlags;
 
@@ -1017,4 +1019,62 @@ public static class HalfSilk
             needolinFullTime = null;
         }
     }
+
+    //Silkspeed Anklet
+    private static PlayMakerFSM? ankletFsm;
+    private static FsmFloat? ankletTimer;
+
+    private static FsmFloat? AnkletTimer(HeroController hc)
+    {
+        if (ankletFsm && ankletTimer != null)
+            return ankletTimer;
+        foreach (PlayMakerFSM fsm in hc.GetComponentsInChildren<PlayMakerFSM>(true))
+        {
+            FsmFloat? found = fsm.FsmVariables.FindFsmFloat("Use Silk Timer");
+            if (found != null)
+            {
+                ankletFsm = fsm;
+                ankletTimer = found;
+                return found;
+            }
+        }
+        return null;
+    }
+
+    private static bool ankletLook;
+
+    [HarmonyPatch(typeof(HeroController), "Update")]
+    [HarmonyPostfix]
+    private static void AnkletHalfLook(HeroController __instance)
+    {
+        if (HeroController.instance != __instance)
+            return;
+        SilkSpool spool = SilkSpool.Instance;
+        if (!spool)
+            return;
+
+        bool on = YenCrest.IsEquipped && GetHasHalfSilk() && __instance.cState.isSprinting
+            && spool.usingSilk.Contains(SilkSpool.SilkUsingFlags.Normal);
+
+        if (on)
+        {
+            FsmFloat? timer = AnkletTimer(__instance);
+            if (timer != null && ankletFsm!.ActiveStateName == "Usage")
+                timer.Value += Time.deltaTime;
+        }
+
+        if (on == ankletLook)
+            return;
+        ankletLook = on;
+
+        NeedolinUsingHalf = on;
+        if (spool.wasUsingChunk)
+        {
+            spool.wasUsingChunk.PlayIdle();
+            spool.wasUsingChunk = null;
+        }
+        spool.RefreshSilk(default, default);
+        RefreshHalfSilkColor();
+    }
+
 }
