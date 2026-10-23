@@ -298,3 +298,15 @@ internal static class HalfSilkHeart {
 		hadHalf = hasHalf;
 	}
 }
+// Halves the cost of wisp Lantern to now use only 1 half silk.
+[HarmonyPatch]
+internal static class WispHalfCost {
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.TakeSilk), [typeof(int), typeof(SilkSpool.SilkTakeSource)])]
+	[HarmonyPrefix]
+	private static bool HalfSilkForWisp(int amount, SilkSpool.SilkTakeSource source) {
+		if (source != SilkSpool.SilkTakeSource.Wisp || amount != 1 || !YenCrest.IsEquipped || !WispCostSetting.Value)
+			return true;
+		HalfSilk.RemoveHalfSilk();
+		return false;
+	}
+}
