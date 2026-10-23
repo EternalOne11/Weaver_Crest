@@ -45,6 +45,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> ParrySetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> BreakableSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> WispCostSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -74,6 +75,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"When you clash with enemy projectiles, or an enemies parry, the attacks half silk will be refunded. (even if it hits an enemy)");
 		BreakableSetting = Config.Bind("Silk", "Refund on breakables", false,
 			"Attacks that break objects and other ones the player can bounce off get refunded.");
+		WispCostSetting = Config.Bind("Silk", "Halves the cost Wisp Lantern", false,
+			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
 
 
 		Harmony.PatchAll(typeof(Moveset));
@@ -97,6 +100,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(BindSoundBlock));
 		Harmony.PatchAll(typeof(SpaHalfSilk));
 		Harmony.PatchAll(typeof(EnemySilkDrain));
+		Harmony.PatchAll(typeof(WispHalfCost));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
