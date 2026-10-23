@@ -931,6 +931,7 @@ public static class HalfSilk
         RemoveOneMossRing();
     }
 
+//Bench interaction
     private static bool AtBench;
     private static int silkSit;
 
@@ -1076,5 +1077,32 @@ public static class HalfSilk
         spool.RefreshSilk(default, default);
         RefreshHalfSilkColor();
     }
+}
+//Spa Interaction
+[HarmonyPatch]
+internal static class SpaHalfSilk {
+	private static readonly List<PlayMakerFSM> spas = [];
+	private static string? spasScene;
 
+	private static bool InSpa() {
+		string scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+		if (scene != spasScene) {
+			spasScene = scene;
+			spas.Clear();
+			foreach (var fsm in UnityEngine.Object.FindObjectsByType<PlayMakerFSM>(FindObjectsSortMode.None))
+				if (fsm.FsmVariables.FindFsmGameObject("Spa Ripple") != null)
+					spas.Add(fsm);
+		}
+		foreach (var spa in spas)
+			if (spa && spa.ActiveStateName is "Stay" or "Heal Pause" or "Healing")
+				return true;
+		return false;
+	}
+
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.AddSilk), [typeof(int), typeof(bool), typeof(SilkSpool.SilkAddSource), typeof(bool)])]
+	[HarmonyPostfix]
+	private static void CompleteHalfInSpa(int __0) {
+		if (__0 > 0 && YenCrest.IsEquipped && HalfSilk.GetHasHalfSilk() && InSpa())
+			HalfSilk.RemoveHalfSilk(interruptRegen: false);
+	}
 }
