@@ -136,27 +136,26 @@ internal static class SilkMechanics {
 internal static class MaskTrade {
 	private const int Cost = 1; //number of masks broken
 	private const int Silk = 3; //value of silk given
+	private const int LifebloodSilk = 1; //value of silk given for a lifeblood mask
 
 	internal static bool DuringTrade() =>
 		PlayerData.instance.silk <= 0
 		&& !HalfSilk.GetHasHalfSilk()
-		&& PlayerData.instance.health > Cost; // never on her last mask
+		&& (PlayerData.instance.healthBlue > 0 || PlayerData.instance.health > Cost); //Never Last Mask
 
 	internal static bool MaskCost(bool normalAttack = false) {
 		if (DuringTrade()) {
 			Sounds.MuteForTrade(); //Pain grunt replaces normal attack grunt
 
-                // Lifeblood Exclusion
-			int lifeblood = LifebloodTradeSetting.Value ? 0 : PlayerData.instance.healthBlue;
-			PlayerData.instance.healthBlue -= lifeblood;
+                // Lifeblood mask value changes
+			bool tradedLifeblood = PlayerData.instance.healthBlue > 0;
 			PlayerData.instance.TakeHealth(Cost, HeroController.instance.IsInLifebloodState, allowFracturedMaskBreak: false);
-			PlayerData.instance.healthBlue += lifeblood;
 			HeroController.instance.damageEffectFSM.SendEvent("DAMAGE"); // the black damage vignette
 			EventRegister.SendEvent("HEALTH UPDATE");
 
 			if (PlayerData.instance.health == 1)
 				EventRegister.SendEvent("HERO DAMAGED");
-			HeroController.instance.AddSilk(Silk, false, SilkSpool.SilkAddSource.Normal, false);
+			HeroController.instance.AddSilk(tradedLifeblood ? LifebloodSilk : Silk, false, SilkSpool.SilkAddSource.Normal, false);
 			HeroController.instance.SpriteFlash.flashFocusHeal();
 			Sounds.PlayHurt();
 			PlayFlash();
