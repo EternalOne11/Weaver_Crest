@@ -40,7 +40,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 	// Config Settings
 	internal static ConfigEntry<bool> HoldToBindSetting { get; private set; } = null!;
-	internal static ConfigEntry<bool> LifebloodTradeSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> SilkDamageSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
@@ -67,8 +66,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 		HoldToBindSetting = Config.Bind("Bind", "Hold bind", true,
 			"Bind now requires holding the button down, the entire time, letting go early cancels it.");
-		LifebloodTradeSetting = Config.Bind("Mask trade", "Trade lifeblood masks", true,
-			"Allow lifeblood masks to be converted into silk during the 0 silk trade.");
 		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", false,
 			"When reaching 0 silk after a bind, you gain half a silk. For full playthroughs");
 		SilkDamageSetting = Config.Bind("Balance", "Reduces silk skill damage", false,
@@ -102,6 +99,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(ShardWallRefund));
 		Harmony.PatchAll(typeof(ParryRefund));
 		Harmony.PatchAll(typeof(SkillAutoEquip));
+		Harmony.PatchAll(typeof(BindSoundBlock));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
