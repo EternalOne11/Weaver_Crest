@@ -7,24 +7,21 @@ namespace Weaver_Crest.Patches;
 
 // silk spell damage modifer (other tools can be added)
 // 1 = 100%, 1.5 = 150% and 0.5 = 50%
-// 100% by default 85% from config.
 internal static class ToolDamage {
-
-	private static HashSet<ToolItem>? silkSkills;
-	private static HashSet<ToolItem> SilkSkills => silkSkills ??= [
-		ToolItemManager.GetToolByName("Silk Spear"),
-		ToolItemManager.GetToolByName("Thread Sphere"),
-		ToolItemManager.GetToolByName("Parry"),
-		ToolItemManager.GetToolByName("Silk Charge"),
-		ToolItemManager.GetToolByName("Silk Bomb"),
-		ToolItemManager.GetToolByName("Silk Boss Needle"),
-	];
 
 	private static Dictionary<ToolItem, float>? targetedTools;
 	private static Dictionary<ToolItem, float> TargetedTools => targetedTools ??= new() {
+		// The six silk skills
+		[ToolItemManager.GetToolByName("Silk Spear")] = 0.85f,
+		[ToolItemManager.GetToolByName("Thread Sphere")] = 0.85f,
+		[ToolItemManager.GetToolByName("Parry")] = 0.85f,
+		[ToolItemManager.GetToolByName("Silk Charge")] = 0.85f,
+		[ToolItemManager.GetToolByName("Silk Bomb")] = 0.85f,
+		[ToolItemManager.GetToolByName("Silk Boss Needle")] = 0.85f,
+
 		//Clawmirror nerfs
-		[ToolItemManager.GetToolByName("Dazzle Bind")] = 0.5f,
-		[ToolItemManager.GetToolByName("Dazzle Bind Upgraded")] = 0.5f,
+		[ToolItemManager.GetToolByName("Dazzle Bind")] = 0.45f,
+		[ToolItemManager.GetToolByName("Dazzle Bind Upgraded")] = 0.45f,
 	};
 
 	[HarmonyPrefix]
@@ -35,10 +32,7 @@ internal static class ToolDamage {
 		if (hitInstance.RepresentingTool == null)
 			return;
 
-		float DamageMultiplier;
-		if (SilkSkills.Contains(hitInstance.RepresentingTool))
-			DamageMultiplier = SilkDamageSetting.Value ? 0.85f : 1f;
-		else if (!TargetedTools.TryGetValue(hitInstance.RepresentingTool, out DamageMultiplier))
+		if (!TargetedTools.TryGetValue(hitInstance.RepresentingTool, out float DamageMultiplier))
 			return;
 
 		hitInstance.Multiplier *= DamageMultiplier;
