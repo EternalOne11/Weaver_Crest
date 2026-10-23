@@ -95,6 +95,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(ParryRefund));
 		Harmony.PatchAll(typeof(SkillAutoEquip));
 		Harmony.PatchAll(typeof(BindSoundBlock));
+		Harmony.PatchAll(typeof(SpaHalfSilk));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
