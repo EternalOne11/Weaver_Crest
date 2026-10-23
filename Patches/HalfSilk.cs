@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
+using HutongGames.PlayMaker.Actions;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using UnityEngine;
@@ -165,9 +166,9 @@ public static class HalfSilk
     private static bool AddedAnimations = false;
 
     // Tempoarary filter for half silk Needolin
-    private const bool NeedolinAcid = true;
-
-    internal static void RefreshColor()
+    private const bool NeedolinAcidLook = true;
+    internal static bool NeedolinUsingHalf;
+    internal static void RefreshHalfSilkColor()
     {
         if (GetHasHalfSilk() && CurrentHalf)
             CurrentHalf.FadeToCorrectColor();
@@ -274,6 +275,8 @@ public static class HalfSilk
         }
         CurrentHalf = null!;
 
+        // The completed silk joins the "can bind" glow if there's now enough silk to bind. Done after it
+        // stops being the half silk, since animations on the half silk are blocked
         if (SilkSpool.Instance.silkChunks.Count(s => !s.IsRegen) >= SilkSpool.BindCost)
             upgraded.StartGlow();
 	}
@@ -437,10 +440,9 @@ public static class HalfSilk
         SilkSpool.SilkUsingFlags ret = SilkSpool.SilkUsingFlags.None;
         
         if (!usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal))
-            NeedolinHalfSilk.UsingHalf = false;
+            NeedolinUsingHalf = false;
 
-        // if using a full silk, pass that to the next silk. I don't know what the silk drain effect is, so I'm passing it to the next silk too.
-        bool needolinOnHalf = NeedolinHalfSilk.UsingHalf && usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal);
+        bool needolinOnHalf = NeedolinUsingHalf && usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal);
         if (!needolinOnHalf && (usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal) || usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Drain)))
             ret = usingFlags;
 
@@ -516,7 +518,7 @@ public static class HalfSilk
             orig = self.acidUseColor;
 
         // Temporary Acid look (remove once you get proper frames)
-        if (NeedolinHalfSilk.UsingHalf && NeedolinAcid)
+        if (NeedolinUsingHalf && NeedolinAcidLook)
             orig = self.acidUseColor;
         
         if (HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Void))
@@ -835,7 +837,7 @@ public static class HalfSilk
     [HarmonyPostfix]
     private static void ResetOnLoad()
     {
-        NeedolinHalfSilk.UsingHalf = false;
+        NeedolinUsingHalf = false;
         HasHalfSilk = false;
         CurrentHalf = null!;
     }
@@ -966,5 +968,53 @@ public static class HalfSilk
 			__instance.mossCreep2Hits = 0;
 			SilkSpool.Instance.SetMossState(0, 1);
 		}
+    }
+
+    // Needolin interactions/mechanics
+    private static bool NeedolinHasHalf() => YenCrest.IsEquipped && GetHasHalfSilk();
+
+    [HarmonyPatch(typeof(HeroController), nameof(HeroController.TakeSilk), [typeof(int), typeof(SilkSpool.SilkTakeSource)])]
+    [HarmonyPrefix]
+    private static bool NeedolinTakeHalfFirst(int amount, SilkSpool.SilkTakeSource source)
+    {
+        if (source != SilkSpool.SilkTakeSource.ActiveUse || amount != 1 || !NeedolinHasHalf())
+            return true;
+        NeedolinUsingHalf = false;
+        RemoveHalfSilk();
+        return false;
+    }
+
+    // Half duration interaction
+    private static float? needolinFullTime;
+
+    [HarmonyPatch(typeof(TimeLimitSetV2), nameof(TimeLimitSetV2.OnEnter))]
+    [HarmonyPrefix]
+    private static void NeedolinHalfTime(TimeLimitSetV2 __instance)
+    {
+        if (__instance.TimeDelay?.Name != "Silk Drain Time" || !NeedolinHasHalf())
+            return;
+        NeedolinUsingHalf = true;
+        needolinFullTime = __instance.TimeDelay.Value;
+        __instance.TimeDelay.Value *= 0.5f;
+
+        SilkSpool spool = SilkSpool.Instance;
+        if (spool.wasUsingChunk)
+        {
+            spool.wasUsingChunk.PlayIdle();
+            spool.wasUsingChunk = null;
+        }
+        spool.RefreshSilk(default, default);
+        RefreshHalfSilkColor();
+    }
+
+    [HarmonyPatch(typeof(TimeLimitSetV2), nameof(TimeLimitSetV2.OnEnter))]
+    [HarmonyPostfix]
+    private static void NeedolinRestoreDrainTime(TimeLimitSetV2 __instance)
+    {
+        if (needolinFullTime is float full)
+        {
+            __instance.TimeDelay.Value = full;
+            needolinFullTime = null;
+        }
     }
 }
