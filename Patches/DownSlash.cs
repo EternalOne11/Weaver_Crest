@@ -204,8 +204,9 @@ internal static class DownPatch {
 
 		Moveset.HideSprite();
 		var state = __instance.cState;
-		bool downAttacking = state.downSpikeAntic || state.downSpiking || state.downAttacking
-			|| heroAnim.CurrentClip?.name == "Downspike Recovery";
+		string? currentClip = heroAnim.CurrentClip?.name;
+		bool downAttacking = state.downSpikeAntic || state.downSpiking || state.downAttacking || state.downSpikeRecovery
+			|| currentClip is "DownSpike Antic" or "DownSpike" or "Downspike Recovery";
 		if (downAttacking && Moveset.InWater(__instance)) {
 			Moveset.EndAttackInWater(__instance);
 			lastClip = null;
