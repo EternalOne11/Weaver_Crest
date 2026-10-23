@@ -57,7 +57,8 @@
 ## Credits
 - Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools) https://ko-fi.com/mebi0910/gallery
 - KAdala, (The artist who made the entire moveset) https://ko-fi.com/kadala_ka/shop
-- Redfrog, (Who coded the half silk.) 
+- Lobo, (the artist who made the mod icon) https://x.com/acheofslowdecay
+- Redfrog, (Who coded the half silk)
 - General Beria, (Who made the attack sounds)
 - Myself, (who created the concept, tweaked the art, and did most of the code)
 
