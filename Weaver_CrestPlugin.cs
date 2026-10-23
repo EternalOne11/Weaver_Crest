@@ -69,11 +69,11 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"When binding a silk skill, on weaver crest, it will autoequip it to the selected slot, none means middle, which in this case leaves it empty.");
 		KnockbackSetting = Config.Bind("Balance", "Half knockback", false,
 			"Reduces knockback in half, making it the same as witch crest.");
-		RefundSetting = Config.Bind("Silk", "Silk Refunds", true,
+		RefundSetting = Config.Bind("Silk", "Essential Refunds", true,
 				"Attacks that on breable walls, doors, spikes, and shellshard walls refund silk");
-		ParrySetting = Config.Bind("Silk", "Refund on parries", false,
+		ParrySetting = Config.Bind("Silk", "Parry Refunds Experimental", false,
 			"When you clash with enemy projectiles, or an enemies parry, the attacks half silk will be refunded. (even if it hits an enemy)");
-		BreakableSetting = Config.Bind("Silk", "Refund on breakables", false,
+		BreakableSetting = Config.Bind("Silk", "Breakable Refunds Experimental", false,
 			"Attacks that break objects and other ones the player can bounce off get refunded.");
 		WispCostSetting = Config.Bind("Silk", "Halves the cost Wisp Lantern", false,
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
