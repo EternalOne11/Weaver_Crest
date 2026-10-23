@@ -1,4 +1,5 @@
 using GlobalSettings;
+using HarmonyLib;
 using HutongGames.PlayMaker;
 using Silksong.UnityHelper.Util;
 using System.Collections;
@@ -6,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
+
+#pragma warning disable HARMONIZE004
 
 namespace Weaver_Crest.Patches;
 
@@ -75,6 +78,8 @@ internal static class Bind
 
         cachedBindCount = numberOfBinds.Value;
         cachedQuick = ToolItemManager.IsToolEquipped("Quickbind");
+        bindCount = numberOfBinds;
+        BindSoundBlock.Stop();
 
         //Config setting
         if (HoldToBindSetting.Value && !holdCheckRunning)
@@ -83,10 +88,11 @@ internal static class Bind
     }
 
     private static bool holdCheckRunning;
+    private static FsmInt? bindCount;
 
     private static bool IsBindCycle(string state) => state.StartsWith("Bind ") && state != "Bind Burst";
-
     private static IEnumerator HoldToBind(PlayMakerFSM bindFsm)
+
     {
         holdCheckRunning = true;
         try {
@@ -95,25 +101,53 @@ internal static class Bind
             int lastCycle = -1;
             while (true) {
                 string state = bindFsm.Fsm.ActiveStateName;
-                if (state == "End Bind" || state == "Cooldown" || state == "Idle")
+                if (state == "End Bind" || state == "Cooldown" || state == "Idle") {
+
+                    // Hold bind sound fix
+                    if (lastCycle >= 0)
+                        HeroController.instance.StartCoroutine(FadeBindLoop());
                     yield break;
+                }
 
                 if (state != lastState && IsBindCycle(state)) {
                     cyclesStarted++;
                     if (lastCycle >= 0 && cyclesStarted > lastCycle) {
                         bindFsm.Fsm.SetState("End Bind");
+                        HeroController.instance.StartCoroutine(FadeBindLoop());
                         yield break;
                     }
                 }
                 lastState = state;
 
-                if (lastCycle < 0 && !HeroController.instance.inputHandler.inputActions.Cast.IsPressed)
+                if (lastCycle < 0 && !HeroController.instance.inputHandler.inputActions.Cast.IsPressed) {
                     lastCycle = Mathf.Max(cyclesStarted, 1);
+                    if (bindCount != null)
+                        bindCount.Value = lastCycle;
+                    BindSoundBlock.Start(bindFsm);
+                    cachedBindCount = lastCycle;
+                }
                 yield return null;
             }
         }
         finally {
             holdCheckRunning = false;
+        }
+    }
+
+    private const float BindFadeTime = 0.25f;
+    private static IEnumerator FadeBindLoop()
+    {
+        AudioSource? loop = HeroController.instance.transform.Find("Sounds/Bind Loop")?.GetComponent<AudioSource>();
+        if (!loop || !loop!.isPlaying)
+            yield break;
+        float volume = loop.volume;
+        for (float t = 0f; t < BindFadeTime && loop && loop.isPlaying; t += Time.deltaTime) {
+            loop.volume = volume * (1f - t / BindFadeTime);
+            yield return null;
+        }
+        if (loop) {
+            loop.Stop();
+            loop.volume = volume; // back to normal for the next bind
         }
     }
 
@@ -205,4 +239,43 @@ internal static class Bind
             shape.scale = d.shapeScale * spread;
         }
     }
+}
+
+[HarmonyPatch]
+internal static class BindSoundBlock {
+	private static PlayMakerFSM? fsm;
+	private static float blockUntil = -1f;
+	private static bool active;
+
+	internal static void Start(PlayMakerFSM bindFsm) {
+		fsm = bindFsm;
+		active = true;
+		blockUntil = float.MaxValue;
+	}
+
+	internal static void Stop() {
+		active = false;
+		fsm = null;
+	}
+
+	private static bool Blocking(AudioClip? clip) {
+		if (!active || !clip)
+			return false;
+		// Block sound after bind is finished
+		if (blockUntil == float.MaxValue && fsm && fsm!.Fsm.ActiveStateName is "Cooldown" or "Idle")
+			blockUntil = Time.time + 0.3f;
+		if (Time.time >= blockUntil) {
+			Stop();
+			return false;
+		}
+		return clip!.name is "hornet_bind_pt_1" or "hornet_bind_loop";
+	}
+
+	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.PlayOneShot), [typeof(AudioClip), typeof(float)])]
+	[HarmonyPrefix]
+	private static bool BlockOneShot(AudioClip clip) => !Blocking(clip);
+
+	[HarmonyPatch(typeof(AudioSource), nameof(AudioSource.Play), [])]
+	[HarmonyPrefix]
+	private static bool BlockPlay(AudioSource __instance) => !Blocking(__instance.clip);
 }
