@@ -98,7 +98,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(AttackGrunts));
 		Harmony.PatchAll(typeof(HalfKnockback));
 		Harmony.PatchAll(typeof(BarnacleHit));
-		Harmony.PatchAll(typeof(NeedolinHalfSilk));
 		Harmony.PatchAll(typeof(BreakableRefund));
 		Harmony.PatchAll(typeof(ShardWallRefund));
 		Harmony.PatchAll(typeof(ParryRefund));
