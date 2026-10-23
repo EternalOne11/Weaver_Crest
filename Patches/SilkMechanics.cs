@@ -102,7 +102,6 @@ internal static class SilkMechanics {
 			return;
 
 		LastWeave = Time.time;
-                Sounds.MuteVoice();
 		MaskTrade.MaskCost();
 		Sounds.PlayAttack("ChargedSlash");
 	}
