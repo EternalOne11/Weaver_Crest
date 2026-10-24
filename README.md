@@ -10,7 +10,7 @@
 - First, there is the introduction of half silk notches. These are akin to moss berry bands, and cannot be used for healing or silk skills.
 - Second, the use of silk in every attack, always draining half a silk.
 - Third, silk gained from attack is doubled, but due to the draining effect of attacks, a succesful hit will provide 1.5 silk.
-- Fourth, when you run out of silk, hornet will break a mask to gain 3 silk.
+- Fourth, when you run out of silk, hornet will break a mask to gain 3 silk. (lifeblood masks trade for 1)
 
 ## Hud
 - The hud is fully custom, and comes with both regular, and steel soul varients. 
@@ -21,9 +21,10 @@
 - Every attack always uses some silk.
 - The default slash's are shorter range the wanderer, but faster than hunter.
 - The up slash is an overhead kick that is slower than the rest of the attacks.
-- the down slash is a kick (not done)
+- The down slash is a downwards frontal kick.
 - The charge attack has both windup and a long range swipe. (with seperate 2 hitboxes)
 - The dash attack has 2 varients. A 2 slash varient and a 4 slash varient. (4 slash uses 1 silk)
+- Custom Wall slash animation. 
 - Was made by KAdala
 
 ## Binding
@@ -34,12 +35,24 @@
 ## Tool slots/Silk Skills
 - This crest has 7 slots, 2 silk/white slots, 1 red slot, 2 blue slots, and 2 yellow slots.
 - (all yellow and blue slots will be locked eventully) (memory lockets will be added)
+- Silk skill damage is lowered by 15%
 
 ## Tool ineractions
 - Multibinder adds an additional 4th bind that heals 1 mask.
 - Injector band works as intended
 - Clawmirror damage is nerfed to account for the multiple binds
 - Weighted belt, flint slate, and longclaw are all functional
+- Mossberry rings from druid eye/eyes can merge with half silk.
+- Silkspeed Anklets works with half silk
+
+## Config Options
+- Hold Bind option. (ability to cancel mid bind) **Undecided**
+- Essential Refunds (WIP) **Undecided**
+- Silk Bind slot. (For when you get a silk skill)
+- Half knockback option. (like witch) **Off by default**
+- Wispfire lantern can use half silk instead **Off by default**
+- Experimental Parry Refunds **WIP Off by default**
+
 
 ## Map changes/implementation
 - (Not yet done) The chapel of the Weaver in Mt fay
