@@ -271,7 +271,26 @@ internal static class HalfSilkHeart {
 		if (!HalfSilk.GetHasHalfSilk())
 			HalfSilk.AddHalfSilk(heroEffect: false);
 	}
+	
+	private static bool wasAtBench;
 
+	[HarmonyPatch(typeof(HeroController), "Update")]
+	[HarmonyPostfix]
+	private static void RestoreAtBench(HeroController __instance, ref float ___silkRegenDurationLeft) {
+		if (HeroController.instance != __instance)
+			return;
+		bool atBench = __instance.playerData.atBench;
+		if (atBench && !wasAtBench && Applies(__instance.playerData)) {
+			if (regenerating) {
+				regenerating = false;
+				___silkRegenDurationLeft = 0f;
+				SilkSpool.Instance.SetRegen(0, false);
+			}
+			HalfSilk.AddHalfSilk(heroEffect: false);
+		}
+		wasAtBench = atBench;
+	}
+	
 	[HarmonyPatch(typeof(HeroController), "ResetSilkRegen")]
 	[HarmonyPostfix]
 	[HarmonyPriority(Priority.Last)]
