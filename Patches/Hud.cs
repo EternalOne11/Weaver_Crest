@@ -36,7 +36,7 @@ internal static class Hud
     private const string SteelSilkIdle = "Hud13_S.png";
 
     private const int AppearFps = 11;
-    private const int SilkFps = 17;
+    private const int SilkFps = 18;
     private const float PixelsPerUnit = 64f;
 
     // Position tuning for hud location.
@@ -144,7 +144,7 @@ internal static class Hud
     {
         // Animation delay upon login, before the silk varient can activate.
 		// This is to prevent the animation from being overridden by the standard one.
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.5f);
 
         // Steel Soul check
         bool isSteelSoul = (int)PlayerData.instance.permadeathMode == 1;
