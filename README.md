@@ -5,17 +5,20 @@
 - This crest is currently unlocked automatically, for now. It will have its own custom shrine eventully and potentially a config option. 
 - Please don't ask how much I have spent commisioning the art, and some code... (It wasnt cheap)
 
-## Custom Silk mechanics
-- There 4 custom mechanics which are centeral to the this mod.
+## Custom mechanics
+- There 5 custom mechanics which are centeral to the this mod.
 - First, there is the introduction of half silk notches. These are akin to moss berry bands, and cannot be used for healing or silk skills.
 - Second, the use of silk in every attack, always draining half a silk.
 - Third, silk gained from attack is doubled, but due to the draining effect of attacks, a succesful hit will provide 1.5 silk.
 - Fourth, when you run out of silk, hornet will break a mask to gain 3 silk. (lifeblood masks trade for 1)
+- Fifth, A silk refund system, refunding silk on essential activities required for progression/transversal.
 
-## Hud
-- The hud is fully custom, and comes with both regular, and steel soul varients. 
-- It also has 2 static variants, which denominate weather or not you have any silk, which is tied to the moveset.
-- Was made by Mebi
+## Hud & Crest Icon
+- The Hud is fully custom
+- It has both a steel soul and regular varient.
+- It also has 2 states, denominating weather or not the player has any silk. 
+- The crest inventory has 7 slots, 2 silk slots, 1 red slot, 2 blue slots, and 2 yellow slots.
+- (all yellow and blue slots will be locked eventully) (memory lockets will be added)
 
 ## Moveset
 - Every attack always uses some silk.
@@ -28,16 +31,15 @@
 - Was made by KAdala
 
 ## Binding
-- To compensate with the increased silk generation, bind has been nerfed to take significantly longer.
-- Bind acts like multibinder but activiates 3 times, each bind only heals 1 mask. 
-- After the first mask's bind you can press the button again to cancel out of the rest. (Silk is still used)
-
-## Tool slots/Silk Skills
-- This crest has 7 slots, 2 silk/white slots, 1 red slot, 2 blue slots, and 2 yellow slots.
-- (all yellow and blue slots will be locked eventully) (memory lockets will be added)
-- Silk skill damage is lowered by 15%
+- The crest has a custom bind, with 2 config options depending on preference.
+- To compensate for the increased silk generation, bind overall has been nerfed.
+- The bind now acts like multibinder, but activates 3 times, which each heal a single mask.
+- The full duration is roughly 1.7x the length of a normal bind.
+- There is a config option to make the bind require being held down.
+- If let go, you will end the bind early, and only heal some masks. (all 9 silk is used even if you heal 1 mask)
 
 ## Tool ineractions
+- Silk skill damage is lowered by 15%
 - Multibinder adds an additional 4th bind that heals 1 mask.
 - Injector band works as intended
 - Clawmirror damage is nerfed to account for the multiple binds
