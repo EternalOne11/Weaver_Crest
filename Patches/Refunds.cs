@@ -1,5 +1,4 @@
 using HarmonyLib;
-using TeamCherry.SharedUtils;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
 
@@ -7,26 +6,18 @@ using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest.Patches;
 
-// Refunds for three kinds, each with its own setting
-// Essentails (for vines, breakable walls, spikes, and stuff for pogos and shellshard walls)
-// breakables
-// Parries
+// Refund settings... Split in 2 (essential and parries) Both are WIP
 [HarmonyPatch]
 internal static class BreakableRefund {
-	private static bool swingOpen, hitBreakable, hitObstacle, hitEnemy, costOnHold;
+	private static bool swingOpen, hitObstacle, hitEnemy, costOnHold;
 	private static float swingStart;
 
 	internal static void StartSwing(bool deferredCost) {
 		EndSwing();
 		swingOpen = true;
 		swingStart = Time.time;
-		hitBreakable = hitObstacle = hitEnemy = false;
+		hitObstacle = hitEnemy = false;
 		costOnHold = deferredCost;
-	}
-
-	internal static void HitBreakable() {
-		if (swingOpen && YenCrest.IsEquipped)
-			hitBreakable = true;
 	}
 
 	internal static void HitObstacle() {
@@ -35,7 +26,8 @@ internal static class BreakableRefund {
 	}
 
 	internal static void HitEnemy() {
-		if (swingOpen)
+		// bounce pods...
+		if (swingOpen && Time.frameCount != podHitFrame)
 			hitEnemy = true;
 	}
 
@@ -48,35 +40,12 @@ internal static class BreakableRefund {
 		if (!swingOpen)
 			return;
 		swingOpen = false;
-		bool refund = (hitObstacle && RefundSetting.Value) || (hitBreakable && BreakableRefundSetting.Value);
-		if (!refund || hitEnemy || !YenCrest.IsEquipped)
+		if (!hitObstacle || hitEnemy || !YenCrest.IsEquipped || !RefundSetting.Value)
 			return;
 		if (costOnHold)
 			MaskTrade.CancelCost();
 		else
-			HalfSilk.AddHalfSilk(heroEffect: false); // refund the half silk
-	}
-
-	[HarmonyPatch(typeof(Breakable), nameof(Breakable.Hit))]
-	[HarmonyPrefix]
-	private static void BeforeBreakableHit(int ___hitsLeft, bool ___isBroken, int ___silkHits,
-		out (int hitsLeft, bool broken, int silkHits) __state) =>
-		__state = (___hitsLeft, ___isBroken, ___silkHits);
-
-	[HarmonyPatch(typeof(Breakable), nameof(Breakable.Hit))]
-	[HarmonyPostfix]
-	private static void AfterBreakableHit(Breakable __instance, HitInstance damageInstance, int ___hitsLeft,
-		bool ___isBroken, int ___silkHits, (int hitsLeft, bool broken, int silkHits) __state) {
-		if (!swingOpen || !YenCrest.IsEquipped || !Moveset.IsOurAttack(damageInstance.Source))
-			return;
-
-		if (___silkHits < __state.silkHits)
-			return;
-
-		bool counted = ___hitsLeft != __state.hitsLeft || (___isBroken && !__state.broken);
-
-		if (counted && IsSolid(__instance))
-			hitBreakable = true;
+			HalfSilk.AddHalfSilk(heroEffect: false);
 	}
 
 	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
@@ -85,8 +54,53 @@ internal static class BreakableRefund {
 		if (___doNotGiveSilk && Moveset.IsOurAttack(hitInstance.Source))
 			HitObstacle();
 	}
+	
+	private static int podHitFrame = -1;
 
-	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch"];
+	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
+	[HarmonyPrefix]
+	private static void BeforePodHit(HealthManager __instance, HitInstance hitInstance) {
+		if (__instance.GetComponent<BouncePod>() && Moveset.IsOurAttack(hitInstance.Source)) {
+			podHitFrame = Time.frameCount;
+			HitObstacle();
+		}
+	}
+
+	// Levers
+	[HarmonyPatch(typeof(Lever), nameof(Lever.Hit))]
+	[HarmonyPrefix]
+	private static void LeverHit(HitInstance damageInstance, bool ___activated) {
+		if (!___activated && Moveset.IsOurAttack(damageInstance.Source))
+			HitObstacle();
+	}
+
+	[HarmonyPatch(typeof(Lever_tk2d), nameof(Lever_tk2d.Hit))]
+	[HarmonyPrefix]
+	private static void LeverTk2dHit(HitInstance damageInstance, bool ___activated, TrackTriggerObjects ___canHitTrigger) {
+		if (!___activated && damageInstance.IsNailDamage && (!___canHitTrigger || ___canHitTrigger.IsInside)
+			&& Moveset.IsOurAttack(damageInstance.Source))
+			HitObstacle();
+	}
+
+	// More bounce pods
+	[HarmonyPatch(typeof(BouncePod), nameof(BouncePod.Hit))]
+	[HarmonyPrefix]
+	private static void BouncePodHit(BouncePod __instance, HitInstance damageInstance) {
+		if (Moveset.IsOurAttack(damageInstance.Source) && __instance.WillRespond(damageInstance))
+			HitObstacle();
+	}
+
+	// Craw balloons
+	[HarmonyPatch(typeof(BounceBalloon), nameof(BounceBalloon.Hit))]
+	[HarmonyPrefix]
+	private static void BalloonHit(HitInstance damageInstance) {
+		if (Moveset.IsOurAttack(damageInstance.Source))
+			HitObstacle();
+	}
+
+	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
+	//Craft metal deposites, coral crusts, 
+	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust"];
 
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
@@ -95,28 +109,30 @@ internal static class BreakableRefund {
 		HitInstance damageInstance, bool __result) {
 		if (!__result || !Moveset.IsOurAttack(damageInstance.Source))
 			return;
-		string name = __instance.Fsm.GameObject ? __instance.Fsm.GameObject.name : "";
+		GameObject owner = __instance.Fsm.GameObject;
+		string name = owner ? owner.name + "/" + (owner.transform.parent ? owner.transform.parent.name : "") : "";
 		bool obstacle = __instance.Fsm.GetState("Can Break?") != null
 			|| System.Array.Exists(ObstacleNames, n => name.IndexOf(n, System.StringComparison.OrdinalIgnoreCase) >= 0);
 		if (obstacle)
 			HitObstacle();
-		else
-			HitBreakable();
 	}
 
-	[HarmonyPatch(typeof(DamageEnemies), nameof(DamageEnemies.OnHitSpikes))]
+	private static bool wasBouncing;
+
+	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
-	private static void AfterSpikesHit(DamageEnemies __instance) {
-		if (Moveset.IsOurAttack(__instance.gameObject))
+	private static void WatchForPogo(HeroController __instance) {
+		if (HeroController.instance != __instance)
+			return;
+		var state = __instance.cState;
+		bool bouncing = state.shroomBouncing || state.bouncing || state.downSpikeBouncing;
+		if (bouncing && !wasBouncing)
 			HitObstacle();
-	}
-
-	private static bool IsSolid(Breakable breakable) {
-		NonBouncer nonBouncer = breakable.GetComponent<NonBouncer>();
-		return !nonBouncer || !nonBouncer.active;
+		wasBouncing = bouncing;
 	}
 }
 
+//Shellshard wall
 [HarmonyPatch]
 internal static class ShardWallRefund {
 	[HarmonyPatch(typeof(ShardRegion), "OnNailSlashTerrainThunked")]
