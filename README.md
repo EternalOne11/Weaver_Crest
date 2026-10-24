@@ -55,7 +55,6 @@
 - Wispfire lantern can use half silk instead **Off by default**
 - Experimental Parry Refunds **WIP Off by default**
 
-
 ## Map changes/implementation
 - (Not yet done) The chapel of the Weaver in Mt fay
 - (Not yet done) 4 Memory lockets
@@ -82,8 +81,8 @@
 - Kaycodes13, (Creator of the Queens crest for the template)
 - DerVorce, (Creator of the Void crest, which served as reference)
 - Everyone in the HK wiki discord, who uncovered the cut content, that inspired this mod.
-- Everyone in the HK modding discord who helped refine my ideas and code the mod.
-- Everyone in the Silksoul who has given me feedback.
+- Everyone in the HK modding discord who helped refine my ideas, and participated in the playtest.
+- Everyone in the Silksoul who has given me feedback, and participated in the playtest.
 
 ## If anyone wants to take or reuse any of these ideas feel free to. 
 
