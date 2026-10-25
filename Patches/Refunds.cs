@@ -82,7 +82,7 @@ internal static class BreakableRefund {
 	}
 
 	// Hazards which the needle clanks off... Requires name being listed below)
-	private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap"];
+	private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap", "Pendulum"];
 
 	[HarmonyPatch(typeof(TinkEffect), nameof(TinkEffect.TryDoTinkReactionNoDamager))]
 	[HarmonyPostfix]
