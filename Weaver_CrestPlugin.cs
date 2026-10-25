@@ -103,9 +103,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		LocketSpawn.Initialize();
 
 		Moveset.ImportAnimations();
-
 		Moveset.SetupSlashes();
-
 		Sounds.Load();
 
 		YenCrest.Moveset.OnInitialized += () =>
@@ -167,7 +165,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		// Yellow and blue slots: locked behind memory lockets
 		// 4 are placed in the world, exact locations in LocketSpawn.cs
 		// But they are in Mount fay, Putrified Ducts, Wispthicket/underworks coennction, and Citidel Spa.
-		bool locked = true;
 		YenCrest.AddYellowSlot(new(-1.57f, 0.4f + slotOffset), locked);
 		YenCrest.AddYellowSlot(new(-1.57f, -1.1f + slotOffset), locked);
 		YenCrest.AddBlueSlot(new( 1.57f, 0.4f + slotOffset), locked);
