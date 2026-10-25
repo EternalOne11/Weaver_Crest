@@ -26,7 +26,6 @@ internal static class BreakableRefund {
 	}
 
 	internal static void HitEnemy() {
-		// bounce pods...
 		if (swingOpen && Time.frameCount != podHitFrame)
 			hitEnemy = true;
 	}
@@ -57,16 +56,42 @@ internal static class BreakableRefund {
 	
 	private static int podHitFrame = -1;
 
+		// bounce pods and wasp hives
 	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
 	[HarmonyPrefix]
 	private static void BeforePodHit(HealthManager __instance, HitInstance hitInstance) {
-		if (__instance.GetComponent<BouncePod>() && Moveset.IsOurAttack(hitInstance.Source)) {
+		bool notEnemy = __instance.GetComponent<BouncePod>()
+			|| NameMatches(__instance.gameObject, ["Hive"]);
+		if (notEnemy && Moveset.IsOurAttack(hitInstance.Source)) {
 			podHitFrame = Time.frameCount;
 			HitObstacle();
 		}
 	}
 
-	// Spikes and thorns. Thorns dont refund silk
+	private static bool NameMatches(GameObject obj, string[] words) {
+		string name = obj.name + "/" + (obj.transform.parent ? obj.transform.parent.name : "");
+		return System.Array.Exists(words, w => name.IndexOf(w, System.StringComparison.OrdinalIgnoreCase) >= 0);
+	}
+
+	// coral stalactites
+	[HarmonyPatch(typeof(Breakable), nameof(Breakable.Hit))]
+	[HarmonyPrefix]
+	private static void StalactiteHit(Breakable __instance, HitInstance damageInstance, bool ___isBroken) {
+		if (!___isBroken && NameMatches(__instance.gameObject, ["Stalactite"]) && Moveset.IsOurAttack(damageInstance.Source))
+			HitObstacle();
+	}
+
+	// Hazards which the needle clanks off... Requires name being listed below)
+	private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap"];
+
+	[HarmonyPatch(typeof(TinkEffect), nameof(TinkEffect.TryDoTinkReactionNoDamager))]
+	[HarmonyPostfix]
+	private static void HazardTink(TinkEffect __instance, GameObject obj, bool __result) {
+		if (__result && NameMatches(__instance.gameObject, TinkNames) && Moveset.IsOurAttack(obj))
+			HitObstacle();
+	}
+
+	// Spikes and thorns, spikes refund silk thorns do not.
 	[HarmonyPatch(typeof(DamageHero), "TryClashTinkCollider")]
 	[HarmonyPrefix]
 	private static void SpikeHit(DamageHero __instance, Collider2D collision) {
@@ -113,7 +138,7 @@ internal static class BreakableRefund {
 
 	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
 	//Craft metal deposites, coral crusts, 
-	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust"];
+	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever"];
 
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
