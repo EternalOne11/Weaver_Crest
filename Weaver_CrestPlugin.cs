@@ -75,7 +75,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		WispCostSetting = Config.Bind("Silk", "Halves the cost Wisp Lantern", false,
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
 
-
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
 		Harmony.PatchAll(typeof(EvaOptOut));
@@ -101,6 +100,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 		RegisterCrest();
 		HalfSilk.Initialize();
+		LocketSpawn.Initialize();
 
 		Moveset.ImportAnimations();
 
@@ -163,10 +163,15 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		YenCrest.AddSkillSlot(AttackToolBinding.Up,new(0f, 1.47f + slotOffset), false);
 		YenCrest.AddSkillSlot(AttackToolBinding.Down,new(0f, -2.19f + slotOffset), false);
 		YenCrest.AddRedSlot(AttackToolBinding.Neutral,new(0f, -0.36f + slotOffset), false);
-		YenCrest.AddYellowSlot(new(-1.57f, 0.4f + slotOffset), false); // set true when memory lockets are added
-		YenCrest.AddYellowSlot(new(-1.57f, -1.1f + slotOffset), false); // set true when memory lockets are added
-		YenCrest.AddBlueSlot(new( 1.57f, 0.4f + slotOffset), false); // set true when memory lockets are added
-		YenCrest.AddBlueSlot(new( 1.57f, -1.1f + slotOffset), false); // set true when memory lockets are added
+
+		// Yellow and blue slots: locked behind memory lockets
+		// 4 are placed in the world, exact locations in LocketSpawn.cs
+		// But they are in Mount fay, Putrified Ducts, Wispthicket/underworks coennction, and Citidel Spa.
+		bool locked = true;
+		YenCrest.AddYellowSlot(new(-1.57f, 0.4f + slotOffset), locked);
+		YenCrest.AddYellowSlot(new(-1.57f, -1.1f + slotOffset), locked);
+		YenCrest.AddBlueSlot(new( 1.57f, 0.4f + slotOffset), locked);
+		YenCrest.AddBlueSlot(new( 1.57f, -1.1f + slotOffset), locked);
 
 		YenCrest.ApplyAutoSlotNavigation(slotDimensions: new(1.25f, 0.75f));
 
