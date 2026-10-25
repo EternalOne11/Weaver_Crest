@@ -18,7 +18,7 @@
 - It has both a steel soul and regular varient.
 - It also has 2 states, denominating weather or not the player has any silk. 
 - The crest inventory has 7 slots, 2 silk slots, 1 red slot, 2 blue slots, and 2 yellow slots.
-- (all yellow and blue slots will be locked eventully) (memory lockets will be added)
+- All yellow and blue slots are locked. (new memory lockets)
 
 ## Moveset
 - Every attack always uses some silk.
@@ -56,8 +56,9 @@
 - Experimental Parry Refunds **WIP Off by default**
 
 ## Map changes/implementation
-- (Not yet done) The chapel of the Weaver in Mt fay
-- (Not yet done) 4 Memory lockets
+- 4 new memory lockets.
+- Mt. Fay, Citadel Spa, Putrified Ducts, and Wisp/Underworks connection.
+- **(Not yet done)** The chapel of the Weaver will be in Mt. fay
 
 ## Design
 - The Hud's design is a combination of 3 themes.
