@@ -82,8 +82,7 @@ internal static class BreakableRefund {
 	}
 
 	// Hazards which the needle clanks off... Requires name being listed below)
-	private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap", "Pendulum"];
-
+        private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap", "Pendulum", "fan_hazard"];
 	[HarmonyPatch(typeof(TinkEffect), nameof(TinkEffect.TryDoTinkReactionNoDamager))]
 	[HarmonyPostfix]
 	private static void HazardTink(TinkEffect __instance, GameObject obj, bool __result) {
@@ -138,7 +137,7 @@ internal static class BreakableRefund {
 
 	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
 	//Craft metal deposites, coral crusts, 
-	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever"];
+        private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way"];
 
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
