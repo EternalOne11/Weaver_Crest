@@ -33,11 +33,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 	internal static CrestData YenCrest { get; private set; }
 
-	internal static SlotInfo YellowSlot1 { get; private set; }
-	internal static SlotInfo YellowSlot2 { get; private set; }
-	internal static SlotInfo BlueSlot1 { get; private set; }
-	internal static SlotInfo BlueSlot2 { get; private set; }
-
 	// Config Settings
 	internal static ConfigEntry<bool> HoldToBindSetting { get; private set; } = null!;
 	internal static ConfigEntry<SkillSlotChoice> SkillSlotSetting { get; private set; } = null!;
@@ -165,10 +160,10 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		// Yellow and blue slots: locked behind memory lockets
 		// 4 are placed in the world, exact locations in LocketSpawn.cs
 		// But they are in Mount fay, Putrified Ducts, Wispthicket/underworks coennction, and Citidel Spa.
-		YenCrest.AddYellowSlot(new(-1.57f, 0.4f + slotOffset), locked);
-		YenCrest.AddYellowSlot(new(-1.57f, -1.1f + slotOffset), locked);
-		YenCrest.AddBlueSlot(new( 1.57f, 0.4f + slotOffset), locked);
-		YenCrest.AddBlueSlot(new( 1.57f, -1.1f + slotOffset), locked);
+		YenCrest.AddYellowSlot(new(-1.57f, 0.4f + slotOffset), true);
+		YenCrest.AddYellowSlot(new(-1.57f, -1.1f + slotOffset), true);
+		YenCrest.AddBlueSlot(new( 1.57f, 0.4f + slotOffset), true);
+		YenCrest.AddBlueSlot(new( 1.57f, -1.1f + slotOffset), true);
 
 		YenCrest.ApplyAutoSlotNavigation(slotDimensions: new(1.25f, 0.75f));
 
