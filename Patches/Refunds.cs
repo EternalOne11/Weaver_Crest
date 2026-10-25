@@ -66,6 +66,14 @@ internal static class BreakableRefund {
 		}
 	}
 
+	// Spikes
+	[HarmonyPatch(typeof(DamageEnemies), nameof(DamageEnemies.OnHitSpikes))]
+	[HarmonyPostfix]
+	private static void AfterSpikesHit(DamageEnemies __instance) {
+		if (Moveset.IsOurAttack(__instance.gameObject))
+			HitObstacle();
+	}
+
 	// Levers
 	[HarmonyPatch(typeof(Lever), nameof(Lever.Hit))]
 	[HarmonyPrefix]
