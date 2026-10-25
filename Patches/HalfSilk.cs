@@ -1080,15 +1080,12 @@ public static class HalfSilk
         if (!spool)
             return;
 
-        bool on = YenCrest.IsEquipped && GetHasHalfSilk() && __instance.cState.isSprinting
-            && spool.usingSilk.Contains(SilkSpool.SilkUsingFlags.Normal);
+        FsmFloat? timer = AnkletTimer(__instance);
+        bool on = YenCrest.IsEquipped && GetHasHalfSilk() && timer != null
+            && ankletFsm!.ActiveStateName == "Usage";
 
         if (on)
-        {
-            FsmFloat? timer = AnkletTimer(__instance);
-            if (timer != null && ankletFsm!.ActiveStateName == "Usage")
-                timer.Value += Time.deltaTime;
-        }
+            timer!.Value += Time.deltaTime;
 
         if (on == ankletLook)
             return;
