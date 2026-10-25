@@ -9,14 +9,14 @@ namespace Weaver_Crest.Patches;
 // Refund settings... Split in 2 (essential and parries) Both are WIP
 [HarmonyPatch]
 internal static class BreakableRefund {
-	private static bool swingOpen, hitObstacle, hitEnemy, costOnHold;
+	private static bool swingOpen, hitObstacle, hitEnemy, hitThorn, costOnHold;
 	private static float swingStart;
 
 	internal static void StartSwing(bool deferredCost) {
 		EndSwing();
 		swingOpen = true;
 		swingStart = Time.time;
-		hitObstacle = hitEnemy = false;
+		hitObstacle = hitEnemy = hitThorn = false;
 		costOnHold = deferredCost;
 	}
 
@@ -40,7 +40,7 @@ internal static class BreakableRefund {
 		if (!swingOpen)
 			return;
 		swingOpen = false;
-		if (!hitObstacle || hitEnemy || !YenCrest.IsEquipped || !RefundSetting.Value)
+		if (!hitObstacle || hitEnemy || hitThorn || !YenCrest.IsEquipped || !RefundSetting.Value)
 			return;
 		if (costOnHold)
 			MaskTrade.CancelCost();
@@ -66,11 +66,16 @@ internal static class BreakableRefund {
 		}
 	}
 
-	// Spikes
-	[HarmonyPatch(typeof(DamageEnemies), nameof(DamageEnemies.OnHitSpikes))]
-	[HarmonyPostfix]
-	private static void AfterSpikesHit(DamageEnemies __instance) {
-		if (Moveset.IsOurAttack(__instance.gameObject))
+	// Spikes and thorns. Thorns dont refund silk
+	[HarmonyPatch(typeof(DamageHero), "TryClashTinkCollider")]
+	[HarmonyPrefix]
+	private static void SpikeHit(DamageHero __instance, Collider2D collision) {
+		if (__instance.hazardType != GlobalEnums.HazardType.SPIKES || !Moveset.IsOurAttack(collision.gameObject))
+			return;
+		SpikeSlashReaction reaction = __instance.GetComponent<SpikeSlashReaction>();
+		if (reaction && reaction.enabled)
+			hitThorn = true;
+		else
 			HitObstacle();
 	}
 
