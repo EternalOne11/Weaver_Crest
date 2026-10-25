@@ -123,8 +123,25 @@ public static class HalfSilk
         HalfSilkDisappear = BuildClip(SpriteCollection, "weaver hud silk blob.000", 3, 0, 30f, tk2dSpriteAnimationClip.WrapMode.Once);
         HalfSilkGrow = BuildClip(SpriteCollection, "weaver hud silk blob.000", 5, 7, 30f, tk2dSpriteAnimationClip.WrapMode.Once);
         HalfSilkShrink = BuildClip(SpriteCollection, "weaver hud silk blob.000", 7, 4, 30f, tk2dSpriteAnimationClip.WrapMode.Once);
-    }
 
+        // Half silk glow
+        Texture2D glowTex = LoadNamedTexture("silk blob chunk glow.png");
+        tk2dSpriteCollectionData glowCollection = Tk2dUtil.CreateTk2dSpriteCollection(
+            sprites: [glowTex],
+            spriteCenters: [new Vector2(glowTex.width / 2f + 0f, glowTex.height / 2f + 3.5f)],
+            pixelsPerUnit: 64f
+        );
+        UnityEngine.Object.DontDestroyOnLoad(glowCollection.gameObject);
+        tk2dSpriteAnimationFrame[] glowFrame = glowCollection.CreateFrames([glowTex.name]);
+        tk2dSpriteAnimationFrame[] idleFrame = SpriteCollection.CreateFrames(["weaver hud silk blob.0004.png"]);
+        HalfSilkGlow = new tk2dSpriteAnimationClip
+        {
+            name = "HalfSilkGlow",
+            fps = 8f,
+            wrapMode = tk2dSpriteAnimationClip.WrapMode.Loop,
+            frames = [.. glowFrame, .. idleFrame],
+        };
+    }
     private static tk2dSpriteCollectionData BuildCollection(string prefix, int startFrame, int endFrame)
     {
         Texture2D[] textures = Enumerable.Range(startFrame, endFrame + 1 - startFrame).Select(i => LoadNamedTexture($"{prefix}{i}.png")).ToArray();
@@ -163,16 +180,17 @@ public static class HalfSilk
     private static tk2dSpriteAnimationClip HalfSilkDisappear = null!;
     private static tk2dSpriteAnimationClip HalfSilkGrow = null!;
     private static tk2dSpriteAnimationClip HalfSilkShrink = null!;
+    private static tk2dSpriteAnimationClip HalfSilkGlow = null!;
     private static tk2dSpriteCollectionData SpriteCollection = null!;
     private static bool AddedAnimations = false;
 
-    // Tempoarary filter for half silk Needolin
-    private const bool NeedolinAcidLook = true;
     internal static bool NeedolinUsingHalf;
     internal static void RefreshHalfSilkColor()
     {
-        if (GetHasHalfSilk() && CurrentHalf)
-            CurrentHalf.FadeToCorrectColor();
+        if (!GetHasHalfSilk() || !CurrentHalf)
+            return;
+        CurrentHalf.FadeToCorrectColor();
+        CurrentHalf.animator.Play(NeedolinUsingHalf ? HalfSilkGlow : HalfSilkIdle);
     }
 
     private static SilkChunk CurrentHalf = null!;
@@ -184,7 +202,16 @@ public static class HalfSilk
         if (AddedAnimations)
             return;
         
-        CurrentHalf.animator.Library.clips = CurrentHalf.animator.Library.clips.Append(HalfSilkIdle).Append(HalfSilkAppear).Append(HalfSilkDisappear).Append(HalfSilkGrow).Append(HalfSilkShrink).ToArray();
+        // SilkChunk Temp Use for half silk.
+        tk2dSpriteAnimationClip tempUse = CurrentHalf.animator.Library.GetClipByName("SilkChunk Temp Use");
+        if (tempUse != null && tempUse.frames.Length > 0)
+        {
+            tk2dSpriteAnimationFrame glow = HalfSilkGlow.frames[0];
+            tk2dSpriteAnimationFrame idle = HalfSilkGlow.frames.Length > 1 ? HalfSilkGlow.frames[1] : glow;
+            HalfSilkGlow.fps = tempUse.fps;
+            HalfSilkGlow.wrapMode = tempUse.wrapMode;
+            HalfSilkGlow.frames = [.. Enumerable.Range(0, tempUse.frames.Length).Select(i => i % 2 == 0 ? glow : idle)];
+        }
         CurrentHalf.animator.Library.isValid = false;
         AddedAnimations = true;
     }
@@ -441,8 +468,11 @@ public static class HalfSilk
         SilkSpool.SilkUsingFlags ret = SilkSpool.SilkUsingFlags.None;
         
         bool needolinStyleUse = usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal);
-        if (!needolinStyleUse)
+        if (!needolinStyleUse && NeedolinUsingHalf)
+        {
             NeedolinUsingHalf = false;
+            CurrentHalf.animator.Play(HalfSilkIdle);
+        }
 
         bool needolinOnHalf = NeedolinUsingHalf && needolinStyleUse;
         if (!needolinOnHalf && (usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Normal) || usingFlags.HasFlag(SilkSpool.SilkUsingFlags.Drain)))
@@ -517,10 +547,6 @@ public static class HalfSilk
             orig *= 1.5f;
 			
         if (HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Acid))
-            orig = self.acidUseColor;
-
-        // Temporary Acid look (remove once you get proper frames)
-        if (NeedolinUsingHalf && NeedolinAcidLook)
             orig = self.acidUseColor;
         
         if (HalfSilkUsingFlags.HasFlag(SilkSpool.SilkUsingFlags.Void))
