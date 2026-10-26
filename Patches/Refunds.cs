@@ -56,7 +56,7 @@ internal static class BreakableRefund {
 	
 	private static int podHitFrame = -1;
 
-		// bounce pods and wasp hives
+                // bounce pods and wasp hives
 	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
 	[HarmonyPrefix]
 	private static void BeforePodHit(HealthManager __instance, HitInstance hitInstance) {
@@ -73,23 +73,37 @@ internal static class BreakableRefund {
 		return System.Array.Exists(words, w => name.IndexOf(w, System.StringComparison.OrdinalIgnoreCase) >= 0);
 	}
 
-	// coral stalactites
+//For lamps... 
+	private static bool NameOrAncestorMatches(GameObject obj, string[] words) {
+		for (Transform? t = obj.transform; t; t = t!.parent)
+			if (System.Array.Exists(words, w => t!.name.IndexOf(w, System.StringComparison.OrdinalIgnoreCase) >= 0))
+				return true;
+		return false;
+	}
+
+	// Breakables, like wisp fire lanterns, coral stalactites, and others.
+	private static readonly string[] BreakableNames = ["Stalactite", "Wispfire", "Slab Chain cage"];
+
 	[HarmonyPatch(typeof(Breakable), nameof(Breakable.Hit))]
 	[HarmonyPrefix]
-	private static void StalactiteHit(Breakable __instance, HitInstance damageInstance, bool ___isBroken) {
-		if (!___isBroken && NameMatches(__instance.gameObject, ["Stalactite"]) && Moveset.IsOurAttack(damageInstance.Source))
+	private static void ObstacleBreakableHit(Breakable __instance, HitInstance damageInstance, bool ___isBroken) {
+		if (!___isBroken && NameOrAncestorMatches(__instance.gameObject, BreakableNames) && Moveset.IsOurAttack(damageInstance.Source))
 			HitObstacle();
 	}
-//Crustnuts
-        [HarmonyPatch(typeof(HitResponse), nameof(HitResponse.Hit))]
-        [HarmonyPrefix]
-        private static void CoralHit(HitResponse __instance, HitInstance damageInstance) {
-                if (NameMatches(__instance.gameObject, ["Coral"]) && Moveset.IsOurAttack(damageInstance.Source))
-                        HitObstacle();
-        }
 
-	// Hazards which the needle clanks off... Requires name being listed below)
-        private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap", "Pendulum", "fan_hazard", "Pearl"];
+	// Coral nuts, Kratt, and a few others
+	private static readonly string[] HitResponseNames = ["Coral", "Kratt", "jail_gate", "Snowflake", "Clover"];
+
+	[HarmonyPatch(typeof(HitResponse), nameof(HitResponse.Hit))]
+	[HarmonyPrefix]
+	private static void HitResponseHit(HitResponse __instance, HitInstance damageInstance) {
+		if (NameMatches(__instance.gameObject, HitResponseNames) && Moveset.IsOurAttack(damageInstance.Source))
+			HitObstacle();
+	}
+
+        // Hazards which the needle clanks off and some enemies... Requires name being listed below)
+	private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap", "Pendulum", "fan_hazard", "Pearl", "Mask Maker", "Bone Beast"];
+
 	[HarmonyPatch(typeof(TinkEffect), nameof(TinkEffect.TryDoTinkReactionNoDamager))]
 	[HarmonyPostfix]
 	private static void HazardTink(TinkEffect __instance, GameObject obj, bool __result) {
@@ -97,7 +111,7 @@ internal static class BreakableRefund {
 			HitObstacle();
 	}
 
-	// Spikes and thorns, spikes refund silk thorns do not.
+        // Spikes and thorns, spikes refund silk thorns do not. Likely a few mistakes...
 	[HarmonyPatch(typeof(DamageHero), "TryClashTinkCollider")]
 	[HarmonyPrefix]
 	private static void SpikeHit(DamageHero __instance, Collider2D collision) {
@@ -144,7 +158,8 @@ internal static class BreakableRefund {
 
 	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
 	//Craft metal deposites, coral crusts, 
-        private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way", "break_tube", "Cage", "jail"];
+	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way", "break_tube", "Cage", "jail", "Float Crystal"];
+
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
 	[HarmonyPostfix]
