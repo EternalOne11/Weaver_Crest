@@ -56,12 +56,14 @@ internal static class BreakableRefund {
 	
 	private static int podHitFrame = -1;
 
-		// bounce pods and wasp hives
+                // bounce pods, wasp hives and lazy flyer pogo
 	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
 	[HarmonyPrefix]
 	private static void BeforePodHit(HealthManager __instance, HitInstance hitInstance) {
+		bool fromAbove = DirectionUtils.GetCardinalDirection(hitInstance.Direction) == 3;
 		bool notEnemy = __instance.GetComponent<BouncePod>()
-			|| NameMatches(__instance.gameObject, ["Hive"]);
+			|| NameMatches(__instance.gameObject, ["Hive"])
+			|| (fromAbove && NameMatches(__instance.gameObject, ["Lazy Flyer"]));
 		if (notEnemy && Moveset.IsOurAttack(hitInstance.Source)) {
 			podHitFrame = Time.frameCount;
 			HitObstacle();
@@ -84,7 +86,7 @@ internal static class BreakableRefund {
         // Breakables, like wisp fire lanterns, coral stalactites, and others.
 	private static readonly string[] BreakableNames = ["Stalactite", "Wispfire", "Wisp Flame Lantern", "Slab Chain cage",
 		"plank_wall", "Hang Sack", "Breakable_cage", "Giant Flea Cage", "drop_planks", "pressure_plate", "lift_break_poles",
-		"blocker struts", "Junk_Pile", "Confessional", "cog_mecanism"];
+		"blocker struts", "Junk_Pile", "Confessional", "cog_mecanism", "Song Knight Tube", "Breakable Window"];
 
 	[HarmonyPatch(typeof(Breakable), nameof(Breakable.Hit))]
 	[HarmonyPrefix]
@@ -114,10 +116,15 @@ internal static class BreakableRefund {
         // Hazards which the needle clanks off and some enemies... Requires name being listed below)
 	private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap", "Pendulum", "fan_hazard", "Pearl", "Mask Maker", "Bone Beast"];
 
+	// So they always refund it... even if you dont move the platform
+	private static readonly string[] TinkAncestorNames = ["Sliding Plat"];
+
 	[HarmonyPatch(typeof(TinkEffect), nameof(TinkEffect.TryDoTinkReactionNoDamager))]
 	[HarmonyPostfix]
 	private static void HazardTink(TinkEffect __instance, GameObject obj, bool __result) {
-		if (__result && NameMatches(__instance.gameObject, TinkNames) && Moveset.IsOurAttack(obj))
+		if (!__result || !Moveset.IsOurAttack(obj))
+			return;
+		if (NameMatches(__instance.gameObject, TinkNames) || NameOrAncestorMatches(__instance.gameObject, TinkAncestorNames))
 			HitObstacle();
 	}
 
@@ -167,9 +174,9 @@ internal static class BreakableRefund {
 	}
 
 	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
-	//Craft metal deposites, coral crusts, 
+	//Craft metal deposites, coral crusts, memory orb objects, etc.
 	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way", "break_tube", "Cage", "jail", "Float Crystal",
-		"Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall"];
+		"Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall", "Memory Orb"];
 
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
