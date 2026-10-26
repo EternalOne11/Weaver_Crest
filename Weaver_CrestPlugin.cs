@@ -38,7 +38,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<SkillSlotChoice> SkillSlotSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
-	internal static ConfigEntry<bool> ParrySetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> WispCostSetting { get; private set; } = null!;
 
 	internal const string
@@ -65,8 +64,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"Reduces knockback in half, making it the same as witch crest.");
 		RefundSetting = Config.Bind("Silk", "Essential Refunds", true,
 				"Attacks that on breable walls, doors, spikes, and shellshard walls refund silk");
-		ParrySetting = Config.Bind("Silk", "Parry Refunds Experimental", false,
-			"When you clash with enemy projectiles, or an enemies parry, the attacks half silk will be refunded. (even if it hits an enemy)");
 		WispCostSetting = Config.Bind("Silk", "Halves the cost Wisp Lantern", false,
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
 
@@ -86,13 +83,12 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(BarnacleHit));
 		Harmony.PatchAll(typeof(BreakableRefund));
 		Harmony.PatchAll(typeof(ShardWallRefund));
-		Harmony.PatchAll(typeof(ParryRefund));
 		Harmony.PatchAll(typeof(SkillAutoEquip));
 		Harmony.PatchAll(typeof(BindSoundBlock));
 		Harmony.PatchAll(typeof(SpaHalfSilk));
 		Harmony.PatchAll(typeof(EnemySilkDrain));
 		Harmony.PatchAll(typeof(WispHalfCost));
-
+		
 		RegisterCrest();
 		HalfSilk.Initialize();
 		LocketSpawn.Initialize();
