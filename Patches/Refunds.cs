@@ -185,27 +185,3 @@ internal static class ShardWallRefund {
 			BreakableRefund.HitObstacle();
 	}
 }
-
-// Parry Refund system...
-[HarmonyPatch]
-internal static class ParryRefund {
-	private static bool refundedSwing = true;
-
-	[HarmonyPatch(typeof(HeroController), "Attack")]
-	[HarmonyPostfix]
-	private static void NewSwing() => refundedSwing = false;
-
-	[HarmonyPatch(typeof(DamageEnemies), nameof(DamageEnemies.SendParried), [typeof(bool)])]
-	[HarmonyPostfix]
-	private static void AfterParried(DamageEnemies __instance) {
-		if (refundedSwing || !YenCrest.IsEquipped || !ParrySetting.Value
-			|| !Moveset.IsOurAttack(__instance.gameObject))
-			return;
-		refundedSwing = true;
-
-		if (!MaskTrade.CancelCost())
-			HalfSilk.AddHalfSilk(heroEffect: false);
-
-		BreakableRefund.HitEnemy();
-	}
-}
