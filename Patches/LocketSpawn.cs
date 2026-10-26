@@ -71,7 +71,7 @@ internal static class LocketSpawn {
 				recorded = true;
 			}
 			else
-				CountAtSpawn = locket.CollectedAmount; // a locket gained some other way: not this one
+				CountAtSpawn = locket.CollectedAmount;
 		}
 	}
 
