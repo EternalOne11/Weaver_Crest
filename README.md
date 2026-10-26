@@ -2,7 +2,8 @@
 - The fully custom themed around the Weavers, and the use of silk.
 - This is likely the first custom crest, with unique a moveset, custom animations and sound effects.
 - This has been a passion project that I have slowly working on for over a year.
-- This crest is currently unlocked automatically, for now. It will have its own custom shrine eventully and potentially a config option. 
+- This crest is currently unlocked automatically, for now. It will have its own custom shrine eventully.
+- Languages available Ingame for all existing Silksong options.
 - Please don't ask how much I have spent commisioning the art, and some code... (It wasnt cheap)
 
 ## Custom mechanics
