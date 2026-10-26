@@ -55,18 +55,23 @@ internal static class LocketSpawn {
 		marker.CountAtSpawn = locket!.CollectedAmount;
 	}
 
+	// Collected check
 	private class LocketMarker : MonoBehaviour {
 		public string Id = "";
 		public string SceneName = "";
 		public int CountAtSpawn;
+		private bool recorded;
 
-		private void OnDisable() {
-			HeroController hero = HeroController.instance;
-			if (!hero || !locket)
+		private void Update() {
+			if (recorded || !locket || locket!.CollectedAmount <= CountAtSpawn)
 				return;
-			bool nextToHornet = Vector2.Distance(hero.transform.position, transform.position) < 3f;
-			if (nextToHornet && locket!.CollectedAmount > CountAtSpawn)
+			HeroController hero = HeroController.instance;
+			if (hero && Vector2.Distance(hero.transform.position, transform.position) < 5f) {
 				SetCollected(Id, SceneName);
+				recorded = true;
+			}
+			else
+				CountAtSpawn = locket.CollectedAmount; // a locket gained some other way: not this one
 		}
 	}
 
