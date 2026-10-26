@@ -122,8 +122,6 @@ internal static class BreakableRefund {
 	}
 
         // Spikes and thorns, spikes refund silk thorns do not.
-	// Thorns have an enabled SpikeSlashReaction, regular spikes don't (it's missing or disabled). Regular spikes
-	// refund; thorns block the refund for that attack (like an enemy), so they can't refund any other way either
 	[HarmonyPatch(typeof(DamageHero), "TryClashTinkCollider")]
 	[HarmonyPrefix]
 	private static void SpikeHit(DamageHero __instance, Collider2D collision) {
