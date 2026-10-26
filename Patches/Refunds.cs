@@ -6,7 +6,7 @@ using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest.Patches;
 
-// Refund settings... Split in 2 (essential and parries) Both are WIP
+// Refund settings...
 [HarmonyPatch]
 internal static class BreakableRefund {
 	private static bool swingOpen, hitObstacle, hitEnemy, hitThorn, costOnHold;
@@ -56,7 +56,7 @@ internal static class BreakableRefund {
 	
 	private static int podHitFrame = -1;
 
-                // bounce pods and wasp hives
+		// bounce pods and wasp hives
 	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
 	[HarmonyPrefix]
 	private static void BeforePodHit(HealthManager __instance, HitInstance hitInstance) {
@@ -73,7 +73,7 @@ internal static class BreakableRefund {
 		return System.Array.Exists(words, w => name.IndexOf(w, System.StringComparison.OrdinalIgnoreCase) >= 0);
 	}
 
-//For lamps... 
+//For lamps
 	private static bool NameOrAncestorMatches(GameObject obj, string[] words) {
 		for (Transform? t = obj.transform; t; t = t!.parent)
 			if (System.Array.Exists(words, w => t!.name.IndexOf(w, System.StringComparison.OrdinalIgnoreCase) >= 0))
@@ -81,8 +81,10 @@ internal static class BreakableRefund {
 		return false;
 	}
 
-	// Breakables, like wisp fire lanterns, coral stalactites, and others.
-	private static readonly string[] BreakableNames = ["Stalactite", "Wispfire", "Slab Chain cage"];
+        // Breakables, like wisp fire lanterns, coral stalactites, and others.
+	private static readonly string[] BreakableNames = ["Stalactite", "Wispfire", "Wisp Flame Lantern", "Slab Chain cage",
+		"plank_wall", "Hang Sack", "Breakable_cage", "Giant Flea Cage", "drop_planks", "pressure_plate", "lift_break_poles",
+		"blocker struts", "Junk_Pile", "Confessional", "cog_mecanism"];
 
 	[HarmonyPatch(typeof(Breakable), nameof(Breakable.Hit))]
 	[HarmonyPrefix]
@@ -91,8 +93,16 @@ internal static class BreakableRefund {
 			HitObstacle();
 	}
 
-	// Coral nuts, Kratt, and a few others
-	private static readonly string[] HitResponseNames = ["Coral", "Kratt", "jail_gate", "Snowflake", "Clover"];
+	// Vine platforms
+	[HarmonyPatch(typeof(SuspendedPlatformCut), nameof(SuspendedPlatformCut.Hit))]
+	[HarmonyPrefix]
+	private static void VinePlatformHit(HitInstance damageInstance) {
+		if (Moveset.IsOurAttack(damageInstance.Source))
+			HitObstacle();
+	}
+
+        // Coral nuts, Kratt, and a few others
+	private static readonly string[] HitResponseNames = ["Coral Nut", "Coral Crust Tree", "Kratt", "jail_gate", "Snowflake", "Clover"];
 
 	[HarmonyPatch(typeof(HitResponse), nameof(HitResponse.Hit))]
 	[HarmonyPrefix]
@@ -111,7 +121,9 @@ internal static class BreakableRefund {
 			HitObstacle();
 	}
 
-        // Spikes and thorns, spikes refund silk thorns do not. Likely a few mistakes...
+        // Spikes and thorns, spikes refund silk thorns do not.
+	// Thorns have an enabled SpikeSlashReaction, regular spikes don't (it's missing or disabled). Regular spikes
+	// refund; thorns block the refund for that attack (like an enemy), so they can't refund any other way either
 	[HarmonyPatch(typeof(DamageHero), "TryClashTinkCollider")]
 	[HarmonyPrefix]
 	private static void SpikeHit(DamageHero __instance, Collider2D collision) {
@@ -158,7 +170,8 @@ internal static class BreakableRefund {
 
 	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
 	//Craft metal deposites, coral crusts, 
-	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way", "break_tube", "Cage", "jail", "Float Crystal"];
+	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way", "break_tube", "Cage", "jail", "Float Crystal",
+		"Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall"];
 
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
