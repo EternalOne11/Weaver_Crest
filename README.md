@@ -53,11 +53,11 @@
 - Silk Bind slot. (For when you get a silk skill)
 - Half knockback option. (like witch) **Off by default**
 - Wispfire lantern can use half silk instead **Off by default**
-- Experimental Parry Refunds **WIP Off by default**
 
 ## Map changes/implementation
 - 4 new memory lockets.
 - Mt. Fay, Citadel Spa, Putrified Ducts, and Wisp/Underworks connection.
+- Citidel spa one has a secret
 - **(Not yet done)** The chapel of the Weaver will be in Mt. fay
 
 ## Design
