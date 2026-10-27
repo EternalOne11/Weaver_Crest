@@ -1104,35 +1104,26 @@ public static class HalfSilk
 // Half silk can activate both now
 [HarmonyPatch]
 internal static class CountHalfSilk {
-	private static readonly System.Collections.Generic.Dictionary<System.Type, System.Reflection.FieldInfo?> outputs = new();
-
 	[HarmonyPatch(typeof(GetSilk), nameof(GetSilk.OnEnter))]
 	[HarmonyPostfix]
-	private static void GetSilkEnter(GetSilk __instance) => CountHalfSilk(__instance);
+	private static void GetSilkEnter(GetSilk __instance) => Count(__instance, __instance.StoreAmount);
 
 	[HarmonyPatch(typeof(GetSilkV2), nameof(GetSilkV2.OnEnter))]
 	[HarmonyPostfix]
-	private static void GetSilkV2Enter(GetSilkV2 __instance) => CountHalfSilk(__instance);
+	private static void GetSilkV2Enter(GetSilkV2 __instance) => Count(__instance, __instance.StoreAmount);
 
 	[HarmonyPatch(typeof(GetSilkV2), nameof(GetSilkV2.OnUpdate))]
 	[HarmonyPostfix]
-	private static void GetSilkV2Update(GetSilkV2 __instance) => CountHalfSilk(__instance);
+	private static void GetSilkV2Update(GetSilkV2 __instance) => Count(__instance, __instance.StoreAmount);
 
-	private static void CountHalfSilk(FsmStateAction action) {
+	private static void Count(FsmStateAction action, FsmInt stored) {
 		if (!YenCrest.IsEquipped || PlayerData.instance.silk > 0 || !HalfSilk.GetHasHalfSilk())
 			return;
 		HeroController hero = HeroController.instance;
 		GameObject owner = action.Fsm.GameObject;
 		if (!hero || !owner || !owner.transform.IsChildOf(hero.transform))
 			return;
-
-		System.Type type = action.GetType();
-		if (!outputs.TryGetValue(type, out var field)) {
-			field = System.Array.Find(type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance),
-				f => f.FieldType == typeof(FsmInt));
-			outputs[type] = field;
-		}
-		if (field?.GetValue(action) is FsmInt stored && stored.Value <= 0)
+		if (stored != null && stored.Value <= 0)
 			stored.Value = 1;
 	}
 }
