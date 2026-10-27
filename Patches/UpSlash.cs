@@ -16,7 +16,7 @@ internal static partial class Moveset {
 	new(-0.4f,3.1f), new(0.4f,3.1f), new(0.8f,2.1f), new(0.4f,-0.3f)];
 
 	// Up attack altered time, does not effect recovery.
-	internal const float UpSlashLength = 0.6f;
+	internal const float UpSlashLength = 0.58f;
 
 	private static void UpSlash() {
 		string[] upSlashFiles = ["upSlash_e0000.png", "upSlash_e0001.png", "upSlash_e0002.png"];
