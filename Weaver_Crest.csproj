@@ -22,6 +22,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/EternalOne11/Weaver_Crest</RepositoryUrl>
+    <Version>0.9.9</Version>
   </PropertyGroup>
   
     <ItemGroup>
