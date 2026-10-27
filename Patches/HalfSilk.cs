@@ -1101,6 +1101,41 @@ public static class HalfSilk
         RefreshHalfSilkColor();
     }
 }
+// Half silk can activate both now
+[HarmonyPatch]
+internal static class CountHalfSilk {
+	private static readonly System.Collections.Generic.Dictionary<System.Type, System.Reflection.FieldInfo?> outputs = new();
+
+	[HarmonyPatch(typeof(GetSilk), nameof(GetSilk.OnEnter))]
+	[HarmonyPostfix]
+	private static void GetSilkEnter(GetSilk __instance) => CountHalfSilk(__instance);
+
+	[HarmonyPatch(typeof(GetSilkV2), nameof(GetSilkV2.OnEnter))]
+	[HarmonyPostfix]
+	private static void GetSilkV2Enter(GetSilkV2 __instance) => CountHalfSilk(__instance);
+
+	[HarmonyPatch(typeof(GetSilkV2), nameof(GetSilkV2.OnUpdate))]
+	[HarmonyPostfix]
+	private static void GetSilkV2Update(GetSilkV2 __instance) => CountHalfSilk(__instance);
+
+	private static void CountHalfSilk(FsmStateAction action) {
+		if (!YenCrest.IsEquipped || PlayerData.instance.silk > 0 || !HalfSilk.GetHasHalfSilk())
+			return;
+		HeroController hero = HeroController.instance;
+		GameObject owner = action.Fsm.GameObject;
+		if (!hero || !owner || !owner.transform.IsChildOf(hero.transform))
+			return;
+
+		System.Type type = action.GetType();
+		if (!outputs.TryGetValue(type, out var field)) {
+			field = System.Array.Find(type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance),
+				f => f.FieldType == typeof(FsmInt));
+			outputs[type] = field;
+		}
+		if (field?.GetValue(action) is FsmInt stored && stored.Value <= 0)
+			stored.Value = 1;
+	}
+}
 //Spa Interaction
 [HarmonyPatch]
 internal static class SpaHalfSilk {
