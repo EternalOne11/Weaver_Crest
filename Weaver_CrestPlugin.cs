@@ -88,6 +88,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(SpaHalfSilk));
 		Harmony.PatchAll(typeof(EnemySilkDrain));
 		Harmony.PatchAll(typeof(WispHalfCost));
+		Harmony.PatchAll(typeof(CountHalfSilk));
 		
 		RegisterCrest();
 		HalfSilk.Initialize();
