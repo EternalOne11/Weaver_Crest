@@ -78,6 +78,7 @@ internal static class SilkMechanics {
 			return;
 		BreakableRefund.EndSwingIfOver();
 		MaskTrade.PayCosts();
+		MaskTrade.SendLastMaskWhenFree();
 	}
 
 	[HarmonyPatch(typeof(AttackBase), nameof(AttackBase.StartAttack))]
@@ -140,8 +141,10 @@ internal static class MaskTrade {
 			HeroController.instance.damageEffectFSM.SendEvent("DAMAGE"); // the black damage vignette
 			EventRegister.SendEvent("HEALTH UPDATE");
 
+			// The last-mask effects come from "HERO DAMAGED", but attacks and other moves treat that event as a real
+			// hit and cancel themselves (freezing Hornet, since no hit's recovery follows). So it waits until she's free
 			if (PlayerData.instance.health == 1)
-				EventRegister.SendEvent("HERO DAMAGED");
+				lastMaskPending = true;
 			HeroController.instance.AddSilk(tradedLifeblood ? LifebloodSilk : Silk, false, SilkSpool.SilkAddSource.Normal, false);
 			HeroController.instance.SpriteFlash.flashFocusHeal();
 			Sounds.PlayHurt();
@@ -187,6 +190,23 @@ internal static class MaskTrade {
 			pendingCosts.Dequeue();
 			HalfSilk.RemoveHalfSilk(interruptRegen: false);
 		}
+	}
+
+	// Delays Hero damaged effect... So it does not interrupt attacks...
+	private static bool lastMaskPending;
+
+	internal static void SendLastMaskWhenFree() {
+		if (!lastMaskPending)
+			return;
+		HeroController hc = HeroController.instance;
+		var state = hc.cState;
+		bool busy = !hc.acceptingInput || hc.controlReqlinquished || state.attacking || state.dashing
+			|| state.downSpikeAntic || state.downSpiking || state.downAttacking || state.downSpikeRecovery;
+		if (busy)
+			return;
+		lastMaskPending = false;
+		if (PlayerData.instance.health == 1)
+			EventRegister.SendEvent("HERO DAMAGED");
 	}
 
 	// A flash played is played when a mask is broken/traded.
