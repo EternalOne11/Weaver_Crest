@@ -45,7 +45,7 @@ internal static partial class Moveset {
 			},
 			new tk2dSpriteAnimationClip {
 				name = "SlashAlt",
-				fps = 10,
+				fps = altSlashHornetTex.Length / NormalAttackTime,
 				wrapMode = WrapMode.Once,
 				frames = altSlashData.CreateFrames(altSlashHornetTex.Select(t => t.name)),
 			},
