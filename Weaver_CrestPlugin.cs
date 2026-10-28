@@ -63,7 +63,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		KnockbackSetting = Config.Bind("Balance", "Half knockback", false,
 			"Reduces knockback in half, making it the same as witch crest.");
 		RefundSetting = Config.Bind("Silk", "Essential Refunds", true,
-				"Attacks that on breable walls, doors, spikes, and shellshard walls refund silk");
+				"Attacks that on breakble walls, doors, spikes, and shellshard walls refund silk");
 		WispCostSetting = Config.Bind("Silk", "Halves the cost Wisp Lantern", false,
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
 
@@ -90,7 +90,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(WispHalfCost));
 		Harmony.PatchAll(typeof(CountHalfSilk));
 		Harmony.PatchAll(typeof(Wyrmling));
-		Harmony.PatchAll(typeof(SlashTurnLock));
 		
 		RegisterCrest();
 		HalfSilk.Initialize();
