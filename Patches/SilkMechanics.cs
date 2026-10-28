@@ -1,9 +1,6 @@
 using GlobalEnums;
 using HarmonyLib;
-using HutongGames.PlayMaker;
 using Needleforge.Attacks;
-using System.Collections;
-using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
 
@@ -78,7 +75,6 @@ internal static class SilkMechanics {
 			return;
 		BreakableRefund.EndSwingIfOver();
 		MaskTrade.PayCosts();
-		MaskTrade.SendLastMaskWhenFree();
 	}
 
 	[HarmonyPatch(typeof(AttackBase), nameof(AttackBase.StartAttack))]
@@ -131,24 +127,39 @@ internal static class MaskTrade {
 		&& !HalfSilk.GetHasHalfSilk()
 		&& (PlayerData.instance.healthBlue > 0 || PlayerData.instance.health > Cost); //Never Last Mask
 
+	// The vanilla damage effect components
+	private static readonly AccessTools.FieldRef<HeroController, GameObject> TakeHitEffect =
+		AccessTools.FieldRefAccess<HeroController, GameObject>("takeHitSingleEffectPrefab");
+	private static readonly AccessTools.FieldRef<HeroController, RandomAudioClipTable> WoundVoice =
+		AccessTools.FieldRefAccess<HeroController, RandomAudioClipTable>("woundAudioTable");
+	private static readonly AccessTools.FieldRef<HeroController, HeroAudioController> AudioCtrl =
+		AccessTools.FieldRefAccess<HeroController, HeroAudioController>("audioCtrl");
+	private static readonly AccessTools.FieldRef<HeroController, HeroVibrationController> VibrationCtrl =
+		AccessTools.FieldRefAccess<HeroController, HeroVibrationController>("vibrationCtrl");
+
 	internal static bool MaskCost(bool normalAttack = false) {
 		if (DuringTrade()) {
-			Sounds.MuteForTrade(); //Pain grunt replaces normal attack grunt
+			Sounds.MuteForTrade(); // the wound voice replaces the normal attack grunt
 
-                // Lifeblood mask value changes
+			// The mask is taken like a normal hit, without knockback or the freeze, invulnerability or the effect that cancels attacks.
+			HeroController hc = HeroController.instance;
 			bool tradedLifeblood = PlayerData.instance.healthBlue > 0;
 			PlayerData.instance.TakeHealth(Cost, HeroController.instance.IsInLifebloodState, allowFracturedMaskBreak: false);
-			HeroController.instance.damageEffectFSM.SendEvent("DAMAGE"); // the black damage vignette
-			EventRegister.SendEvent("HEALTH UPDATE");
+			AudioCtrl(hc)?.PlaySound(HeroSounds.TAKE_HIT, playVibration: true);
+			GameObject? hitEffect = TakeHitEffect(hc);
+			if (hitEffect)
+				hitEffect!.Spawn(hc.transform.position);
 
-			// The last-mask effects come from "HERO DAMAGED", but attacks and other moves treat that event as a real
-			// hit and cancel themselves (freezing Hornet, since no hit's recovery follows). So it waits until she's free
-			if (PlayerData.instance.health == 1)
-				lastMaskPending = true;
+			// Screen shake, vintage, light flash, and last mask effects..
+			HeroController.instance.damageEffectFSM.SendEvent("DAMAGE");
+			GameCameras.instance?.cameraShakeFSM?.SendEvent("EnemyKillShake");
+			EventRegister.SendEvent("HEALTH UPDATE");
+			RandomAudioClipTable? voice = WoundVoice(hc);
+			if (voice)
+				voice!.SpawnAndPlayOneShot(hc.transform.position);
+			VibrationCtrl(hc)?.PlayHeroDamage();
+
 			HeroController.instance.AddSilk(tradedLifeblood ? LifebloodSilk : Silk, false, SilkSpool.SilkAddSource.Normal, false);
-			HeroController.instance.SpriteFlash.flashFocusHeal();
-			Sounds.PlayHurt();
-			PlayFlash();
 		}
 		//visual delay at 9 silk to prevent a greater visual annoyance
 		bool DipBelowBind = PlayerData.instance.silk == SilkSpool.BindCost && !HalfSilk.GetHasHalfSilk();
@@ -190,58 +201,6 @@ internal static class MaskTrade {
 			pendingCosts.Dequeue();
 			HalfSilk.RemoveHalfSilk(interruptRegen: false);
 		}
-	}
-
-	// Delays Hero damaged effect... So it does not interrupt attacks...
-	private static bool lastMaskPending;
-
-	internal static void SendLastMaskWhenFree() {
-		if (!lastMaskPending)
-			return;
-		HeroController hc = HeroController.instance;
-		var state = hc.cState;
-		bool busy = !hc.acceptingInput || hc.controlReqlinquished || state.attacking || state.dashing
-			|| state.downSpikeAntic || state.downSpiking || state.downAttacking || state.downSpikeRecovery;
-		if (busy)
-			return;
-		lastMaskPending = false;
-		if (PlayerData.instance.health == 1)
-			EventRegister.SendEvent("HERO DAMAGED");
-	}
-
-	// A flash played is played when a mask is broken/traded.
-	private static GameObject? flash;
-	private static Vector3 flashScale;
-	private static int flashRun;
-	private static bool flashRestore;
-
-	private static void PlayFlash() {
-		if (!flash) {
-			flash = HeroController.instance.GetComponents<PlayMakerFSM>()
-				.Select(fsm => fsm.FsmVariables.FindFsmGameObject("Sphere Flash")?.Value)
-				.FirstOrDefault(obj => obj);
-			if (!flash)
-				return;
-		}
-
-		if (flashRun == 0 || !flashRestore)
-			flashScale = flash!.transform.localScale;
-		flash!.transform.localScale = flashScale * 0.7f;
-		flash.SetActive(false);
-		flash.SetActive(true);
-
-		flashRestore = true;
-		HeroController.instance.StartCoroutine(RestoreFlashSize(++flashRun));
-	}
-
-	// disables the scale change unless for the interaction above
-	private static IEnumerator RestoreFlashSize(int run) {
-		yield return new WaitForSeconds(0.5f);
-		if (run != flashRun)
-			yield break;
-		if (flash)
-			flash!.transform.localScale = flashScale;
-		flashRestore = false;
 	}
 }
 
