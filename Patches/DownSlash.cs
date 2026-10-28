@@ -141,7 +141,7 @@ internal static partial class Moveset {
 		?? AccessTools.Method(typeof(HeroController), "CancelDownspike", [])
 		?? AccessTools.Method(typeof(HeroController), "CancelDownAttack", []);
 
-	// Landing in water and dashing during recovery ends the attack animations.
+	// Landing in water, dashing, or any other move that takes over during recovery ends the attack animations.
 	internal static void EndDownAttackEarly(HeroController hc) {
 		finishDownspike?.Invoke(hc, null);
 		HeroController.instance.cState.downSpikeRecovery = false;
@@ -172,6 +172,11 @@ internal static partial class Moveset {
 					yield break;
 				}
 				if (heroAnim.CurrentClip != downRecoveryClip) {
+
+					if (!hc.cState.onGround) {
+						EndDownAttackEarly(hc);
+						yield break;
+					}
 					int frame = Mathf.Min((int)(t * downRecoveryClip.fps), downRecoveryClip.frames.Length - 1);
 					heroAnim.PlayFromFrame(downRecoveryClip, frame);
 				}
