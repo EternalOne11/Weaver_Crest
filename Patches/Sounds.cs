@@ -23,8 +23,6 @@ internal static class Sounds {
 
 	private static readonly Dictionary<string, AudioClip?> clips = [];
 	private static readonly Dictionary<string, AudioClip?> attackClips = [];
-	private static AudioClip[]? gameHurtClips;
-	private static float NextHurt;
 	private static AudioSource? source;
 	private static string[]? resourceNames;
 
@@ -39,21 +37,6 @@ internal static class Sounds {
 	internal static void PlayAttack(string attack) {
 		if (attackClips.TryGetValue(attack, out AudioClip? clip))
 			Play(clip);
-	}
-
-	internal static void PlayHurt() {
-		if (!GameManager.instance.gameSettings.playerVoiceEnabled)
-			return;
-
-		if ((gameHurtClips == null || gameHurtClips.Length == 0) && Time.unscaledTime >= NextHurt) {
-			NextHurt = Time.unscaledTime + 5f;
-			gameHurtClips = [.. Resources.FindObjectsOfTypeAll<AudioClip>()
-				.Where(c => c.name is "w1" or "w2" or "w3" or "w4" or "w5" or "w6" or "w7")
-				.GroupBy(c => c.name).Select(g => g.First())];
-		}
-
-		if (gameHurtClips != null && gameHurtClips.Length > 0)
-			Play(gameHurtClips[UnityEngine.Random.Range(0, gameHurtClips.Length)]);
 	}
 
 	private const float MuteTime = 0.35f;
