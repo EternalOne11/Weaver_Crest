@@ -21,7 +21,6 @@ internal static partial class Moveset {
 	private static readonly Vector2[] Hitbox2 = [new(0.0f, -0.5f), new(-1.0f, -0.7f), new(-1.7f, -1.0f), new(-2.6f, -1.3f), 
 		new(-2.4f, -0.5f), new(-1.7f, 0.2f), new(-0.9f, 0.5f), new(0.3f, 0.2f)];
 
-	private static tk2dSpriteAnimationClip dashRecoverClip = null!;
 	private static tk2dSpriteCollectionData dashData = null!;
 	private static tk2dSpriteAnimation dashAnims = null!;
 
@@ -80,12 +79,13 @@ internal static partial class Moveset {
 				frames = dashData.CreateFrames(slashes[i].Select(t => t.name)),
 			});
 		}
-		dashRecoverClip = new tk2dSpriteAnimationClip {
-			name = "Weaver Dash Recover",
+		//Dash attack recovery
+		hornetClips.Add(new tk2dSpriteAnimationClip {
+			name = "Dash Attack Recover",
 			fps = 15f,
 			wrapMode = WrapMode.Once,
 			frames = dashData.CreateFrames(recover.Select(t => t.name)),
-		};
+		});
 
 		dashAnims.ValidateLookup();
 		sharedLib.clips = [.. sharedLib.clips, .. hornetClips];
@@ -105,16 +105,6 @@ internal static partial class Moveset {
 				Step("Weaver Dash Effect 4", Hitbox2),
 			],
 		};
-	}
-
-	internal static IEnumerator DashRecovery() {
-		var heroAnim = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
-		var animCtrl = HeroController.instance.GetComponent<HeroAnimationController>();
-		animCtrl.StopControl();
-		heroAnim.Stop();
-		heroAnim.Play(dashRecoverClip);
-		yield return new WaitForSeconds(dashRecoverClip.frames.Length / dashRecoverClip.fps);
-		animCtrl.StartControl();
 	}
 
 	internal static IEnumerator DashSwipes(System.Func<bool> attacking) {
@@ -211,12 +201,6 @@ internal static class DashPatch {
 				swiping = true;
 				__instance.StartCoroutine(Moveset.DashSwipes(() => swiping));
 			}
-		}
-		else if (state == "Skid Anims?" && inDashAttack) {
-			inDashAttack = false;
-			swiping = false;
-			Moveset.PlayBurst();
-			__instance.StartCoroutine(Moveset.DashRecovery());
 		}
 		else if (state != "Attack Antic" && state != "Loop?") {
 			inDashAttack = false;
