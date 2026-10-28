@@ -252,9 +252,9 @@ internal static class HalfSilkHeart {
 	[HarmonyPatch(typeof(HeroController), "StartSilkRegen")]
 	[HarmonyPostfix]
 	[HarmonyPriority(Priority.Last)]
-	private static void SetHalfRegenTime(ref float ___silkRegenDurationLeft, float ___SILK_REGEN_DURATION) {
+	private static void SetHalfRegenTime(ref float ___silkRegenDurationLeft, float ___FIRST_SILK_REGEN_DURATION) {
 		if (regenerating)
-			___silkRegenDurationLeft = WithWhiteRing(___SILK_REGEN_DURATION);
+			___silkRegenDurationLeft = WithWhiteRing(___FIRST_SILK_REGEN_DURATION);
 	}
 
 	[HarmonyPatch(typeof(HeroController), "DoSilkRegen")]
@@ -299,10 +299,10 @@ internal static class HalfSilkHeart {
 	[HarmonyPatch(typeof(HeroController), "ResetSilkRegen")]
 	[HarmonyPostfix]
 	[HarmonyPriority(Priority.Last)]
-	private static void CancelHalfRegen(ref float ___silkRegenDelayLeft, float ___SILK_REGEN_DELAY) {
+	private static void CancelHalfRegen(ref float ___silkRegenDelayLeft, float ___FIRST_SILK_REGEN_DELAY) {
 		regenerating = false;
 		if (Applies(PlayerData.instance))
-			___silkRegenDelayLeft = WithWhiteRing(___SILK_REGEN_DELAY);
+			___silkRegenDelayLeft = WithWhiteRing(___FIRST_SILK_REGEN_DELAY);
 	}
 
 	private static bool hadHalf;
@@ -310,12 +310,12 @@ internal static class HalfSilkHeart {
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
 	private static void RestartAfterUse(HeroController __instance, ref float ___silkRegenDelayLeft,
-		ref float ___silkRegenDurationLeft, float ___SILK_REGEN_DELAY) {
+		ref float ___silkRegenDurationLeft, float ___FIRST_SILK_REGEN_DELAY) {
 		if (HeroController.instance != __instance)
 			return;
 		bool hasHalf = HalfSilk.GetHasHalfSilk();
 		if (hadHalf && !hasHalf && !regenerating && Applies(PlayerData.instance)) {
-			___silkRegenDelayLeft = WithWhiteRing(___SILK_REGEN_DELAY);
+			___silkRegenDelayLeft = WithWhiteRing(___FIRST_SILK_REGEN_DELAY);
 			___silkRegenDurationLeft = 0f;
 			SilkSpool.Instance.SetRegen(0, false);
 		}
