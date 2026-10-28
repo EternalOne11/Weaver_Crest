@@ -1,6 +1,7 @@
 using GlobalEnums;
 using HarmonyLib;
 using Needleforge.Attacks;
+using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
 
@@ -127,7 +128,7 @@ internal static class MaskTrade {
 		&& !HalfSilk.GetHasHalfSilk()
 		&& (PlayerData.instance.healthBlue > 0 || PlayerData.instance.health > Cost); //Never Last Mask
 
-	// The vanilla damage effect components
+        // The vanilla damage effect components
 	private static readonly AccessTools.FieldRef<HeroController, GameObject> TakeHitEffect =
 		AccessTools.FieldRefAccess<HeroController, GameObject>("takeHitSingleEffectPrefab");
 	private static readonly AccessTools.FieldRef<HeroController, RandomAudioClipTable> WoundVoice =
@@ -141,25 +142,28 @@ internal static class MaskTrade {
 		if (DuringTrade()) {
 			Sounds.MuteForTrade(); // the wound voice replaces the normal attack grunt
 
-			// The mask is taken like a normal hit, without knockback or the freeze, invulnerability or the effect that cancels attacks.
+                        // The mask is taken like a normal hit, without knockback or the freeze, invulnerability or the effect that cancels attacks.
 			HeroController hc = HeroController.instance;
 			bool tradedLifeblood = PlayerData.instance.healthBlue > 0;
-			PlayerData.instance.TakeHealth(Cost, HeroController.instance.IsInLifebloodState, allowFracturedMaskBreak: false);
+			PlayerData.instance.TakeHealth(Cost, hc.IsInLifebloodState, allowFracturedMaskBreak: false);
 			AudioCtrl(hc)?.PlaySound(HeroSounds.TAKE_HIT, playVibration: true);
 			GameObject? hitEffect = TakeHitEffect(hc);
 			if (hitEffect)
 				hitEffect!.Spawn(hc.transform.position);
 
-			// Screen shake, vintage, light flash, and last mask effects..
-			HeroController.instance.damageEffectFSM.SendEvent("DAMAGE");
+// Screen shake, vintage, light flash, and last mask effects..
+			hc.damageEffectFSM.SendEvent("DAMAGE");
 			GameCameras.instance?.cameraShakeFSM?.SendEvent("EnemyKillShake");
 			EventRegister.SendEvent("HEALTH UPDATE");
+			hc.SendHeroDamagedEvent();
+			if (PlayerData.instance.health == 1)
+				SendHeroDamagedAwayFromHornet();
 			RandomAudioClipTable? voice = WoundVoice(hc);
 			if (voice)
 				voice!.SpawnAndPlayOneShot(hc.transform.position);
 			VibrationCtrl(hc)?.PlayHeroDamage();
 
-			HeroController.instance.AddSilk(tradedLifeblood ? LifebloodSilk : Silk, false, SilkSpool.SilkAddSource.Normal, false);
+			hc.AddSilk(tradedLifeblood ? LifebloodSilk : Silk, false, SilkSpool.SilkAddSource.Normal, false);
 		}
 		//visual delay at 9 silk to prevent a greater visual annoyance
 		bool DipBelowBind = PlayerData.instance.silk == SilkSpool.BindCost && !HalfSilk.GetHasHalfSilk();
@@ -201,6 +205,24 @@ internal static class MaskTrade {
 			pendingCosts.Dequeue();
 			HalfSilk.RemoveHalfSilk(interruptRegen: false);
 		}
+	}
+
+	// Sends "HERO DAMAGED" listener
+	private static System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<EventRegister>>? registers;
+
+	private static void SendHeroDamagedAwayFromHornet() {
+		registers ??= AccessTools.Field(typeof(EventRegister), "_eventRegister")?.GetValue(null)
+			as System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<EventRegister>>;
+		if (registers == null) {
+			Log.LogWarning("MaskTrade: EventRegister listeners not found");
+			return;
+		}
+		if (!registers.TryGetValue(EventRegisterEvents.HeroDamaged, out var listeners))
+			return;
+		Transform hornet = HeroController.instance.transform;
+		foreach (EventRegister listener in listeners.ToArray())
+			if (listener && !listener.transform.IsChildOf(hornet))
+				listener.ReceiveEvent();
 	}
 }
 
