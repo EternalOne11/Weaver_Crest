@@ -14,7 +14,7 @@ internal static partial class Moveset {
 
 	private const float DownAnticFps = 12f;
 	private const float DownKickFps = 16f;
-	private const float DownRecoveryFps = 14f;
+	private const float DownRecoveryFps = 13f;
 	private const int DownAnticFrames = 2, DownKickFrames = 3, DownRecoveryFrames = 3;
 
 	internal const float DownAnticTime = DownAnticFrames / DownAnticFps;
@@ -59,7 +59,8 @@ internal static partial class Moveset {
 			spriteCenters: [
 				.. fx.Select((t, i) => new Vector2(t.width, t.height) * 0.5f
 					+ new Vector2(30f, DownEffectOffsetY[i])),
-				.. hornet.Select(t => new Vector2(t.width, t.height) * 0.5f),
+				.. hornet.Select((t, i) => new Vector2(t.width, t.height) * 0.5f
+					+ (i >= DownAnticFrames + DownKickFrames ? new Vector2(38f, 0f) : Vector2.zero)), //Offsets recovery animation to line up with hornets move hitbox.
 			]
 		);
 		Object.DontDestroyOnLoad(downData.gameObject);
@@ -140,13 +141,25 @@ internal static partial class Moveset {
 		?? AccessTools.Method(typeof(HeroController), "CancelDownspike", [])
 		?? AccessTools.Method(typeof(HeroController), "CancelDownAttack", []);
 
-	internal static void EndAttackInWater(HeroController hc) {
+	// Landing in water and dashing during recovery ends the attack animations.
+	internal static void EndDownAttackEarly(HeroController hc) {
 		finishDownspike?.Invoke(hc, null);
+		HeroController.instance.cState.downSpikeRecovery = false;
 		HeroController.instance.GetComponent<HeroAnimationController>().StartControl();
 	}
 
 	internal static IEnumerator DownRecovery() {
+		HeroController hc = HeroController.instance;
 		HeroController.instance.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+
+		// Moves hornet hitbox backwards to line up with the animation
+		float facing = hc.cState.facingRight ? 1f : -1f;
+		float shift = 38f / 64f; //64 is PerUnit
+		RaycastHit2D wall = Physics2D.Raycast(hc.transform.position, new Vector2(-facing, 0f), shift + 0.1f,
+			LayerMask.GetMask("Terrain"));
+		if (wall)
+			shift = Mathf.Max(0f, wall.distance - 0.1f);
+		hc.transform.position += new Vector3(-facing * shift, 0f, 0f);
 
 		var heroAnim = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
 		var animCtrl = HeroController.instance.GetComponent<HeroAnimationController>();
@@ -154,8 +167,10 @@ internal static partial class Moveset {
 		try {
 			float duration = downRecoveryClip.frames.Length / downRecoveryClip.fps;
 			for (float t = 0f; t < duration; t += Time.deltaTime) {
-				if (InWater(HeroController.instance))
+				if (InWater(hc) || hc.cState.dashing) {
+					EndDownAttackEarly(hc);
 					yield break;
+				}
 				if (heroAnim.CurrentClip != downRecoveryClip) {
 					int frame = Mathf.Min((int)(t * downRecoveryClip.fps), downRecoveryClip.frames.Length - 1);
 					heroAnim.PlayFromFrame(downRecoveryClip, frame);
@@ -208,7 +223,7 @@ internal static class DownPatch {
 		bool downAttacking = state.downSpikeAntic || state.downSpiking || state.downAttacking || state.downSpikeRecovery
 			|| currentClip is "DownSpike Antic" or "DownSpike" or "Downspike Recovery";
 		if (downAttacking && Moveset.InWater(__instance)) {
-			Moveset.EndAttackInWater(__instance);
+			Moveset.EndDownAttackEarly(__instance);
 			lastClip = null;
 			return;
 		}
@@ -223,11 +238,31 @@ internal static class DownPatch {
 		lastClip = clip;
 	}
 
-	// Manual cooldown
+	// Interrupted vs normal cooldown for down attack
+	private static float downAttackEnd = -1f;
+
 	[HarmonyPatch(typeof(HeroController), "Attack")]
 	[HarmonyPostfix]
 	private static void DownAttackCooldown(AttackDirection __0, ref float ___attack_cooldown) {
-		if (YenCrest.IsEquipped && __0 == AttackDirection.downward)
+		if (!YenCrest.IsEquipped)
+			return;
+		if (__0 == AttackDirection.downward) {
 			___attack_cooldown = Moveset.DownCooldown;
+			downAttackEnd = Time.time + Moveset.DownCooldown;
+		}
+		else
+			downAttackEnd = -1f;
+	}
+
+	// prevents dashing until down attack recovery frames... (for visual issue)
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.CanDash))]
+	[HarmonyPostfix]
+	private static void NoDashDuringDownAttack(HeroController __instance, ref bool __result) {
+		if (!__result || !YenCrest.IsEquipped || Time.time >= downAttackEnd)
+			return;
+		var state = __instance.cState;
+		string? clip = __instance.GetComponent<tk2dSpriteAnimator>()?.CurrentClip?.name;
+		if (state.downSpikeAntic || state.downSpiking || clip is "DownSpike Antic" or "DownSpike")
+			__result = false;
 	}
 }
