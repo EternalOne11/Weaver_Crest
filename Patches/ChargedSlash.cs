@@ -17,8 +17,8 @@ internal static partial class Moveset {
 	private static readonly Vector2[] ChargeHitbox = [new(0f, 1.2f), new(-2.3f, 1.8f), new(-4.3f, 1.4f),
 	new(-6.4f, 0.3f), new(-7.1f, -1.0f), new (-4.3f, -1.4f), new (-2.4f, -1.4f), new (0f, -1.2f),];
 
-	private static readonly Vector2[] WindupHitbox = [new(1.8f,0.3f), new(-0.7f,0.3f), new(-1.5f,-0.4f),
-	new(-1f,-1.2f), new(2.0f,-1.3f), new(2.4f,-0.3f)];
+	private static readonly Vector2[] WindupHitbox = [new(1.9f,0.3f), new(-0.7f,0.3f), new(-1.4f,-0.4f),
+	new(-1f,-1.2f), new(2.2f,-1.3f), new(2.6f,-0.3f)];
 
 	// Main attack modifer
 	private const float ChargedMultiplier = 2.75f;
@@ -67,7 +67,7 @@ internal static partial class Moveset {
 		chargedAnims.clips = [
 			new tk2dSpriteAnimationClip {
 				name = "Weaver Charged Effect",
-				fps = 12,
+				fps = 13,
 				wrapMode = WrapMode.Once,
 				frames = [
 					chargedData.CreateFrame(chargedTex[0].name, triggerEvent: true),
