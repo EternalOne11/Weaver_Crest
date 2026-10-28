@@ -12,7 +12,7 @@ internal static class LocketSpawn {
 
 	// Locations of each locket... Room and position... ID must remain different.
 	private static readonly (string Id, string Scene, Vector2 Position)[] Locations = [
-		("WeaverLocket1", "Aqueduct_03", new Vector2(57.7f, 8.3f)),
+		("WeaverLocket1", "Aqueduct_03", new Vector2(57.7f, 9.3f)),
 		("WeaverLocket2", "Peak_02", new Vector2(33.5f, 165f)),
 		("WeaverLocket3", "Song_10", new Vector2(23.6f, 51f)),
 		("WeaverLocket4", "Under_23", new Vector2(36.7f, 2f)),
@@ -103,7 +103,7 @@ internal static class PlatformSpawn {
 		(new Vector2(-0.10f, 0.29f), -0.3153f, 359.6378f, new Vector2(-1f, 1f), true),
 		(new Vector2(-0.42f, 1.65f), 1.0314f, 313.0127f, new Vector2(-0.99f, 0.99f), false),
 		(new Vector2(-0.36f, 0.03f), -0.1834f, 359.2561f, new Vector2(-1.0104f, 0.98f), true),
-		(new Vector2(-1.78f, -0.84f), -0.0234f, 17.3131f, new Vector2(-1.0104f, 0.98f), true),
+		(new Vector2(-1.78f, -0.84f), -0.0234f, 17.3131f, new Vector2(-1.0104f, 0.98f), false),
 	];
 
 	private static Sprite? sprite;
