@@ -2,7 +2,6 @@ using GlobalEnums;
 using HarmonyLib;
 using Needleforge.Attacks;
 using Silksong.UnityHelper.Util;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 using static Weaver_Crest.Weaver_CrestPlugin;
@@ -37,7 +36,6 @@ internal static partial class Moveset {
 
 	private static tk2dSpriteCollectionData downData = null!;
 	private static tk2dSpriteAnimation downAnims = null!;
-	private static tk2dSpriteAnimationClip downRecoveryClip = null!;
 	private static GameObject? downEffectObj;
 	private static tk2dSpriteAnimator? downEffectAnim;
 
@@ -94,10 +92,16 @@ internal static partial class Moveset {
 				wrapMode = WrapMode.Once,
 				frames = downData.CreateFrames(followUp.Select(t => t.name)),
 			},
+			// Vanilla behavior to fix some visual issues...
+			new tk2dSpriteAnimationClip {
+				name = "Downspike Recovery Land",
+				fps = DownRecoveryFps,
+				wrapMode = WrapMode.Once,
+				frames = downData.CreateFrames(followUp.Select(t => t.name)),
+			},
 		];
 		downAnims.ValidateLookup();
 		sharedLib.clips = [.. sharedLib.clips, .. downAnims.clips.Skip(1)];
-		downRecoveryClip = downAnims.GetClipByName("Downspike Recovery");
 
 		YenCrest.Moveset.DownSlash = new DownAttack {
 			Name = "WeaverDownSlash",
@@ -124,35 +128,8 @@ internal static partial class Moveset {
 		downEffectAnim.Play(downAnims.GetClipByName("Weaver DownSlash Effect"));
 	}
 
-	// Water bugfix... Maybe not vanilla behavior.
-	private static readonly Collider2D[] waterHits = new Collider2D[16];
-	private static ContactFilter2D waterFilter = new() { useTriggers = true };
-
-	internal static bool InWater(HeroController hc) {
-		int count = Physics2D.OverlapCircle(hc.transform.position, 0.6f, waterFilter, waterHits);
-		for (int i = 0; i < count; i++)
-			if (waterHits[i] && waterHits[i].CompareTag("Water Surface"))
-				return true;
-		return false;
-	}
-
-	private static readonly System.Reflection.MethodInfo? finishDownspike =
-		AccessTools.Method(typeof(HeroController), "FinishDownspike", [])
-		?? AccessTools.Method(typeof(HeroController), "CancelDownspike", [])
-		?? AccessTools.Method(typeof(HeroController), "CancelDownAttack", []);
-
-	// Landing in water, dashing, or any other move that takes over during recovery ends the attack animations.
-	internal static void EndDownAttackEarly(HeroController hc) {
-		finishDownspike?.Invoke(hc, null);
-		HeroController.instance.cState.downSpikeRecovery = false;
-		HeroController.instance.GetComponent<HeroAnimationController>().StartControl();
-	}
-
-	internal static IEnumerator DownRecovery() {
-		HeroController hc = HeroController.instance;
-		HeroController.instance.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
-
-		// Moves hornet hitbox backwards to line up with the animation
+        // Moves hornet hitbox backwards to line up with the animation
+	internal static void ShiftForRecovery(HeroController hc) {
 		float facing = hc.cState.facingRight ? 1f : -1f;
 		float shift = 38f / 64f; //64 is PerUnit
 		RaycastHit2D wall = Physics2D.Raycast(hc.transform.position, new Vector2(-facing, 0f), shift + 0.1f,
@@ -160,32 +137,6 @@ internal static partial class Moveset {
 		if (wall)
 			shift = Mathf.Max(0f, wall.distance - 0.1f);
 		hc.transform.position += new Vector3(-facing * shift, 0f, 0f);
-
-		var heroAnim = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
-		var animCtrl = HeroController.instance.GetComponent<HeroAnimationController>();
-		animCtrl.StopControl();
-		try {
-			float duration = downRecoveryClip.frames.Length / downRecoveryClip.fps;
-			for (float t = 0f; t < duration; t += Time.deltaTime) {
-				if (InWater(hc) || hc.cState.dashing) {
-					EndDownAttackEarly(hc);
-					yield break;
-				}
-				if (heroAnim.CurrentClip != downRecoveryClip) {
-
-					if (!hc.cState.onGround) {
-						EndDownAttackEarly(hc);
-						yield break;
-					}
-					int frame = Mathf.Min((int)(t * downRecoveryClip.fps), downRecoveryClip.frames.Length - 1);
-					heroAnim.PlayFromFrame(downRecoveryClip, frame);
-				}
-				yield return null;
-			}
-		}
-		finally {
-			animCtrl.StartControl();
-		}
 	}
 
 	internal static void HideSprite() {
@@ -223,22 +174,15 @@ internal static class DownPatch {
 			return;
 
 		Moveset.HideSprite();
-		var state = __instance.cState;
-		string? currentClip = heroAnim.CurrentClip?.name;
-		bool downAttacking = state.downSpikeAntic || state.downSpiking || state.downAttacking || state.downSpikeRecovery
-			|| currentClip is "DownSpike Antic" or "DownSpike" or "Downspike Recovery";
-		if (downAttacking && Moveset.InWater(__instance)) {
-			Moveset.EndDownAttackEarly(__instance);
-			lastClip = null;
-			return;
-		}
 
 		string? clip = heroAnim.CurrentClip?.name;
 		if (clip != lastClip) {
 			if (clip == "DownSpike")
 				Moveset.PlayDownEffect();
-			else if (clip == "Downspike Recovery")
-				__instance.StartCoroutine(Moveset.DownRecovery());
+			// Vanilla downspike recovery
+			else if (clip is "Downspike Recovery" or "Downspike Recovery Land"
+				&& lastClip is not ("Downspike Recovery" or "Downspike Recovery Land"))
+				Moveset.ShiftForRecovery(__instance);
 		}
 		lastClip = clip;
 	}
