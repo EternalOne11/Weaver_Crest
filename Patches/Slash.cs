@@ -69,3 +69,30 @@ internal static partial class Moveset {
 		};
 	}
 }
+
+//Prevents turning before attack ends...
+[HarmonyPatch]
+internal static class SlashTurnLock {
+	private static float slashEnd = -1f;
+
+	[HarmonyPatch(typeof(HeroController), "Attack")]
+	[HarmonyPostfix]
+	private static void StartLock(HeroController __instance, AttackDirection __0, float ___attackDuration) {
+		bool normalSlash = YenCrest.IsEquipped && __0 == AttackDirection.normal && !__instance.cState.wallSliding;
+		slashEnd = normalSlash ? Time.time + ___attackDuration : -1f;
+	}
+
+	private static bool Locked() => YenCrest.IsEquipped && Time.time < slashEnd;
+
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.FlipSprite))]
+	[HarmonyPrefix]
+	private static bool NoFlip() => !Locked();
+
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.FaceLeft))]
+	[HarmonyPrefix]
+	private static bool NoFaceLeft(HeroController __instance) => !Locked() || !__instance.cState.facingRight;
+
+	[HarmonyPatch(typeof(HeroController), nameof(HeroController.FaceRight))]
+	[HarmonyPrefix]
+	private static bool NoFaceRight(HeroController __instance) => !Locked() || __instance.cState.facingRight;
+}
