@@ -39,7 +39,8 @@ internal static class LocketSpawn {
 
 	private static void Spawn(string id, Scene scene, Vector2 position) {
 		string sceneName = scene.name;
-		locket ??= Resources.FindObjectsOfTypeAll<CollectableItem>().FirstOrDefault(i => i.name == LocketName);
+		if (!locket)
+			locket = Resources.FindObjectsOfTypeAll<CollectableItem>().FirstOrDefault(i => i.name == LocketName);
 		CollectableItemPickup prefab = GlobalSettings.Gameplay.CollectableItemPickupPrefab;
 		if (!locket || !prefab) {
 			return;
@@ -114,11 +115,13 @@ internal static class PlatformSpawn {
 	internal static void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
 		if (scene.name != TargetScene)
 			return;
-		sprite ??= Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(s => s.name == SpriteName);
-		if (!sprite) {
+		// Makes it so the custom sprites and assets remain when you reload a screen... (in certain situations)
+		if (!sprite)
+			sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(s => s.name == SpriteName);
+		if (!sprite)
 			return;
-		}
-		strut ??= Sprite.Create(sprite!.texture, StrutRect, new Vector2(0.5f, 0.5f), sprite.pixelsPerUnit);
+		if (!strut || strut!.texture != sprite!.texture)
+			strut = Sprite.Create(sprite!.texture, StrutRect, new Vector2(0.5f, 0.5f), sprite.pixelsPerUnit);
 
 		GameObject platform = new("Locket Platform");
 		SceneManager.MoveGameObjectToScene(platform, scene);
