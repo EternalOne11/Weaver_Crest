@@ -93,12 +93,12 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(WispHalfCost));
 		Harmony.PatchAll(typeof(CountHalfSilk));
 		Harmony.PatchAll(typeof(SlashTurnLock));
-		Harmony.PatchAll(typeof(Wyrmling));
+		Harmony.PatchAll(typeof(Vyrmling));
 		
 		RegisterCrest();
 		HalfSilk.Initialize();
 		LocketSpawn.Initialize();
-
+		Vyrmling.Initialize();
 		Moveset.ImportAnimations();
 		Moveset.SetupSlashes();
 		Sounds.Load();
