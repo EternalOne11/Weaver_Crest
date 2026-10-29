@@ -39,6 +39,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> WispCostSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -66,6 +67,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 				"Attacks that on breakble walls, doors, spikes, and shellshard walls refund silk");
 		WispCostSetting = Config.Bind("Silk", "Halves the cost Wisp Lantern", false,
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
+		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", false,
+			"When reaching 0 silk after a bind, you gain half a silk. For full playthroughs");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
