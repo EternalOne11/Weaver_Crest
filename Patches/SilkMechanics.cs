@@ -69,6 +69,21 @@ internal static class SilkMechanics {
 			HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
+	//Option to regain 0.5 silk after a bind setting you to 0
+	private static bool wasBinding;
+
+	[HarmonyPatch(typeof(HeroController), "Update")]
+	[HarmonyPostfix]
+	private static void HalfSilkAfterBind(HeroController __instance) {
+		if (HeroController.instance != __instance)
+			return;
+		bool binding = __instance.cState.isBinding;
+		if (wasBinding && !binding && YenCrest.IsEquipped && BindHalfSilkSetting.Value
+			&& PlayerData.instance.silk <= 0 && !HalfSilk.GetHasHalfSilk())
+			HalfSilk.AddHalfSilk(heroEffect: false);
+		wasBinding = binding;
+	}
+
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
 	private static void PayMissed(HeroController __instance) {
@@ -128,7 +143,7 @@ internal static class MaskTrade {
 		&& !HalfSilk.GetHasHalfSilk()
 		&& (PlayerData.instance.healthBlue > 0 || PlayerData.instance.health > Cost); //Never Last Mask
 
-        // The vanilla damage effect components
+	// The vanilla damage effect components
 	private static readonly AccessTools.FieldRef<HeroController, GameObject> TakeHitEffect =
 		AccessTools.FieldRefAccess<HeroController, GameObject>("takeHitSingleEffectPrefab");
 	private static readonly AccessTools.FieldRef<HeroController, RandomAudioClipTable> WoundVoice =
@@ -142,7 +157,7 @@ internal static class MaskTrade {
 		if (DuringTrade()) {
 			Sounds.MuteForTrade(); // the wound voice replaces the normal attack grunt
 
-                        // The mask is taken like a normal hit, without knockback or the freeze, invulnerability or the effect that cancels attacks.
+			// The mask is taken like a normal hit, without knockback or the freeze, invulnerability or the effect that cancels attacks.
 			HeroController hc = HeroController.instance;
 			bool tradedLifeblood = PlayerData.instance.healthBlue > 0;
 			PlayerData.instance.TakeHealth(Cost, hc.IsInLifebloodState, allowFracturedMaskBreak: false);
@@ -151,7 +166,7 @@ internal static class MaskTrade {
 			if (hitEffect)
 				hitEffect!.Spawn(hc.transform.position);
 
-// Screen shake, vintage, light flash, and last mask effects..
+			// Screen shake, vintage, light flash, and last mask effects..
 			hc.damageEffectFSM.SendEvent("DAMAGE");
 			GameCameras.instance?.cameraShakeFSM?.SendEvent("EnemyKillShake");
 			EventRegister.SendEvent("HEALTH UPDATE");
