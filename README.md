@@ -55,6 +55,7 @@
 - Silk Bind slot. (For when you get a silk skill)
 - Half knockback option. (like witch) **Off by default**
 - Wispfire lantern can use half silk instead **Off by default**
+- Half silk after bind leaves you at 0. **Off by default**
 
 ## Map changes/implementation
 - 4 new memory lockets.
