@@ -4,6 +4,7 @@
 - This has been a passion project that I have slowly working on for over a year.
 - This crest is currently unlocked automatically, for now. It will have its own custom shrine eventully.
 - Languages available Ingame for all existing Silksong options.
+- This mod when uninstalled then reinstalled should keep crest socket and memory locket data saved.
 - Please don't ask how much I have spent commisioning the art, and some code... (It wasnt cheap)
 
 ## Custom mechanics
