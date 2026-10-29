@@ -125,7 +125,6 @@
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0000.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0001.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0002.png" />
-    <EmbeddedResource Include="Resources\DownSlash\downSlash_0003.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0004.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0005.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0006.png" />
@@ -202,6 +201,25 @@
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0006.png" />
     <EmbeddedResource Include="Resources\Half_Silk\weaver hud silk blob.0007.png" />
 	<EmbeddedResource Include="Resources\Half_Silk\silk blob chunk glow.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Attack\Attack_0000.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Attack\Attack_0001.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Attack\Attack_0002.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Attack\Attack_0003.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Death\Death_0000.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Death\Death_0001.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Death\Death_0002.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Death\Death_0003.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Death\Death_0004.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Out-In\Out_0000.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Out-In\Out_0001.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Out-In\Out_0002.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Wiggle\Wiggle_0000.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Wiggle\Wiggle_0001.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Wiggle\Wiggle_0002.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Wiggle\Wiggle_0003.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Wiggle\Wiggle_0004.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Corpse.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Journal.png" />
     <EmbeddedResource Include="Resources\Sounds\Slash1.wav" />
     <EmbeddedResource Include="Resources\Sounds\Slash2.wav" />
     <EmbeddedResource Include="Resources\Sounds\Slash3_up.wav" />
@@ -210,6 +228,8 @@
     <EmbeddedResource Include="Resources\Sounds\Charge_slash_windup.wav" />
     <EmbeddedResource Include="Resources\Sounds\Dash_slash1.wav" />
     <EmbeddedResource Include="Resources\Sounds\Dash_slash2.wav" />
+	<EmbeddedResource Include="Resources\Sounds\Flukeman_aggressive_loop.wav" />
+	<EmbeddedResource Include="Resources\Sounds\Fluke_Mother_rest_idle.wav" />
   </ItemGroup>
 
   <ItemGroup>
