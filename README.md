@@ -30,7 +30,6 @@
 - The charge attack has both windup and a long range swipe. (with seperate 2 hitboxes)
 - The dash attack has 2 varients. A 2 slash varient and a 4 slash varient. (4 slash uses 1 silk)
 - Custom Wall slash animation. 
-- Was made by KAdala
 
 ## Binding
 - The crest has a custom bind, with 2 config options depending on preference.
@@ -51,26 +50,17 @@
 
 ## Config Options
 - Hold Bind option. (ability to cancel mid bind) **Undecided**
-- Essential Refunds (WIP) **Undecided**
-- Silk Bind slot. (For when you get a silk skill)
-- Half knockback option. (like witch) **Off by default**
-- Wispfire lantern can use half silk instead **Off by default**
-- Half silk after bind leaves you at 0. **Off by default**
+- Essential Refunds. (Entire refunds system) **On by Default**
+- Silk Bind slot. (For when you get a silk skill) **Top slot by Default**
+- Half knockback option. (Like witch) **Off by Default**
+- Wispfire lantern can use half silk instead **Off by Default**
+- Half silk after bind leaves you at 0. **Off by Default**
 
 ## Map changes/implementation
 - 4 new memory lockets.
 - Mt. Fay, Citadel Spa, Putrified Ducts, and Wisp/Underworks connection.
 - Citidel spa one has a secret
 - **(Not yet done)** The chapel of the Weaver will be in Mt. fay
-
-## Design
-- The Hud's design is a combination of 3 themes.
-- First Silk in its use for the crest, and its assosiation with the weavers. 
-- Second Hornets own legs, and the weavers claws. 
-- Third the crook which thematicaly surrounds GMS in the cradle, acting like a loom. (It seems to be hearding the silk, and has historically represented, power, guidence, and protection.)
-- The Crest icon design is inspired by 2 aspects.
-- First, its inspired by spider webs, and the weaver runes that use silk and is delibratly symentrical to distinguish it from other crests.
-- Second its hexigonal design is derived from hives motif due to hornets connection with them.
 
 ## AI Disclosure
 - AI was used in the process of developing this mod.
