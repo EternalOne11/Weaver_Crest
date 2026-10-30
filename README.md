@@ -7,7 +7,7 @@
 - This mod when uninstalled then reinstalled should keep crest socket and memory locket data saved.
 - Please don't ask how much I have spent commisioning the art, and some code... (It wasnt cheap)
 
-## Custom mechanics
+## Custom Mechanics
 - There 5 custom mechanics which are centeral to the this mod.
 - First, there is the introduction of half silk notches. These are akin to moss berry bands, and cannot be used for healing or silk skills.
 - Second, the use of silk in every attack, always draining half a silk.
@@ -53,7 +53,7 @@
 - Essential Refunds. (Entire refunds system) **On by Default**
 - Silk Bind slot. (For when you get a silk skill) **Top slot by Default**
 - Half knockback option. (Like witch) **Off by Default**
-- Wispfire lantern can use half silk instead **Off by Default**
+- Wispfire lantern can use half silk instead. **Off by Default**
 - Half silk after bind leaves you at 0. **Off by Default**
 
 ## Map changes/implementation
@@ -67,7 +67,7 @@
 - I used it as an assistant to help with feedback and optimization, and fix some bugs I couldn't figure out.
 - It was used to code some areas I was unsure how to do myself, such as the sound implementation.
 - It was also used to figure out and explain certain aspects of silksongs own code, which were either tedious or I was unable figure out. (Some FSM's and files in Assembly-CSharp.dll)
-- No art or sound effects were made using AI to my knowledge.
+- Assets were commissioned and were not created with AI to the best of my knowledge
 
 ## Credits
 - Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools) https://ko-fi.com/mebi0910/gallery
