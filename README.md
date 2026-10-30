@@ -72,6 +72,12 @@
 - First, its inspired by spider webs, and the weaver runes that use silk and is delibratly symentrical to distinguish it from other crests.
 - Second its hexigonal design is derived from hives motif due to hornets connection with them.
 
+## AI Disclosure
+- AI was used in the process of developing this mod.
+- It was used to code some areas I was unsure how to do myself, such as the sound implementation.
+- It was also used for feedback and optimization, and fix some bugs I couldn't figure out.
+- It was also used to figure out certain aspects of silksongs own code, which I couldn't figure out. (Some FSM's and files in Assembly-CSharp.dll)
+
 ## Credits
 - Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools) https://ko-fi.com/mebi0910/gallery
 - KAdala, (The artist who made the entire moveset and the suprise) https://ko-fi.com/kadala_ka/shop
