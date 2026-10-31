@@ -167,8 +167,7 @@ internal static partial class Moveset {
 						float dir = Mathf.Abs(input) > 0.3f ? Mathf.Sign(input) : 0f;
 						x = dir * ChargedMoveSpeed;
 					}
-					// Gravity's pull this step is Physics2D.gravity.y * gravityScale * fixedDeltaTime (downwards): part of it
-					// is given back, so it falls as if gravity were weaker
+					
 					y -= Physics2D.gravity.y * rb.gravityScale * ChargedGravityReduction * Time.fixedDeltaTime;
 					rb.linearVelocity = new Vector2(x, y);
 					yield return new WaitForFixedUpdate();
