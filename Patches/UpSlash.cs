@@ -89,4 +89,27 @@ internal static class UpPatch {
 		___attackDuration *= Moveset.UpSlashLength / Moveset.NormalAttackTime;
 		HeroController.instance.StartCoroutine(Moveset.RestartUpSlash());
 	}
+
+	[HarmonyPatch(typeof(HeroController), "HeroJump", [typeof(bool)])]
+	[HarmonyPrefix]
+	private static void KeepUpSlashOnJump(HeroController __instance, ref float ___attack_time, out float __state) {
+		__state = -1f;
+		var state = __instance.cState;
+		if (!YenCrest.IsEquipped || !state.attacking || !state.upAttacking)
+			return;
+		__state = ___attack_time;
+		___attack_time = 0f;
+	}
+
+	private static readonly AccessTools.FieldRef<HeroAnimationController, bool> CanceledSlash =
+		AccessTools.FieldRefAccess<HeroAnimationController, bool>("canceledSlash");
+
+	[HarmonyPatch(typeof(HeroController), "HeroJump", [typeof(bool)])]
+	[HarmonyPostfix]
+	private static void RestoreAttackTime(HeroController __instance, ref float ___attack_time, float __state) {
+		if (__state < 0f)
+			return;
+		___attack_time = __state;
+		CanceledSlash(__instance.AnimCtrl) = false;
+	}
 }
