@@ -26,6 +26,7 @@ Note that moveset and Evo optout are still from queencrest.
 [BepInDependency("io.github.needleforge", "0.9.0")]
 [BepInDependency("org.silksong-modding.unityhelper", "1.1.1")]
 [BepInDependency("org.silksong-modding.fsmutil", "0.3.16")]
+[BepInDependency("org.silksong-modding.assethelper")]
 public partial class Weaver_CrestPlugin : BaseUnityPlugin
 {
 	private Harmony Harmony { get; } = new(Id);
@@ -57,7 +58,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Log = Logger;
 		Logger.LogInfo($"Plugin {Name} ({Id}) has loaded!");
 
-		HoldToBindSetting = Config.Bind("Bind", "Hold bind", true,
+		HoldToBindSetting = Config.Bind("Bind", "Hold bind", false,
 			"Bind now requires holding the button down, the entire time, letting go early cancels it.");
 		SkillSlotSetting = Config.Bind("Crest", "Silk skill bind slot", SkillSlotChoice.Top,
 			"When binding a silk skill, on weaver crest, it will autoequip it to the selected slot, none means middle, which in this case leaves it empty.");
@@ -67,8 +68,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 				"Attacks that on breakble walls, doors, spikes, and shellshard walls refund silk");
 		WispCostSetting = Config.Bind("Silk", "Halves the cost Wisp Lantern", false,
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
-		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", false,
-			"When reaching 0 silk after a bind, you gain half a silk. For full playthroughs");
+		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", true,
+			"When reaching 0 silk after a bind, you gain half a silk.");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
