@@ -230,6 +230,7 @@
     <EmbeddedResource Include="Resources\Sounds\Dash_slash2.wav" />
 	<EmbeddedResource Include="Resources\Sounds\Flukeman_aggressive_loop.wav" />
 	<EmbeddedResource Include="Resources\Sounds\Fluke_Mother_rest_idle.wav" />
+	<EmbeddedResource Include="Resources\Sounds\fluke_fairy_call.wav" />
   </ItemGroup>
 
   <ItemGroup>
@@ -243,7 +244,8 @@
     <PackageReference Include="UnityEngine.Modules" Version="6000.0.50" IncludeAssets="compile"/>
     <PackageReference Include="Silksong.UnityHelper" Version="1.2.0" />
     <PackageReference Include="Silksong.GameLibs" Version="*-*" PrivateAssets="all" />
-  </ItemGroup>
+	<PackageReference Include="Silksong.AssetHelper" Version="1.0.0" />
+ </ItemGroup>
   <ItemGroup>
     <Folder Remove="thunderstore/temp;thunderstore/dist" />
     <None Include="README.md" Pack="True" PackagePath="README.md" />
