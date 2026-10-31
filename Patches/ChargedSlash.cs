@@ -195,7 +195,6 @@ internal static partial class Moveset {
 			// Removes small the recoil
 			fsm.FsmVariables.GetFsmString("Recoil Method").Value = "";
 
-
 			WindupStep?.EndAttack();
 			ChargedMain?.StartAttack();
 		});
