@@ -28,6 +28,9 @@ internal static partial class Moveset {
 	// left and right air movement speed
 	private const float ChargedMoveSpeed = 8f;
 
+        // reduces the % of gravities pull during charge attack... (0.25% means 75% normal gravity strength)
+	private const float ChargedGravityReduction = 0.25f;
+
 	//frame where the animation is split (into windup and slash)
 	private const int ChargedSplit = 11;
 
@@ -149,20 +152,25 @@ internal static partial class Moveset {
 			// Windup sound
 			Sounds.PlayAttack("ChargedWindup");
 
-			HeroController.instance.RelinquishControl();
+			HeroController.instance.RelinquishControlNotVelocity();
 			HeroController.instance.AffectedByGravity(true);
 			Rigidbody2D rb = HeroController.instance.GetComponent<Rigidbody2D>();
 
-			// Horizontal movement during charge attack, when in the air (ground movement disabled by CheckTouchingGround)
+			// Horizontal movement during charge attack, when in the air (ground movement disabled by CheckTouchingGround),
 			HeroController.instance.StartCoroutine(ChargedMovement());
 			IEnumerator ChargedMovement() {
 				while (fsm.ActiveStateName == startState.Name || fsm.ActiveStateName == attackState.Name) {
 					var cState = HeroController.instance.cState;
+					float x = rb.linearVelocity.x, y = rb.linearVelocity.y;
 					if (!cState.recoiling && !cState.recoilingLeft && !cState.recoilingRight) {
 						float input = HeroController.instance.CheckTouchingGround() ? 0f : InputHandler.Instance.inputActions.MoveVector.Vector.x;
 						float dir = Mathf.Abs(input) > 0.3f ? Mathf.Sign(input) : 0f;
-						rb.linearVelocity = new Vector2(dir * ChargedMoveSpeed, rb.linearVelocity.y);
+						x = dir * ChargedMoveSpeed;
 					}
+					// Gravity's pull this step is Physics2D.gravity.y * gravityScale * fixedDeltaTime (downwards): part of it
+					// is given back, so it falls as if gravity were weaker
+					y -= Physics2D.gravity.y * rb.gravityScale * ChargedGravityReduction * Time.fixedDeltaTime;
+					rb.linearVelocity = new Vector2(x, y);
 					yield return new WaitForFixedUpdate();
 				}
 			}
@@ -187,6 +195,7 @@ internal static partial class Moveset {
 		attackState.AddMethod(() => {
 			// Removes small the recoil
 			fsm.FsmVariables.GetFsmString("Recoil Method").Value = "";
+
 
 			WindupStep?.EndAttack();
 			ChargedMain?.StartAttack();
