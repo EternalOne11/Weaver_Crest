@@ -34,6 +34,13 @@ internal static class Sounds {
 		}
 	}
 
+	// (loads them for other parts of the mod, for example the noodlevyrm)
+	internal static AudioClip? LoadClip(string fileName) {
+		if (!clips.TryGetValue(fileName, out AudioClip? clip))
+			clips[fileName] = clip = LoadEmbeddedWav(fileName);
+		return clip;
+	}
+
 	internal static void PlayAttack(string attack) {
 		if (attackClips.TryGetValue(attack, out AudioClip? clip))
 			Play(clip);
