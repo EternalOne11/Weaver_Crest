@@ -182,8 +182,8 @@ internal static class Vyrmling
                 Log.LogError($"Noodlevyrm failed to load a sound using AssetHelper: {asset.Handle.OperationException}");
         }
 
-        private bool Loaded => asset != null && asset.Handle.IsValid() && asset.Handle.Status == AsyncOperationStatus.Succeeded;
-
+        private bool Loaded => asset != null && asset.HasBeenLoaded && asset.Handle.IsDone
+            && asset.Handle.Status == AsyncOperationStatus.Succeeded;
         internal AudioClip? Clip => embedded ? embedded : Loaded ? asset!.Handle.Result : null;
     }
 
