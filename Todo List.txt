@@ -32,7 +32,7 @@ Hold Bind option. (Done)
 Half knockback option. (Done)
 Wispfire lantern can use half silk instead. (Done)
 
-**Moveset**
+**Moveset** (complete)
 Basic Slash (Done)
 Alt slash (Done)
 Up attack (Done)
@@ -48,8 +48,7 @@ Longclaw (Done)
 Weighted Belt (automatic)
 Flint slate (automatic)
 
-
-**Custom Mechanics**  (complete)
+**Custom Mechanics** (complete)
 Silk Use (done)
 Double silk (done)
 Mask damage to restore silk (done)
@@ -59,16 +58,15 @@ Half silk spool muckmaggots... (done)
 Half silk spool void degredation. (done)
 Half silk, for acid degredation. (done)
 
-**Sounds**
+**Sounds** (complete)
 Attacks (Done)
 Dash attack (Done?)
 Mask break (Done)
 
-
-**Progression** (after mod launch)
+**Progression** 
 Memory lockets locations (done)
 Locked Tool slots (done)
-Weaver Crest shrine/Room. **(more complex)**
+Weaver Crest shrine/Room. **(After launch)**
 Corpse bind sprite (N/A)
 
 **TBD**
