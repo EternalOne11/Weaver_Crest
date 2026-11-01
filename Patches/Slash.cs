@@ -13,7 +13,7 @@ namespace Weaver_Crest.Patches;
 internal static partial class Moveset {
 
 	// regular attacks and recovery lengths, these must match the "time" fields in moveset.cs.
-	internal const float NormalAttackTime = 0.33f;
+	internal const float NormalAttackTime = 0.32f;
 	internal const float SlashRecoveryTime = 0.15f;
 
 	// Effect timing: starts on hornets 2nd frame and lasts 3 of her frames (vanilla does frames 1 to 3 of 5)
