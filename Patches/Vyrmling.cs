@@ -43,10 +43,10 @@ internal static class Vyrmling
 
     // The many sounds of the enemy, either through imported .wav or using Assethelper.
     private const string WiggleSoundFile = "Flukeman_aggressive_loop.wav";
-    private const string OutSoundFile = "sfxstatic_assets_areacoral|Assets/Audio/SFX/Silksong Deliveries/2023-02 v2 Coral zap stuff coral tree hornet lands peak creature ui profiles/coral_zap_boss_emerge.ogg";
+    private const string OutSoundFile = "sfxstatic_assets_areacoral|Assets/Audio/SFX/Silksong Deliveries/2023-02 v2 Coral zap stuff coral tree hornet lands peak creature ui profiles/coral_zap_boss_emerge.wav";
     private const string InSoundFile = "sfxstatic_assets_areacoral|Assets/Audio/SFX/Silksong Deliveries/2023-02 v2 Coral zap stuff coral tree hornet lands peak creature ui profiles/coral_zap_boss_dissapear.wav";
     private const string AttackSoundFile = "fluke_fairy_call.wav";
-    private const string DeathSoundFile = "sfxstatic_assets_shared|Assets/audio/SFX/Enemy/Hornet/boss_death_pt_1.wav";
+    private const string DeathSoundFile = "sfxstatic_assets_shared|Assets/Audio/SFX/Enemy/Hornet/boss_death_pt_1.wav";
     private const string IdleSoundFile = "Fluke_Mother_rest_idle.wav";
     internal const float WiggleVolume = 0.6f; // 1 is full volume
     internal const float IdleHearRange = 12f; // distance you can hear the idle sounds, when its hidden
