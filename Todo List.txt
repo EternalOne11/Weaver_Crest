@@ -1,5 +1,5 @@
 **Todo list/ Current Status** (partially for myself)
-(last updated 10/18/2026, Noon)
+(last updated 11/01/2026, Afternoon)
 
 **Crest inventory** (complete)
 Crest design and implemantation (done)
@@ -15,6 +15,7 @@ Ingame Hud alignment (done)
 Silk varient (done)
 Non steel soul varient (done)
 Lifeblood Overdose (automatic)
+Save slot icon (Done) (both normal and Steel soul)
 
 **Bind** (complete) 
 Triple bind (done)
@@ -23,11 +24,13 @@ Injector band (done)
 Claw mirrors nerf (done)
 Custom Bind animations (done)
 
-**Misc features** 
-Save slot icon (Done)
-Both steel soul (done) 
-Normal (done)
-Silk skill changes (Done) (disabled)
+**Configs** (complete)
+Essential Refunds. (Done)
+Half silk after bind leaves you at 0. (Done)
+Silk Bind slot. (Done)
+Hold Bind option. (Done)
+Half knockback option. (Done)
+Wispfire lantern can use half silk instead. (Done)
 
 **Moveset**
 Basic Slash (Done)
@@ -40,10 +43,11 @@ Charge attack (Done)
 Wall slash (Done)
 
 **Moveset general checklist...**
-Attack Speed (done?)
+Attack Speed (done)
 Longclaw (Done)
 Weighted Belt (automatic)
 Flint slate (automatic)
+
 
 **Custom Mechanics**  (complete)
 Silk Use (done)
@@ -60,17 +64,10 @@ Attacks (Done)
 Dash attack (Done?)
 Mask break (Done)
 
-**Polish** (remove when completed)
-Hud animation timings. (done?)
-Pixel alignment for save slot icon (done?)
-
-**Undecided**
-Readd bind cancel?
-Half knockback like witch?
 
 **Progression** (after mod launch)
-Memory lockets locations (Not Implemented)
-Locked Tool slots (done) (disabled)
+Memory lockets locations (done)
+Locked Tool slots (done)
 Weaver Crest shrine/Room. **(more complex)**
 Corpse bind sprite (N/A)
 
