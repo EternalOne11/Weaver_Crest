@@ -17,35 +17,33 @@ internal static partial class Moveset {
 		Texture2D[] altSlashTex = LoadNamedTextures(altSlashFiles);
 		string[] altSlashHornetFiles = ["slashAlt_0000.png", "slashAlt_0001.png", "slashAlt_0002.png", "slashAlt_0003.png", "slashAlt_0004.png"];
 		Texture2D[] altSlashHornetTex = LoadNamedTextures(altSlashHornetFiles);
+		Texture2D blank = BlankTexture("slashalt_blank");
 
 		tk2dSpriteCollectionData altSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
-			sprites: [.. altSlashTex, .. altSlashHornetTex],
+			sprites: [.. altSlashTex, .. altSlashHornetTex, blank],
 			spriteCenters: [
 				.. altSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(108f, -15)),
 				.. altSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f),
+				new Vector2(0.5f, 0.5f),
 			]
 		);
 		Object.DontDestroyOnLoad(altSlashData.gameObject);
 		altSlashData.gameObject.name = $"{YenId}_AltSlashAnim";
 		altSlashData.spriteDefinitions[0].material.EnableKeyword("IS_HERO");
-		
+
 		heroShaderCollections.Add(altSlashData);
 
 		tk2dSpriteAnimation altSlashAnims = altSlashData.gameObject.AddComponent<tk2dSpriteAnimation>();
 		altSlashAnims.clips = [
 			new tk2dSpriteAnimationClip {
 				name = "Weaver SlashAlt Effect",
-				fps = 12,
+				fps = altSlashTex.Length / SlashHornetFrameTime,
 				wrapMode = WrapMode.Once,
-				frames = [
-					altSlashData.CreateFrame(altSlashTex[0].name, triggerEvent: true),
-					.. altSlashData.CreateFrames(altSlashTex.Skip(1).Select(t => t.name)),
-					altSlashData.CreateFrame(altSlashTex[^1].name, triggerEvent: true),
-				],
+				frames = EffectFrames(altSlashData, altSlashTex, blank),
 			},
 			new tk2dSpriteAnimationClip {
 				name = "SlashAlt",
-				fps = altSlashHornetTex.Length / NormalAttackTime,
+				fps = 1f / SlashHornetFrameTime,
 				wrapMode = WrapMode.Once,
 				frames = altSlashData.CreateFrames(altSlashHornetTex.Select(t => t.name)),
 			},
