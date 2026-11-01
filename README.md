@@ -49,12 +49,12 @@
 - Silkspeed Anklets works with half silk
 
 ## Config Options
-- Hold Bind option. (ability to cancel mid bind) **Undecided**
 - Essential Refunds. (Entire refunds system) **On by Default**
+- Half silk after bind leaves you at 0. **On by Default**
 - Silk Bind slot. (For when you get a silk skill) **Top slot by Default**
+- Hold Bind option. (ability to cancel mid bind) **Off by Default**
 - Half knockback option. (Like witch) **Off by Default**
 - Wispfire lantern can use half silk instead. **Off by Default**
-- Half silk after bind leaves you at 0. **Off by Default**
 
 ## Map changes/implementation
 - 4 new memory lockets.
@@ -75,7 +75,7 @@
 - Lobo, (the artist who made the mod icon) https://x.com/acheofslowdecay
 - Redfrog, (Who coded the half silk)
 - General Beria, (Who made the attack sounds)
-- Myself, (who created the concept, tweaked the art, and did most of the code)
+- Last but most importantly Team cherry, for creating silksong.
 
 ## Special Thanks to
 - VoidBaroness, (The Creator of Needleforge)
