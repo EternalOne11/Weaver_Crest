@@ -214,4 +214,14 @@ internal static class DownPatch {
 		if (state.downSpikeAntic || state.downSpiking || clip is "DownSpike Antic" or "DownSpike")
 			__result = false;
 	}
+
+	// fixs sawtooth circlet and decides what can be pogoed like vanilla.
+	[HarmonyPatch(typeof(HeroDownAttack), "ContinueBounceTrigger")]
+	[HarmonyPrefix]
+	private static bool NoBounceOnOwnTools(GameObject __0) {
+		if (!YenCrest.IsEquipped || !__0 || __0.layer != (int)PhysLayers.HERO_ATTACK)
+			return true;
+		return __0.CompareTag("Enemy Projectile") || __0.CompareTag("Hero Damage Target")
+			|| __0.GetComponent<TinkEffect>() || __0.GetComponent<SpikeSlashReaction>();
+	}
 }
