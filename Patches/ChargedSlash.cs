@@ -28,8 +28,8 @@ internal static partial class Moveset {
 	// left and right air movement speed
 	private const float ChargedMoveSpeed = 8f;
 
-        // reduces the % of gravities pull during charge attack, only while falling... (0.3 means 70% normal gravity strength)
-		private static float ChargedGravityReduction => ChargedFloatSetting.Value ? 0.9f : 0.3f;
+	// reduces the % of gravities pull during charge attack, only while falling... (0.4 means 60% normal gravity strength)
+	private static float ChargedGravityReduction => ChargedFloatSetting.Value ? 0.8f : 0.4f;
 
 	//frame where the animation is split (into windup and slash)
 	private const int ChargedSplit = 11;
