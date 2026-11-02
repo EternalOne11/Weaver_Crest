@@ -40,6 +40,7 @@
 - If let go, you will end the bind early, and only heal some masks. (all 9 silk is used even if you heal 1 mask)
 
 ## Tool ineractions
+- Silk skill damage is lowered by 10%
 - Multibinder adds an additional 4th bind that heals 1 mask.
 - Injector band works as intended
 - Clawmirror damage is nerfed to account for the multiple binds
