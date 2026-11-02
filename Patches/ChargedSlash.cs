@@ -28,8 +28,8 @@ internal static partial class Moveset {
 	// left and right air movement speed
 	private const float ChargedMoveSpeed = 8f;
 
-        // reduces the % of gravities pull during charge attack... (0.25% means 75% normal gravity strength)
-	private const float ChargedGravityReduction = 0.25f;
+        // reduces the % of gravities pull during charge attack, only while falling... (0.3 means 70% normal gravity strength)
+		private static float ChargedGravityReduction => ChargedFloatSetting.Value ? 0.9f : 0.3f;
 
 	//frame where the animation is split (into windup and slash)
 	private const int ChargedSplit = 11;
@@ -167,8 +167,10 @@ internal static partial class Moveset {
 						float dir = Mathf.Abs(input) > 0.3f ? Mathf.Sign(input) : 0f;
 						x = dir * ChargedMoveSpeed;
 					}
-					
-					y -= Physics2D.gravity.y * rb.gravityScale * ChargedGravityReduction * Time.fixedDeltaTime;
+
+					// Reduced gravity only while falling
+					if (y < 0f)
+						y -= Physics2D.gravity.y * rb.gravityScale * ChargedGravityReduction * Time.fixedDeltaTime;
 					rb.linearVelocity = new Vector2(x, y);
 					yield return new WaitForFixedUpdate();
 				}
