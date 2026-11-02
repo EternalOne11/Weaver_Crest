@@ -12,12 +12,12 @@ internal static class ToolDamage {
 	private static Dictionary<ToolItem, float>? targetedTools;
 	private static Dictionary<ToolItem, float> TargetedTools => targetedTools ??= new() {
 		// The six silk skills
-		[ToolItemManager.GetToolByName("Silk Spear")] = 1.0f,
-		[ToolItemManager.GetToolByName("Thread Sphere")] = 1.0f,
-		[ToolItemManager.GetToolByName("Parry")] = 1.0f,
-		[ToolItemManager.GetToolByName("Silk Charge")] = 1.0f,
-		[ToolItemManager.GetToolByName("Silk Bomb")] = 1.0f,
-		[ToolItemManager.GetToolByName("Silk Boss Needle")] = 1.0f,
+		[ToolItemManager.GetToolByName("Silk Spear")] = 0.9f,
+		[ToolItemManager.GetToolByName("Thread Sphere")] = 0.9f,
+		[ToolItemManager.GetToolByName("Parry")] = 0.9f,
+		[ToolItemManager.GetToolByName("Silk Charge")] = 0.9f,
+		[ToolItemManager.GetToolByName("Silk Bomb")] = 0.9f,
+		[ToolItemManager.GetToolByName("Silk Boss Needle")] = 0.9f,
 
 		//Clawmirror nerfs
 		[ToolItemManager.GetToolByName("Dazzle Bind")] = 0.45f,
