@@ -40,7 +40,6 @@
 - If let go, you will end the bind early, and only heal some masks. (all 9 silk is used even if you heal 1 mask)
 
 ## Tool ineractions
-- Silk skill damage is lowered by 10%
 - Multibinder adds an additional 4th bind that heals 1 mask.
 - Injector band works as intended
 - Clawmirror damage is nerfed to account for the multiple binds
@@ -72,7 +71,7 @@
 
 ## Credits
 - Mebi, (The artist who made the hud, Crest icon/design, and the half silk spools) https://ko-fi.com/mebi0910/gallery
-- KAdala, (The artist who made the entire moveset and the suprise) https://ko-fi.com/kadala_ka/shop
+- KAdala, (The artist who made the entire moveset and all the other custom sprites) https://ko-fi.com/kadala_ka/shop
 - Lobo, (the artist who made the mod icon) https://x.com/acheofslowdecay
 - Redfrog, (Who coded the half silk)
 - General Beria, (Who made the attack sounds)
