@@ -41,6 +41,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> WispCostSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
+	internal static ConfigEntry<bool> ChargedFloatSetting { get; private set; } = null!;
 
 	internal const string
 		YenId = "Weaver";
@@ -70,6 +71,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
 		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", true,
 			"When reaching 0 silk after a bind, you gain half a silk.");
+		ChargedFloatSetting = Config.Bind("Balance", "Charged attack float", false,
+			"While falling during the charged attack, fall at 10% of normal gravity instead of 50%.");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
@@ -77,6 +80,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(SilkMechanics));
 		Harmony.PatchAll(typeof(HalfSilkHeart));
 		Harmony.PatchAll(typeof(ToolDamage));
+		Harmony.PatchAll(typeof(ClawmirrorSize));
 		Harmony.PatchAll(typeof(UpPatch));
 		Harmony.PatchAll(typeof(WallPatch));
 		Harmony.PatchAll(typeof(ChargedPatch));
