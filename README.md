@@ -7,7 +7,9 @@
 
 ## Installation and Compatibility
 - This mod requires I18n, Needleforge, Unity Helper, fsm util, AssetHelper and optionally modmenu.
-- This mod, when uninstalled and then reinstalled, should save the data regarding unlocked crest sockets and collected memory lockets.
+- This mod is safe to install and uninstall from an existing save.
+- When uninstalled and then reinstalled, the save the data regarding unlocked crest sockets and collected memory lockets should remain intact.
+- Half silk has been made to work, with all types of silk degradation along with the Needolin.
 - This mod is fully compatible with Architect. (Future compatibility with more mods may be added.)
 
 ## Custom Mechanics
