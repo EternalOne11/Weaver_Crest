@@ -45,10 +45,9 @@
 - If let go, you will end the bind early and only heal some masks. (All 9 silks are used even if you heal 1 mask.)
 
 ## Tool interactions
-- Silk skill damage is lowered by 10%
 - Multibinder adds an additional 4th bind that heals 1 mask.
 - Injector band works as intended.
-- Clawmirror damage is nerfed to account for the multiple binds.
+- Clawmirror damage reworked to account for multiple binds, dealing 36 per instead of 67 each. (with 20% less range)
 - Weighted belt, flint slate, and longclaw are all functional.
 - Mossberry rings from druid eye/eyes can merge with half silk.
 - Silkspeed Anklets works with half silk.
@@ -60,6 +59,7 @@
 - Hold Bind option. (ability to cancel mid bind) **Off by Default**
 - Half knockback option. (Like witch) **Off by Default**
 - The Wispfire lantern can use half silk instead. **Off by Default**
+- Charge attack fall speed option. **Off by Default**
 
 ## Map changes/implementation
 - 4 new memory lockets.
