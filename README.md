@@ -65,7 +65,8 @@
 ## AI Disclosure
 - AI was used in the process of developing this mod.
 - I used it as an assistant to help with feedback and optimization, and fix some bugs I couldn't figure out.
-- It was used to code some areas I was unsure how to do myself, such as the sound implementation.
+- The majority of the code was done by hand... (around 15% of my code used AI assistance)
+- It primarily was used to code some areas I was unsure how to do myself, such as the sound implementation.
 - It was also used to figure out and explain certain aspects of silksongs own code, which were either tedious or I was unable figure out. (Some FSM's and files in Assembly-CSharp.dll)
 - Assets were commissioned and were not created with AI to the best of my knowledge
 
