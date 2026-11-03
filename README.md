@@ -1,4 +1,3 @@
-
 # Crest of the Weaver
 - This crest is fully custom and themed around the Weavers and the use of silk.
 - This is likely the first custom crest, with a unique moveset, custom animations, and sound effects.
