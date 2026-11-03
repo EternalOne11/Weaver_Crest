@@ -13,12 +13,13 @@
 - This mod is fully compatible with Architect. (Future compatibility with more mods may be added.)
 
 ## Custom Mechanics
-- There are 5 custom mechanics that are central to this mod.
+- There are 6 custom mechanics that are central to this mod.
 - First, there is the introduction of half silk notches. These are akin to moss berry bands and cannot be used for healing or silk skills.
 - Second, the use of silk in every attack, always draining half a silk.
 - Third, silk gained from attack is doubled, but due to the draining effect of attacks, a successful hit will provide 1.5 silk.
 - Fourth, when you run out of silk, the hornet will break a mask to gain 3 silk. (lifeblood masks trade for 1)
 - Fifth, a silk refund system, refunding silk on essential activities required for progression/transversal.
+- Sixth, while it only impacts fresh saves... You gain a half silk heart. Its disabled once you get your first true silkheart.
 
 ## Hud & Crest Icon
 - The HUD is fully custom, with 2 states demonstrating weather the not having any silk.
