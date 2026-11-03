@@ -16,7 +16,7 @@ internal static partial class Moveset {
 	new(-0.4f,3.1f), new(0.4f,3.1f), new(0.8f,2.1f), new(0.4f,-0.3f)];
 
 	// Up attack altered time, does not effect recovery.
-	internal const float UpSlashLength = 0.58f;
+	internal const float UpSlashLength = 0.57f;
 
 	private static void UpSlash() {
 		string[] upSlashFiles = ["upSlash_e0000.png", "upSlash_e0001.png", "upSlash_e0002.png"];
@@ -26,11 +26,16 @@ internal static partial class Moveset {
 			"upSlash0009.png", "upSlash0010.png", "upSlash0011.png", "upSlash0012.png",];
 		Texture2D[] upSlashHornetTex = LoadNamedTextures(upSlashHornetFiles);
 
+		Texture2D blank = new(1, 1) { name = "upSlash_blank" };
+		blank.SetPixel(0, 0, Color.clear);
+		blank.Apply();
+
 		tk2dSpriteCollectionData upSlashData = Tk2dUtil.CreateTk2dSpriteCollection(
-			sprites: [.. upSlashTex, .. upSlashHornetTex],
+			sprites: [.. upSlashTex, .. upSlashHornetTex, blank],
 			spriteCenters: [
 				.. upSlashTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(35f, 95f)),
 				.. upSlashHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(-12f, 32f)),
+				new Vector2(0.5f, 0.5f),
 			]
 		);
 		Object.DontDestroyOnLoad(upSlashData.gameObject);
@@ -47,8 +52,8 @@ internal static partial class Moveset {
 				wrapMode = WrapMode.Once,
 				frames = [
 					upSlashData.CreateFrame(upSlashTex[0].name, triggerEvent: true),
-					.. upSlashData.CreateFrames(upSlashTex.Skip(1).Take(upSlashTex.Length - 2).Select(t => t.name)),
-					upSlashData.CreateFrame(upSlashTex[^1].name, triggerEvent: true),
+					.. upSlashData.CreateFrames(upSlashTex.Skip(1).Select(t => t.name)),
+					upSlashData.CreateFrame(blank.name, triggerEvent: true),
 				],
 			},
 			new tk2dSpriteAnimationClip {
@@ -68,6 +73,9 @@ internal static partial class Moveset {
 			Hitbox = UpHitbox,
 		};
 	}
+
+	internal static bool UpSlashRunning(HeroController hc) =>
+		YenCrest.IsEquipped && hc.cState.attacking && hc.cState.upAttacking && hc.attack_time < hc.attackDuration;
 
 	internal static IEnumerator RestartUpSlash() {
 		yield return null;
@@ -90,26 +98,51 @@ internal static class UpPatch {
 		HeroController.instance.StartCoroutine(Moveset.RestartUpSlash());
 	}
 
+        // Fix for a hornet animation not always playing when jumping.
 	[HarmonyPatch(typeof(HeroController), "HeroJump", [typeof(bool)])]
 	[HarmonyPrefix]
-	private static void KeepUpSlashOnJump(HeroController __instance, ref float ___attack_time, out float __state) {
+	private static void KeepUpSlashOnJump(HeroController __instance, out float __state) {
 		__state = -1f;
-		var state = __instance.cState;
-		if (!YenCrest.IsEquipped || !state.attacking || !state.upAttacking)
+		if (!Moveset.UpSlashRunning(__instance))
 			return;
-		__state = ___attack_time;
-		___attack_time = 0f;
+		__state = __instance.attack_time;
+		__instance.attack_time = 0f;
 	}
-
-	private static readonly AccessTools.FieldRef<HeroAnimationController, bool> CanceledSlash =
-		AccessTools.FieldRefAccess<HeroAnimationController, bool>("canceledSlash");
 
 	[HarmonyPatch(typeof(HeroController), "HeroJump", [typeof(bool)])]
 	[HarmonyPostfix]
-	private static void RestoreAttackTime(HeroController __instance, ref float ___attack_time, float __state) {
-		if (__state < 0f)
+	private static void RestoreAttackTime(HeroController __instance, float __state) {
+		if (__state >= 0f)
+			__instance.attack_time = __state;
+	}
+
+	private static bool landingUpSlash;
+
+	[HarmonyPatch(typeof(HeroController), "BackOnGround")]
+	[HarmonyPrefix]
+	private static void NoteLanding(HeroController __instance) => landingUpSlash = Moveset.UpSlashRunning(__instance);
+
+	[HarmonyPatch(typeof(HeroController), "BackOnGround")]
+	[HarmonyPostfix]
+	private static void EndLanding() => landingUpSlash = false;
+
+	// Landing no longer resets recovery time for up attack
+	[HarmonyPatch(typeof(HeroController), "ResetAttacks")]
+	[HarmonyPrefix]
+	private static bool KeepSlashOnLand(HeroController __instance) =>
+		!(landingUpSlash && Moveset.UpSlashRunning(__instance));
+
+	[HarmonyPatch(typeof(HeroController), "StartFloat")]
+	[HarmonyPrefix]
+	private static bool NoFloatDuringUpSlash(HeroController __instance) => !Moveset.UpSlashRunning(__instance);
+
+	[HarmonyPatch(typeof(HeroAnimationController), "UpdateState")]
+	[HarmonyPostfix]
+	private static void KeepUpSlashAnimation(HeroAnimationController __instance) {
+		HeroController hc = HeroController.instance;
+		if (!hc || !Moveset.UpSlashRunning(hc))
 			return;
-		___attack_time = __state;
-		CanceledSlash(__instance.AnimCtrl) = false;
+		__instance.canceledSlash = false;
+		__instance.playSlashLand = false;
 	}
 }
