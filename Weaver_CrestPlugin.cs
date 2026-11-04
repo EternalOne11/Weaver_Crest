@@ -99,6 +99,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(CountHalfSilk));
 		Harmony.PatchAll(typeof(SlashFlipCancel));
 		Harmony.PatchAll(typeof(Vyrmling));
+		Harmony.PatchAll(typeof(NoCompletion)); //Remove once you add the chapel
 
 		RegisterCrest();
 		HalfSilk.Initialize();
