@@ -168,3 +168,15 @@ internal static class HalfKnockback {
 		__2 *= belt && belt.IsEquipped ? 0f : KnockbackMult;
 	}
 }
+
+//REMOVE when you add chapel
+[HarmonyPatch]
+internal static class NoCompletion {
+	[HarmonyPatch(typeof(PlayerData), nameof(PlayerData.CountGameCompletion))]
+	[HarmonyPostfix]
+	private static void RemoveWeaverCrest(PlayerData __instance) {
+		ToolCrest? weaver = ToolItemManager.GetAllCrests().FirstOrDefault(c => c && c.name == YenId);
+		if (weaver && weaver!.IsUnlocked)
+			__instance.completionPercentage -= 1f;
+	}
+}
