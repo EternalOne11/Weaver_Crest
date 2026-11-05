@@ -9,6 +9,27 @@ using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest.Patches;
 
+// Determines weather or not the rules are active... (to disable during memories)
+internal static class SilkRules {
+	private static readonly string[] NoSilkMechanicsScenes = [
+		"Memory_Silk_Heart",
+		"Memory_Needolin",
+		"Memory_First_Sinner",
+	];
+
+	internal static bool Active => YenCrest.IsEquipped && !InExcludedScene;
+
+	private static bool InExcludedScene {
+		get {
+			GameManager? gm = GameManager.SilentInstance;
+			if (!gm)
+				return false;
+			string scene = gm!.GetSceneNameString();
+			return NoSilkMechanicsScenes.Any(scene.StartsWith);
+		}
+	}
+}
+
 // This is to make melee attacks give double silk and
 // adds a press delay to avoid some issues at low silk.
 [HarmonyPatch]
@@ -16,7 +37,7 @@ internal static class SilkMechanics {
 	[HarmonyPatch(typeof(HeroController), "Attack")]
 	[HarmonyPrefix]
 	private static void MuteGruntForTrade() {
-		if (YenCrest.IsEquipped && MaskTrade.DuringTrade())
+		if (SilkRules.Active && MaskTrade.DuringTrade())
 			Sounds.MuteForTrade();
 	}
 
@@ -27,8 +48,10 @@ internal static class SilkMechanics {
 		if (!YenCrest.IsEquipped)
 			return;
 
-		LastWeave = Time.time;
-		BreakableRefund.StartSwing(deferredCost: MaskTrade.MaskCost(normalAttack: true));
+		if (SilkRules.Active) {
+			LastWeave = Time.time;
+			BreakableRefund.StartSwing(deferredCost: MaskTrade.MaskCost(normalAttack: true));
+		}
 
 		Sounds.PlayAttack(__0 switch {
 			AttackDirection.upward => "UpSlash",
@@ -43,7 +66,7 @@ internal static class SilkMechanics {
 	[HarmonyPatch(typeof(HeroController), nameof(HeroController.SilkGain), [typeof(HitInstance)])]
 	[HarmonyPostfix]
 	private static void WeaveGain() {
-		if (!YenCrest.IsEquipped)
+		if (!SilkRules.Active)
 			return;
 
 		if (Time.time - LastWeave >= MaskTrade.WeaveWindow)
@@ -62,7 +85,7 @@ internal static class SilkMechanics {
 	[HarmonyPatch(typeof(HeroController), nameof(HeroController.AddSilk), [typeof(int), typeof(bool), typeof(SilkSpool.SilkAddSource), typeof(bool)])]
 	[HarmonyPostfix]
 	private static void GainSettlesHeldCost(int __0) {
-		if (__0 <= 0 || !YenCrest.IsEquipped || !MaskTrade.CancelCost())
+		if (__0 <= 0 || !SilkRules.Active || !MaskTrade.CancelCost())
 			return; // nothing gained, or no cost on hold
 		BreakableRefund.HitEnemy();
 		if (PlayerData.instance.silk > SilkSpool.BindCost)
@@ -78,7 +101,7 @@ internal static class SilkMechanics {
 		if (HeroController.instance != __instance)
 			return;
 		bool binding = __instance.cState.isBinding;
-		if (wasBinding && !binding && YenCrest.IsEquipped && BindHalfSilkSetting.Value
+		if (wasBinding && !binding && SilkRules.Active && BindHalfSilkSetting.Value
 			&& PlayerData.instance.silk <= 0 && !HalfSilk.GetHasHalfSilk())
 			HalfSilk.AddHalfSilk(heroEffect: false);
 		wasBinding = binding;
@@ -102,8 +125,10 @@ internal static class SilkMechanics {
 		if (__instance != Moveset.ChargedMain)
 			return;
 
-		LastWeave = Time.time;
-		MaskTrade.MaskCost();
+		if (SilkRules.Active) {
+			LastWeave = Time.time;
+			MaskTrade.MaskCost();
+		}
 		Sounds.PlayAttack("ChargedSlash");
 	}
 
@@ -120,13 +145,14 @@ internal static class SilkMechanics {
 
 		string? clip = heroAnim.CurrentClip?.name;
 		if (clip != lastHeroClip && clip != null && clip.StartsWith("Dash Attack Antic ")) {
-			LastWeave = Time.time;
-
 			bool firstOrThird = clip == "Dash Attack Antic 1" || clip == "Dash Attack Antic 3";
 			Sounds.PlayAttack(firstOrThird ? "DashSlashA" : "DashSlashB");
 
-			if (firstOrThird)
-				MaskTrade.MaskCost();
+			if (SilkRules.Active) {
+				LastWeave = Time.time;
+				if (firstOrThird)
+					MaskTrade.MaskCost();
+			}
 		}
 		lastHeroClip = clip;
 	}
@@ -206,7 +232,7 @@ internal static class MaskTrade {
 	}
 
 	internal static void PayCosts() {
-		if (!YenCrest.IsEquipped) {
+		if (!SilkRules.Active) {
 			pendingCosts.Clear();
 			return;
 		}
@@ -247,7 +273,7 @@ internal static class HalfSilkHeart {
 	private static bool regenerating;
 
 	private static bool Applies(PlayerData pd) =>
-		YenCrest.IsEquipped && pd.CurrentSilkRegenMax <= 0 && pd.silk <= 0
+		SilkRules.Active && pd.CurrentSilkRegenMax <= 0 && pd.silk <= 0
 		&& !HalfSilk.GetHasHalfSilk() && pd.CurrentSilkMax > 0;
 
 	private static float WithWhiteRing(float time) =>
@@ -287,7 +313,7 @@ internal static class HalfSilkHeart {
 		if (!HalfSilk.GetHasHalfSilk())
 			HalfSilk.AddHalfSilk(heroEffect: false);
 	}
-	
+
 	private static bool wasAtBench;
 
 	[HarmonyPatch(typeof(HeroController), "Update")]
@@ -310,7 +336,7 @@ internal static class HalfSilkHeart {
 		}
 		wasAtBench = atBench;
 	}
-	
+
 	[HarmonyPatch(typeof(HeroController), "ResetSilkRegen")]
 	[HarmonyPostfix]
 	[HarmonyPriority(Priority.Last)]
@@ -343,7 +369,7 @@ internal static class WispHalfCost {
 	[HarmonyPatch(typeof(HeroController), nameof(HeroController.TakeSilk), [typeof(int), typeof(SilkSpool.SilkTakeSource)])]
 	[HarmonyPrefix]
 	private static bool HalfSilkForWisp(int amount, SilkSpool.SilkTakeSource source) {
-		if (source != SilkSpool.SilkTakeSource.Wisp || amount != 1 || !YenCrest.IsEquipped || !WispCostSetting.Value)
+		if (source != SilkSpool.SilkTakeSource.Wisp || amount != 1 || !SilkRules.Active || !WispCostSetting.Value)
 			return true;
 		HalfSilk.RemoveHalfSilk();
 		return false;
