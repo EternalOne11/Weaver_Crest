@@ -1,2 +1,4 @@
-## v0.1.0
-* Initial release!
+# Version History
+
+## 1.0.0
+Inital Release (maybe add all playtest changelogs)
