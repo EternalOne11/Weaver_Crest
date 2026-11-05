@@ -219,7 +219,10 @@
 	<EmbeddedResource Include="Resources\Noodlevyrm\Wiggle\Wiggle_0003.png" />
 	<EmbeddedResource Include="Resources\Noodlevyrm\Wiggle\Wiggle_0004.png" />
 	<EmbeddedResource Include="Resources\Noodlevyrm\Corpse.png" />
-	<EmbeddedResource Include="Resources\Noodlevyrm\Journal.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Noodle_journal.png" />
+	<EmbeddedResource Include="Resources\Noodlevyrm\Noodle_journal_small.png" />
+	<EmbeddedResource Include="Resources\Corpses.png" />
+	<EmbeddedResource Include="Resources\Icefly.png" />
     <EmbeddedResource Include="Resources\Sounds\Slash1.wav" />
     <EmbeddedResource Include="Resources\Sounds\Slash2.wav" />
     <EmbeddedResource Include="Resources\Sounds\Slash3_up.wav" />
