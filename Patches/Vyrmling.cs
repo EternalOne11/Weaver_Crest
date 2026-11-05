@@ -90,13 +90,14 @@ internal static class Vyrmling
             if (record)
                 return record!;
 
-            Sprite icon = LoadEmbeddedPngAsSprite("Journal.png");
+            Sprite icon = LoadEmbeddedPngAsSprite("Noodle_journal.png");
+            Sprite iconS = LoadEmbeddedPngAsSprite("Noodle_journal_small.png");
             record = ScriptableObject.CreateInstance<EnemyJournalRecord>();
             record.name = "Weaver Noodlevyrm";
             record.displayName = JournalName;
             record.description = JournalDesc;
             record.notes = JournalNotes;
-            record.iconSprite = icon;
+            record.iconSprite = iconS;
             record.enemySprite = icon;
             record.killsRequired = KillsRequired;
             record.recordType = EnemyJournalRecord.RecordTypes.Enemy;
