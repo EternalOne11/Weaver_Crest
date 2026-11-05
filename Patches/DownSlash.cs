@@ -43,7 +43,7 @@ internal static partial class Moveset {
 		string[] fxFiles = ["downSlash_e0000.png", "downSlash_e0001.png", "downSlash_e0002.png",
 			"downSlash_e0003.png", "downSlash_e0004.png"];
 		string[] hornetFiles = ["downSlash_0000.png", "downSlash_0001.png", "downSlash_0002.png",
-		"downSlash_0004.png", "downSlash_0005.png", "downSlash_0006.png", "downSlash_0007.png", "downSlash_0008.png"];
+		"downSlash_0003.png", "downSlash_0004.png", "downSlash_0005.png", "downSlash_0006.png", "downSlash_0007.png"];
 
 		Texture2D[] fx = LoadNamedTextures(fxFiles);
 		Texture2D[] hornet = LoadNamedTextures(hornetFiles);
