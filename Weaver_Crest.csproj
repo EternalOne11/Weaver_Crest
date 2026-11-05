@@ -247,7 +247,8 @@
     <PackageReference Include="UnityEngine.Modules" Version="6000.0.50" IncludeAssets="compile"/>
     <PackageReference Include="Silksong.UnityHelper" Version="1.2.0" />
     <PackageReference Include="Silksong.GameLibs" Version="*-*" PrivateAssets="all" />
-	<PackageReference Include="Silksong.AssetHelper" Version="1.0.0" />
+	<PackageReference Include="Silksong.AssetHelper" Version="1.3.0" />
+	
  </ItemGroup>
   <ItemGroup>
     <Folder Remove="thunderstore/temp;thunderstore/dist" />
