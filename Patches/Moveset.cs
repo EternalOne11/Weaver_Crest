@@ -180,3 +180,19 @@ internal static class NoCompletion {
 			__instance.completionPercentage -= 1f;
 	}
 }
+//Needleforge bugfix
+[HarmonyPatch]
+internal static class LoadFix {
+	[HarmonyPatch(typeof(GameManager), nameof(GameManager.FinishedEnteringScene))]
+	[HarmonyPostfix]
+	private static void Reapplycrest() {
+		PlayerData? pd = PlayerData.instance;
+		HeroController? hc = HeroController.SilentInstance;
+		if (pd == null || !hc || pd.CurrentCrestID != YenId)
+			return;
+		ToolCrest? weaver = ToolItemManager.GetCrestByName(YenId);
+		if (!weaver || !weaver!.HeroConfig || hc!.Config == weaver.HeroConfig)
+			return;
+		ToolItemManager.SendEquippedChangedEvent(force: true);
+	}
+}
