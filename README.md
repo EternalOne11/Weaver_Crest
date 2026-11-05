@@ -19,7 +19,7 @@
 - Third, silk gained from an attack is doubled, but due to the draining effect of attacks, a successful hit will provide 1.5 silk.
 - Fourth, when you run out of silk, the hornet will break a mask to gain 3 silk. (lifeblood masks trade for 1)
 - Fifth, a silk refund system, refunding silk on essential activities required for progression/transversal.
-- Sixth, while it only impacts fresh saves... You gain a half silk heart. Its disabled once you get your first true silkheart.
+- Sixth, the crest gives you a half silk heart. Its disabled once you get your first true silkheart.
 
 ## Hud & Crest Icon
 - The HUD is fully custom, with 2 states demonstrating whether the player has any silk.
