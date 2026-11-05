@@ -116,8 +116,8 @@ internal static class BreakableRefund {
         // Hazards which the needle clanks off and some enemies... Requires name being listed below)
 	private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap", "Pendulum", "fan_hazard", "Pearl", "Mask Maker", "Bone Beast"];
 
-        // So they always refund it... even if you dont move the platform
-	private static readonly string[] TinkAncestorNames = ["Sliding Plat", "BounceGame", "JuggleGame", "Bellflea"];
+        // So they always refund it... even if you dont move the platform (also the slab's spike jail traps)
+	private static readonly string[] TinkAncestorNames = ["Sliding Plat", "BounceGame", "JuggleGame", "Bellflea", "spike_trap_slab_jail"];
 
 	[HarmonyPatch(typeof(TinkEffect), nameof(TinkEffect.TryDoTinkReactionNoDamager))]
 	[HarmonyPostfix]
