@@ -125,11 +125,11 @@
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0000.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0001.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0002.png" />
+    <EmbeddedResource Include="Resources\DownSlash\downSlash_0003.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0004.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0005.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0006.png" />
     <EmbeddedResource Include="Resources\DownSlash\downSlash_0007.png" />
-    <EmbeddedResource Include="Resources\DownSlash\downSlash_0008.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0000.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0001.png" />
     <EmbeddedResource Include="Resources\DownSlash Effect\downSlash_e0002.png" />
