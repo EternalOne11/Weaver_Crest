@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Weaver_Crest.Utils.ResourceUtils;
 using static Weaver_Crest.Weaver_CrestPlugin;
 
 namespace Weaver_Crest;
@@ -164,38 +165,47 @@ internal static class PlatformSpawn {
 	}
 }
 
-// Peak Memory locket Corpse...
+// Memory locket corpse spawns... (for mt fay and bilewater)
 internal static class DecorSpawn {
-	private static readonly (string Scene, string SpriteName, Vector2 Position, float Z, float Scale, bool Flip)[] Decor = [
-		("Peak_02", "Peak_Broken_Servitors_0001_1_snow", new Vector2(33.5f, 165f), 0.5f, 1f, false),
+	private static readonly (string Scene, string File, Vector2 Position, float Z, float Scale, bool Flip, string Material)[] Decor = [
+		("Peak_02", "Icefly.png", new Vector2(33.6f, 166.4f), 0.5f, 1f, false, "Crossroads_Material_0.5"),
+		("Aqueduct_03", "Corpses.png", new Vector2(57.7f, 9.4f), 0.5f, 1f, false, "Crossroads_Material_0.5"),
 	];
 
+	private const float PixelsPerUnit = 64f;
 	private static readonly System.Collections.Generic.Dictionary<string, Sprite> sprites = new();
+	private static readonly System.Collections.Generic.Dictionary<string, Material> materials = new();
 
 	internal static void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-		foreach (var (sceneName, spriteName, position, z, scale, flip) in Decor) {
+		foreach (var (sceneName, file, position, z, scale, flip, material) in Decor) {
 			if (sceneName != scene.name)
 				continue;
-			if (!sprites.TryGetValue(spriteName, out Sprite? sprite) || !sprite) {
-				sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(s => s.name == spriteName);
-				if (!sprite) {
-					Log.LogWarning($"DecorSpawn: sprite '{spriteName}' not found");
-					continue;
-				}
-				sprites[spriteName] = sprite!;
+			try {
+				Spawn(scene, file, position, z, scale, flip, material);
 			}
-
-			GameObject decor = new(spriteName);
-			SceneManager.MoveGameObjectToScene(decor, scene);
-			decor.transform.position = new Vector3(position.x, position.y, z);
-			decor.transform.localScale = new Vector3(flip ? -scale : scale, scale, 1f);
-			var renderer = decor.AddComponent<SpriteRenderer>();
-			renderer.sprite = sprite;
-
-			Material? material = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<SpriteRenderer>(true))
-				.Select(r => r.sharedMaterial).FirstOrDefault(m => m);
-			if (material)
-				renderer.sharedMaterial = material;
+			catch (System.Exception e) {
+					Log.LogError($"DecorSpawn: '{file}' failed in {scene.name}: {e}");
+			}
 		}
+	}
+
+	private static void Spawn(Scene scene, string file, Vector2 position, float z, float scale, bool flip, string materialName) {
+		if (!sprites.TryGetValue(file, out Sprite? sprite) || !sprite)
+			sprites[file] = sprite = LoadEmbeddedPngAsSprite(file, new Vector2(0.5f, 0.5f), PixelsPerUnit);
+
+		GameObject decor = new(file);
+		SceneManager.MoveGameObjectToScene(decor, scene);
+		decor.transform.position = new Vector3(position.x, position.y, z);
+		decor.transform.localScale = new Vector3(flip ? -scale : scale, scale, 1f);
+		var renderer = decor.AddComponent<SpriteRenderer>();
+		renderer.sprite = sprite;
+
+		if (!materials.TryGetValue(materialName, out Material? material) || !material) {
+			material = Resources.FindObjectsOfTypeAll<Material>().FirstOrDefault(m => m.name == materialName);
+			if (material)
+				materials[materialName] = material!;
+		}
+		if (material)
+			renderer.sharedMaterial = material;
 	}
 }
