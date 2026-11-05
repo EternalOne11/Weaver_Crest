@@ -26,7 +26,7 @@ Note that moveset and Evo optout are still from queencrest.
 [BepInDependency("io.github.needleforge", "0.9.0")]
 [BepInDependency("org.silksong-modding.unityhelper", "1.1.1")]
 [BepInDependency("org.silksong-modding.fsmutil", "0.3.16")]
-[BepInDependency("org.silksong-modding.assethelper")]
+[BepInDependency("org.silksong-modding.assethelper", "1.3.0")]
 public partial class Weaver_CrestPlugin : BaseUnityPlugin
 {
 	private Harmony Harmony { get; } = new(Id);
@@ -99,6 +99,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(CountHalfSilk));
 		Harmony.PatchAll(typeof(SlashFlipCancel));
 		Harmony.PatchAll(typeof(Vyrmling));
+		Harmony.PatchAll(typeof(LoadFix));
 		Harmony.PatchAll(typeof(NoCompletion)); //Remove once you add the chapel
 
 		RegisterCrest();
