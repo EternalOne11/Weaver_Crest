@@ -10,7 +10,10 @@ Hotfix
 - Plus the tiny half frame display of the vanilla bind effect should be removed.
 
 ## 1.0.2
-- Fixes error with thunderstore.toml that was causing some people's builds to not compile the mod correctly.
+- Fixes weird error that was causing some people's builds to not work correctly... 
+Tied to either thunderstore.toml or ResourceUtils.cs. (probably system language issue)
+
+
 
 
 
