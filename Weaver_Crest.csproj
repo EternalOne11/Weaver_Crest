@@ -257,10 +257,9 @@
   </ItemGroup>
   <Target Name="CopyAndPackageMod" AfterTargets="PostBuildEvent">
     <ItemGroup>
-      <Binaries Include="$(TargetPath)" LocalDir="/" PackDir="/" />
-      <Binaries Include="$(TargetDir)/$(TargetName).pdb" LocalDir="/" PackDir="/" />
-      <Binaries Include="Languages/*.json" PackDir="/Languages/" LocalDir="/Languages/" />
-      <Binaries Include="Languages/*.json" PackDir="/plugins/Languages/" />
+      <Binaries Include="$(TargetPath)" LocalDir="/" PackDir="/plugins/" />
+      <Binaries Include="$(TargetDir)/$(TargetName).pdb" LocalDir="/" PackDir="/plugins/" />
+      <Binaries Include="Languages/*.json" LocalDir="/Languages/" PackDir="/plugins/Languages/" />
     </ItemGroup>
     <PropertyGroup>
       <ThunderstoreDir>$(ProjectDir)/thunderstore</ThunderstoreDir>
@@ -279,3 +278,4 @@
     <Exec Command="dotnet tcli build --config-path &quot;$(ThunderstoreDir)/thunderstore.toml&quot; --package-name &quot;$(AssemblyTitle)&quot; --package-version $(ThunderstorePkgVersion)" StandardOutputImportance="High" StandardErrorImportance="High" />
   </Target>
 </Project>
+
