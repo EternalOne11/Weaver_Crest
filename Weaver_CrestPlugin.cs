@@ -72,7 +72,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", true,
 			"When reaching 0 silk after a bind, you gain half a silk.");
 		ChargedFloatSetting = Config.Bind("Balance", "Charged attack float", false,
-			"While falling during the charged attack, fall at 80% of normal gravity instead of 40%.");
+			"While falling during the charged attack, fall at 20% of normal gravity instead of 60%.");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
