@@ -10,12 +10,13 @@ Hotfix
 - Plus the tiny half frame display of the vanilla bind effect should be removed.
 
 ## 1.0.2
-Hotfix 
+Hotfix
 - Fixes weird error that was causing some people's builds to not work correctly... 
 Tied to either thunderstore.toml or ResourceUtils.cs. (probably system language issue)
 
-
-
+## 1.0.3
+Hotfix
+- Fixes issue with R2Modman, breaking the language file folder... (causing bugged text)
 
 
 
