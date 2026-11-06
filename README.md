@@ -10,7 +10,7 @@
 - This mod is safe to install and uninstall from an existing save.
 - When uninstalled and then reinstalled, the save the data regarding unlocked crest sockets and collected memory lockets should remain intact.
 - Half silk has been made to work, with all types of silk degradation along with the Needolin.
-- This mod is fully compatible with Architect. (Future compatibility with more mods may be added.)
+- This mod is fully compatible with Architect, and crest shuffler. (Future compatibility with more mods may be added.)
 
 ## Custom Mechanics
 - There are 6 custom mechanics that are central to this mod.
@@ -80,7 +80,7 @@
 ## Credits
 - Mebi (the artist who made the HUD, the Crest icon/design, and the half silk spools) https://ko-fi.com/mebi0910/gallery
 - KAdala (the artist who made the entire moveset and all the other custom sprites) https://ko-fi.com/kadala_ka/shop
-- Lobo (the artist who made the mod icon) https://x.com/acheofslowdecay
+- Lobo (the artist who made the mod icon, full resolution of both variants included in the mod files) https://x.com/acheofslowdecay
 - Redfrog (who coded the half silk)
 - General Beria (who made the attack sounds)
 - Last but most importantly, Team Cherry, for creating Silksong.
