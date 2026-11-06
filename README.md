@@ -32,7 +32,7 @@
 - Every attack always uses some silk.
 - The default slashes have a shorter range than the wanderer's but are slightly faster than hunter's.
 - The up slash is an overhead kick that is slower than the rest of the attacks.
-- The down slash is a downward frontal kick.
+- The down slash is a downward frontal kick, kinda like architect and hunter.
 - The charge attack has both a windup and a long-range swipe (with 2 separate hitboxes)
 - The dash attack has 2 variants. A 2-slash variant and a 4-slash variant. (4 slash uses 1 silk)
 - Custom Wall slash animation.
@@ -60,12 +60,12 @@
 - Hold Bind option. (ability to cancel mid-bind) **Off by Default**
 - Half knockback option. (Like witch) **Off by Default**
 - The Wispfire lantern can use half silk instead. **Off by Default**
-- Charge attack fall speed option. **Off by Default**
+- Charge attack fall/airstall speed option. **Off by Default**
 
 ## Map changes/implementation
 - 4 new memory lockets.
 - Mt. Fay, Citadel Spa, Putrefied Ducts, and Wisp/Underworks connection.
-- Citadel spa one has a secret primarily was
+- Citadel spa one has a secret. 
 - **(Not yet done)** The chapel of the Weaver will be in Mt. Fay.
 
 ## AI Disclosure
@@ -87,12 +87,14 @@
 
 ## Special Thanks to
 - VoidBaroness (The Creator of Needleforge)
-- Kaycodes13 (Creator of the Queencrest the inital template for this mod.)
+- Kaycodes13 (Creator of the Queencrest the initial template for this mod.)
 - DerVorce (creator of the Void crest, which served as reference)
 - Everyone in the HK wiki Discord, who uncovered the cut content that inspired this mod.
 - Everyone in the HK modding Discord who helped refine my ideas and participated in the playtest.
-- Everyone in the Silksoul who has given me feedback and participated in the playtest.
+- Everyone in the Silksoul Discord who has given me feedback and participated in the playtest.
 
 ## If anyone wants to take or reuse any of these ideas, feel free to.
+
+## Feel free to fork this mod to make your own custom crest mods. 
 
 # If this mod ever reaches the notice of Team Cherry, feel free to implement any of these ideas.
