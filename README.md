@@ -93,8 +93,8 @@
 - Everyone in the HK modding Discord who helped refine my ideas and participated in the playtest.
 - Everyone in the Silksoul Discord who has given me feedback and participated in the playtest.
 
+## Please report any bugs or compatibility requests on github.
 ## If anyone wants to take or reuse any of these ideas, feel free to.
-
 ## Feel free to fork this mod to make your own custom crest mods. 
 
 # If this mod ever reaches the notice of Team Cherry, feel free to implement any of these ideas.
