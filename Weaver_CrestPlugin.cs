@@ -71,8 +71,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
 		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", true,
 			"When reaching 0 silk after a bind, you gain half a silk.");
-		ChargedFloatSetting = Config.Bind("Balance", "Charged attack float", true,
-			"While falling during the charged attack, fall at 40% of normal gravity instead of 80%.");
+		ChargedFloatSetting = Config.Bind("Balance", "Charged attack float", false,
+			"While falling during the charged attack, fall at 80% of normal gravity instead of 40%.");
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
