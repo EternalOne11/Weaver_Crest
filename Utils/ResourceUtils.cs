@@ -39,7 +39,8 @@ internal static class ResourceUtils {
 	public static Texture2D LoadEmbeddedPngAsTexture2D(string filename) {
 		var assembly = Assembly.GetExecutingAssembly();
 		string resourceName = assembly.GetManifestResourceNames()
-			.First(x => x.EndsWith(filename));
+			.FirstOrDefault(x => x.EndsWith(filename, System.StringComparison.Ordinal))
+			?? throw new FileNotFoundException($"Embedded image '{filename}' isn't in this build of the mod");
 
 		byte[] data;
 
