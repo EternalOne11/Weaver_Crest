@@ -45,6 +45,12 @@
 - There is a config option to make the bind require being held down.
 - If you let go, you will end the bind early and only heal some masks. (All 9 silks are used even if you heal 1 mask.)
 
+## Map changes/implementation
+- 4 new memory lockets.
+- Mt. Fay, Citadel Spa, Putrefied Ducts, and Wisp/Underworks connection.
+- Citadel spa one has a secret. 
+- **(Not yet done)** The chapel of the Weaver will be in Mt. Fay.
+
 ## Tool interactions
 - Multibinder adds a 4th bind that heals 1 mask.
 - Injector band works as intended.
@@ -61,12 +67,6 @@
 - Half knockback option. (Like witch) **Off by Default**
 - The Wispfire lantern can use half silk instead. **Off by Default**
 - Charge attack fall/airstall speed option. **Off by Default**
-
-## Map changes/implementation
-- 4 new memory lockets.
-- Mt. Fay, Citadel Spa, Putrefied Ducts, and Wisp/Underworks connection.
-- Citadel spa one has a secret. 
-- **(Not yet done)** The chapel of the Weaver will be in Mt. Fay.
 
 ## AI Disclosure
 - AI was used in the process of developing this mod.
