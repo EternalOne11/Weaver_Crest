@@ -87,7 +87,7 @@
 
 ## Special Thanks to
 - VoidBaroness (The Creator of Needleforge)
-- Kaycodes13 (Creator of the Queens crest for the template)
+- Kaycodes13 (Creator of the Queencrest the inital template for this mod.)
 - DerVorce (creator of the Void crest, which served as reference)
 - Everyone in the HK wiki Discord, who uncovered the cut content that inspired this mod.
 - Everyone in the HK modding Discord who helped refine my ideas and participated in the playtest.
