@@ -41,7 +41,7 @@ internal static partial class Moveset {
 		Object.DontDestroyOnLoad(BindCollection.gameObject);
 		BindCollection.gameObject.name = $"{YenId}_BindAnim";
 
-		//Animation speeds
+		//Default Animation speeds (gets modified)
 		BindClip = new tk2dSpriteAnimationClip {
 			name = "Weaver Bind",
 			fps = 12,
@@ -62,9 +62,13 @@ internal static partial class Moveset {
 
 internal static class Bind
 {
-	//bind animation length
-	private const float BindCycle = 0.81f;
-	private const float QuickCycle = 0.54f;
+	// Time per cycle
+	private const float SecondsPerBind = 0.65f;
+	// Normal cycle speed vs quick bind speed
+	private const float QuickSpeed = 0.54f / 0.81f;
+	// To make animations line up
+	private const float EffectFrames = 1f;
+	private const float QuickEffectFrames = -0.5f;
 
     private static int cachedBindCount;
     private static bool cachedQuick;
@@ -74,12 +78,13 @@ internal static class Bind
         //Bind amount values
         amountHealed.Value = 1;
         numberOfBinds.Value = Gameplay.MultibindTool.IsEquipped ? 4 : 3;
-        secondsPerBind.Value = 0.65f;
+        secondsPerBind.Value = SecondsPerBind;
 
         cachedBindCount = numberOfBinds.Value;
         cachedQuick = ToolItemManager.IsToolEquipped("Quickbind");
         bindCount = numberOfBinds;
         BindSoundBlock.Stop();
+        StartHiding();
 
         //Config setting
         if (HoldToBindSetting.Value && !holdCheckRunning)
@@ -158,6 +163,28 @@ internal static class Bind
     private static bool effectPlaying;
     private static int effectRun;
 
+    private static bool hiding;
+    private static Transform? DefaultEffect =>
+        HeroController.instance ? HeroController.instance.transform.Find("Bind Effects") : null;
+
+    private static void StartHiding()
+    {
+        if (hiding)
+            return;
+        hiding = true;
+        Application.onBeforeRender += HideBeforeRender;
+    }
+
+    private static void StopHiding()
+    {
+        if (!hiding)
+            return;
+        hiding = false;
+        Application.onBeforeRender -= HideBeforeRender;
+    }
+
+    private static void HideBeforeRender() => SetEffect(DefaultEffect, true);
+
 	private static IEnumerator PlayBindEffect(PlayMakerFSM bindFsm)
     {
         if (effectPlaying)
@@ -174,11 +201,15 @@ internal static class Bind
             effectAnim.Library = Moveset.BindLibrary;
         }
 
-        Transform? defaultEffect = HeroController.instance.transform.Find("Bind Effects");
+        Transform? defaultEffect = DefaultEffect;
         tk2dSpriteAnimationClip clip = cachedQuick ? Moveset.QuickBindClip : Moveset.BindClip;
-        float fps = clip.frames.Length / (cachedQuick ? QuickCycle : BindCycle);
         effectObj!.SetActive(true);
         ScaleParticles(defaultEffect, true);
+
+        float bindTime = SecondsPerBind * (cachedQuick ? QuickSpeed : 1f);
+        float extraFrames = cachedQuick ? QuickEffectFrames : EffectFrames;
+        float cycle = bindTime * (clip.frames.Length + extraFrames) / clip.frames.Length;
+        float fps = clip.frames.Length / cycle;
 
         string lastState = "";
         int played = 0;
@@ -188,23 +219,21 @@ internal static class Bind
             if (state == "Cooldown" || state == "Idle")
                 break;
 
-            if (state != lastState && state.StartsWith("Bind ") && state != "Bind Burst" && played < cachedBindCount) {
+            if (state != lastState && IsBindCycle(state) && played < cachedBindCount) {
                 effectAnim!.Stop();
                 effectAnim.Play(clip, 0f, fps);
                 played++;
             }
             lastState = state;
-            SetEffect(defaultEffect, true);
             yield return null;
         }
         effectObj.SetActive(false);
         effectPlaying = false;
         while (run == effectRun && defaultEffect != null && YenCrest.IsEquipped
-            && defaultEffect.Cast<Transform>().Any(c => c.gameObject.activeInHierarchy)) {
-            SetEffect(defaultEffect, true);
+            && defaultEffect.Cast<Transform>().Any(c => c.gameObject.activeInHierarchy))
             yield return null;
-        }
         if (run == effectRun) {
+            StopHiding();
             SetEffect(defaultEffect, false);
             ScaleParticles(defaultEffect, false);
         }
