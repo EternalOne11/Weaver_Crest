@@ -18,6 +18,16 @@ Tied to either thunderstore.toml or ResourceUtils.cs. (probably system language 
 Hotfix
 - Fixes issue with R2Modman, breaking the language file folder... (causing bugged text)
 
+## 1.0.4
+Hotfix
+- Fixed a stupid mistake and cleaned up a small amount of unused code. (I accidentally removed the deps.json *facepalm*)
+
+## 1.0.5
+Hotfix
+- Changed the display health value of the noodlevyrm to be accurate.
+- Fixed it so half silk disapears once you unequip the weaver crest... (has this previously but removed it acidently during cleanup)
+
+
 
 
 
