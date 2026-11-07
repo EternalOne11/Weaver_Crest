@@ -1,7 +1,7 @@
 # Version History
 
 ## 1.0.0
-Inital Public Release
+Initial Public Release
 
 ## 1.0.1
 Hotfix 
@@ -25,7 +25,7 @@ Hotfix
 ## 1.0.5
 Hotfix
 - Changed the display health value of the noodlevyrm to be accurate.
-- Fixed it so half silk disapears once you unequip the weaver crest... (has this previously but removed it acidently during cleanup)
+- Fixed it so half silk disappears once you unequip the weaver crest... (has this previously but removed it accidentally during cleanup)
 
 
 
@@ -52,7 +52,7 @@ First playtest
 -  Mossberry+halfsilk merge interaction
 - Fixed white flash spam at 9 silk, with no silk extensions)
 - Bind cancel included (config option) (disabled by default)
-- Mask break removed for lifeblood   (config option) (Allowed by default)
+- Mask break removed for lifeblood (config option) (Allowed by default)
 - 0.5 silk upon reaching 0 silk from a bind. (config option) (disabled by default...)
 - 15% Silk skill damage reduction. (config option) (disabled by default...)
 - Audio now scales with volume settings (I think) 
@@ -69,11 +69,11 @@ First playtest
 
 ### PT5
 - Experimental build with silk refunds...
-- (essentail ones are the only ones enabled by default)
+- (essential ones are the only ones enabled by default)
 - Known missing things are the white flowers in shellwood
-- the red baloons in huntersmarch/marrow, and levers.
+- the red balloons in huntersmarch/marrow, and levers.
 - breakable config uses all that have bounce mechanics on it. (on the chopping block)
-- Parry refunds havent exprimented much
+- Parry refunds haven't experimented much
 - 1 bug fixed this time. (silkthread 9 silk spam) 
 - And a config for which slot, the silk slot binding puts it into. 
 
@@ -136,7 +136,7 @@ First playtest
 - it should has removed the delay of the last mask effect...
 - Basically the damage is treated the same way as normal, without the invicibility or the freeze.
 - Some minor silk mechanical behavior changing... 
-- Minor Dash attack improvments
+- Minor Dash attack improvements
 - small typo fix. 
 
 ### PT13
