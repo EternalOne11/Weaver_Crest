@@ -870,6 +870,22 @@ public static class HalfSilk
         CurrentHalf = null!;
     }
 
+    // Removes the half silk when you switch off the crest
+    private static bool wasWeaverEquipped;
+
+    [HarmonyPatch(typeof(HeroController), nameof(HeroController.Update))]
+    [HarmonyPostfix]
+    private static void RemoveOnCrestSwitch(HeroController __instance)
+    {
+        if (HeroController.instance != __instance)
+            return;
+
+        bool equipped = YenCrest.IsEquipped;
+        if (wasWeaverEquipped && !equipped && GetHasHalfSilk())
+            SetHalfSilkState(false);
+        wasWeaverEquipped = equipped;
+    }
+
     [HarmonyPatch(typeof(SilkSpool), nameof(SilkSpool.DrawSpool), [typeof(int)])]
     [HarmonyPostfix]
     private static void AfterDrawSpool()
