@@ -22,7 +22,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/EternalOne11/Weaver_Crest</RepositoryUrl>
-    <Version>1.0.2</Version>
+    <Version>1.0.4</Version>
   </PropertyGroup>
   
     <ItemGroup>
@@ -278,4 +278,3 @@
     <Exec Command="dotnet tcli build --config-path &quot;$(ThunderstoreDir)/thunderstore.toml&quot; --package-name &quot;$(AssemblyTitle)&quot; --package-version $(ThunderstorePkgVersion)" StandardOutputImportance="High" StandardErrorImportance="High" />
   </Target>
 </Project>
-
