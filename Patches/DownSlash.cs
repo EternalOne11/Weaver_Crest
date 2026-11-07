@@ -215,13 +215,22 @@ internal static class DownPatch {
 			__result = false;
 	}
 
-	// fixs sawtooth circlet and decides what can be pogoed like vanilla.
+	// fixs sawtooth circlet and decides what can be pogoed like vanilla, and gives iframes when you hit an enemy.
 	[HarmonyPatch(typeof(HeroDownAttack), "ContinueBounceTrigger")]
 	[HarmonyPrefix]
-	private static bool NoBounceOnOwnTools(GameObject __0) {
-		if (!YenCrest.IsEquipped || !__0 || __0.layer != (int)PhysLayers.HERO_ATTACK)
+	private static bool DownAttackBounce(GameObject __0) {
+		if (!YenCrest.IsEquipped || !__0)
 			return true;
-		return __0.CompareTag("Enemy Projectile") || __0.CompareTag("Hero Damage Target")
-			|| __0.GetComponent<TinkEffect>() || __0.GetComponent<SpikeSlashReaction>();
+
+		bool ownTool = __0.layer == (int)PhysLayers.HERO_ATTACK
+			&& !(__0.CompareTag("Enemy Projectile") || __0.CompareTag("Hero Damage Target")
+				|| __0.GetComponent<TinkEffect>() || __0.GetComponent<SpikeSlashReaction>());
+		if (ownTool)
+			return false;
+
+		var layer = (PhysLayers)__0.layer;
+		if (layer != PhysLayers.TERRAIN && layer != PhysLayers.SOFT_TERRAIN)
+			HeroController.instance.StartDownspikeInvulnerability();
+		return true;
 	}
 }
