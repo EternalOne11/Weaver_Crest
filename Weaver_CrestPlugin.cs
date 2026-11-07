@@ -49,11 +49,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		YenName = new($"Mods.{Id}", "CREST_NAME"),
 		YenDesc = new($"Mods.{Id}", "CREST_DESC");
 
-	private static Color AdminGreen { get; }
-		= new Color32(r: 89, g: 255, b: 152, a: 255);
-	internal static Color AttackColor { get; }
-		= Color.Lerp(Color.white, AdminGreen, 0.3f);
-
 	private void Awake()
 	{
 		Log = Logger;
