@@ -19,10 +19,10 @@
     <!-- Shortens and anonymizes paths in debug symbols relative to the project directory. Breakpoints will not work, however. -->
     <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
 
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadameFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/EternalOne11/Weaver_Crest</RepositoryUrl>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
   
     <ItemGroup>
