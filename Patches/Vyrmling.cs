@@ -330,7 +330,8 @@ internal static class Vyrmling
             rootCollider.offset = turn * HitboxOffset;
 
             HealthManager health = body.AddComponent<HealthManager>();
-            health.hp = HeldHp; //true hp
+            health.hp = ShownHp;
+            health.initHp = ShownHp;
             InitializeHealthManagerDefaults(health);
 
             NoodlevyrmBody behaviour = body.AddComponent<NoodlevyrmBody>();
@@ -358,6 +359,7 @@ internal static class Vyrmling
         };
     }
 
+    private const int ShownHp = 1;
     private const int HeldHp = 9999;
 
     [HarmonyPatch(typeof(HealthManager), "TakeDamage")]
@@ -377,7 +379,7 @@ internal static class Vyrmling
             return;
 
         int taken = HeldHp - __instance.hp;
-        __instance.hp = HeldHp;
+        __instance.hp = ShownHp;
         body!.TakeHit(taken);
     }
 
