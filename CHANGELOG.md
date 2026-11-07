@@ -24,10 +24,12 @@ Hotfix
 
 ## 1.0.5
 Hotfix
-- Changed the display health value of the noodlevyrm to be accurate.
 - Fixed it so half silk disappears once you unequip the weaver crest... (has this previously but removed it accidentally during cleanup)
+- Changed the display health value of the noodlevyrm to be accurate. (This is for health viewers and debug mod)
 
-
+## 1.0.6
+Hotfix
+- Fixed invincibility frames upon a down attack hitting an enemy not activating...
 
 
 
