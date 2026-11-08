@@ -6,7 +6,8 @@
 - Languages available In game for all existing Silksong options (some MTL, some manual)
 
 ## Installation and Compatibility
-- This mod requires I18n, Needleforge, Unity Helper, fsm util, AssetHelper and optionally modmenu.
+- This mod requires I18n, Needleforge, Unity Helper, fsm util, and AssetHelper
+- **For config options, you must install modmenu, but its not required**
 - This mod is safe to install and uninstall from an existing save.
 - When uninstalled and then reinstalled, the save the data regarding unlocked crest sockets and collected memory lockets should remain intact.
 - Half silk has been made to work, with all types of silk degradation along with the Needolin.
@@ -64,9 +65,9 @@
 - Half silk after binding leaves you at 0 silk. **On by Default**
 - Silk Bind slot. (For when you get a silk skill) **Top slot by Default**
 - Hold Bind option. (ability to cancel mid-bind) **Off by Default**
+- Slow down charge attack's falling/airstall speed. **Off by Default**
 - Half knockback option. (Like witch) **Off by Default**
 - The Wispfire lantern can use half silk instead. **Off by Default**
-- Charge attack fall/airstall speed option. **Off by Default**
 
 ## AI Disclosure
 - AI was used in the process of developing this mod.
@@ -93,8 +94,8 @@
 - Everyone in the HK modding Discord who helped refine my ideas and participated in the playtest.
 - Everyone in the Silksoul Discord who has given me feedback and participated in the playtest.
 
-## Please report any bugs or compatibility requests on github.
+## Please report any bugs or compatibility requests on github. (or ping me on discord)
 ## If anyone wants to take or reuse any of these ideas, feel free to.
-## Feel free to fork this mod to make your own custom crest mods. 
+## Feel free to fork this mod to make your own custom crest mods.
 
 # If this mod ever reaches the notice of Team Cherry, feel free to implement any of these ideas.
