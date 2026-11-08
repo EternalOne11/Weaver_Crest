@@ -3,8 +3,7 @@
 ## 1.0.0
 Initial Public Release
 
-## 1.0.1
-Hotfix 
+## 1.0.1 
 - Fixed binding timings... I forgot to fix this oops...
 - They should now both properly line up timing wise, in the same way the vanilla ones do.
 - Plus the tiny half frame display of the vanilla bind effect should be removed.
@@ -23,14 +22,18 @@ Hotfix
 - Fixed a stupid mistake and cleaned up a small amount of unused code. (I accidentally removed the deps.json *facepalm*)
 
 ## 1.0.5
-Hotfix
 - Fixed it so half silk disappears once you unequip the weaver crest... (has this previously but removed it accidentally during cleanup)
 - Changed the display health value of the noodlevyrm to be accurate. (This is for health viewers and debug mod)
 
 ## 1.0.6
-Hotfix
 - Fixed invincibility frames upon a down attack hitting an enemy not activating...
 
+## 1.0.7
+Hotfix
+- Fixed hunter's jounrnal text... I made a mistake in 1.0.3 that caused this issue and the 1.0.4 issue.
+
+## 1.0.8
+- Made it so the charge slash swipe now deals heavy damage
 
 
 
