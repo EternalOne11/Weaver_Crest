@@ -128,8 +128,10 @@ internal static partial class Moveset {
 
 	internal static void ChargedDamage() {
 		if (ChargedMain?.GameObject is GameObject main)
-			foreach (var de in main.GetComponentsInChildren<DamageEnemies>(true))
+			foreach (var de in main.GetComponentsInChildren<DamageEnemies>(true)) {
 				de.nailDamageMultiplier = ChargedMultiplier;
+				de.attackType = AttackTypes.Heavy;
+			}
 		if (WindupStep?.GameObject is GameObject windup)
 			foreach (var de in windup.GetComponentsInChildren<DamageEnemies>(true))
 				de.nailDamageMultiplier = WindupMultiplier;
