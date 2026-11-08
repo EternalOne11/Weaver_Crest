@@ -30,7 +30,7 @@ Hotfix
 
 ## 1.0.7
 Hotfix
-- Fixed hunter's jounrnal text... I made a mistake in 1.0.3 that caused this issue and the 1.0.4 issue.
+- Fixed hunter's journal text... I made a mistake in 1.0.3 that caused this issue and the 1.0.4 issue.
 
 ## 1.0.8
 - Made it so the charge slash swipe now deals heavy damage
