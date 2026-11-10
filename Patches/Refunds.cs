@@ -9,14 +9,14 @@ namespace Weaver_Crest.Patches;
 // Refund settings...
 [HarmonyPatch]
 internal static class BreakableRefund {
-	private static bool swingOpen, hitObstacle, hitEnemy, hitThorn, costOnHold;
+	private static bool swingOpen, hitObstacle, hitEnemy, hitThorn, parried, costOnHold;
 	private static float swingStart;
 
 	internal static void StartSwing(bool deferredCost) {
 		EndSwing();
 		swingOpen = true;
 		swingStart = Time.time;
-		hitObstacle = hitEnemy = hitThorn = false;
+		hitObstacle = hitEnemy = hitThorn = parried = false;
 		costOnHold = deferredCost;
 	}
 
@@ -30,6 +30,12 @@ internal static class BreakableRefund {
 			hitEnemy = true;
 	}
 
+	// Parries!!!
+	internal static void Parried() {
+		if (swingOpen && YenCrest.IsEquipped)
+			parried = true;
+	}
+
 	internal static void EndSwingIfOver() {
 		if (swingOpen && (!MaskTrade.Swinging() || Time.time - swingStart >= MaskTrade.WeaveWindow))
 			EndSwing();
@@ -39,12 +45,28 @@ internal static class BreakableRefund {
 		if (!swingOpen)
 			return;
 		swingOpen = false;
-		if (!hitObstacle || hitEnemy || hitThorn || !YenCrest.IsEquipped || !RefundSetting.Value)
+		if (!YenCrest.IsEquipped)
+			return;
+		if (!RefundSetting.Value || (!parried && !hitObstacle) || hitEnemy || hitThorn)
 			return;
 		if (costOnHold)
 			MaskTrade.CancelCost();
 		else
 			HalfSilk.AddHalfSilk(heroEffect: false);
+	}
+
+	[HarmonyPatch(typeof(DamageEnemies), nameof(DamageEnemies.SendParried), [typeof(bool)])]
+	[HarmonyPostfix]
+	private static void AfterParried(DamageEnemies __instance) => OnParried(__instance);
+
+	[HarmonyPatch(typeof(DamageEnemies), nameof(DamageEnemies.SendParried), [])]
+	[HarmonyPostfix]
+	private static void AfterParry(DamageEnemies __instance) => OnParried(__instance);
+
+	private static void OnParried(DamageEnemies damager) {
+		bool ours = Moveset.IsOurAttack(damager.gameObject);
+		if (ours)
+			Parried();
 	}
 
 	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
