@@ -95,6 +95,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(SlashFlipCancel));
 		Harmony.PatchAll(typeof(Vyrmling));
 		Harmony.PatchAll(typeof(LoadFix));
+		Harmony.PatchAll(typeof(NoDuplicates));
 		Harmony.PatchAll(typeof(NoCompletion)); //Remove once you add the chapel
 
 		RegisterCrest();
