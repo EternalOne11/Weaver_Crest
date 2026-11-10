@@ -196,3 +196,17 @@ internal static class LoadFix {
 		ToolItemManager.SendEquippedChangedEvent(force: true);
 	}
 }
+
+// Another needleforge bugfix... (preventing duplicate crests showing up))
+[HarmonyPatch]
+internal static class NoDuplicates {
+	[HarmonyPatch(typeof(ToolItemManager), nameof(ToolItemManager.Awake))]
+	[HarmonyPostfix]
+	[HarmonyAfter("io.github.needleforge")]
+	private static void KeepNewestCrest() {
+		var list = ToolItemManager.Instance.crestList;
+		var copies = list.Where(c => c && c.name == YenId).ToList();
+		for (int i = 0; i < copies.Count - 1; i++)
+			list.Remove(copies[i]);
+	}
+}
