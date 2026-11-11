@@ -73,8 +73,8 @@ internal static partial class Moveset {
 		yenConfig.SetAttackFields(time: 0.32f, recovery: 0.15f, cooldown: 0.4f, // Regular attack speeds
 			quickSpeedMult: 1.5f, quickCooldown: 0.2f); // Flea Brew
 
-		yenConfig.SetDashStabFields(time: 0.15f, speed: -26f, bounceJumpSpeed: 20f);
-
+		yenConfig.SetDashStabFields(time: 0.15f, speed: -26f, bounceJumpSpeed: 20f, doesBurstEffect: false);
+		
 		yenConfig.ChargedSlashFsmEdit = ChargedFsmEdit;
 	}
 
@@ -83,49 +83,15 @@ internal static partial class Moveset {
 		return [m.Slash?.GameObject, m.AltSlash?.GameObject, m.UpSlash?.GameObject,
 			m.WallSlash?.GameObject, m.DownSlash?.GameObject, m.DashSlash?.GameObject, m.ChargedSlash?.GameObject];
 	}
-
-	// Needleforge oversight... (you need to manually readd the NailSlashTerrainThunk, to not double hit the wall.
-	private static readonly AccessTools.FieldRef<NailSlashTerrainThunk, float> ThunkCooldown =
-		AccessTools.FieldRefAccess<NailSlashTerrainThunk, float>("cooldown");
-
-	internal static void TerrainHitCooldown() {
+	internal static bool IsOurAttack(GameObject? obj) {
+		if (!obj)
+			return false;
 		foreach (GameObject? attack in AttackObjects())
-			if (attack)
-				foreach (var thunk in attack!.GetComponentsInChildren<NailSlashTerrainThunk>(true))
-					ThunkCooldown(thunk) = 0.3f;
+			if (attack && obj!.transform.IsChildOf(attack!.transform))
+				return true;
+		return false;
 	}
-
-	//Stupid Barnacles
-	internal static readonly HashSet<DamageEnemies> OurDamagers = [];
-
-        internal static bool IsOurAttack(GameObject? obj) {
-                if (!obj)
-                        return false;
-                foreach (GameObject? attack in AttackObjects())
-                        if (attack && obj!.transform.IsChildOf(attack!.transform))
-                                return true;
-                return false;
-        }
-	internal static void DetectBarnacle() {
-		int attackLayer = LayerMask.NameToLayer("Attack");
-		OurDamagers.Clear();
-		foreach (GameObject? attack in AttackObjects()) {
-			if (!attack)
-				continue;
-			foreach (var damager in attack!.GetComponentsInChildren<DamageEnemies>(true)) {
-				OurDamagers.Add(damager);
-				GameObject hitbox = damager.gameObject;
-				if (attackLayer >= 0)
-					hitbox.layer = attackLayer;
-				if (!hitbox.GetComponent<Rigidbody2D>()) {
-					var body = hitbox.AddComponent<Rigidbody2D>();
-					body.bodyType = RigidbodyType2D.Kinematic;
-					body.simulated = true;
-				}
-			}
-		}
-	}
-
+	
 	private static Texture2D[] LoadNamedTextures(string[] files) =>
 		files.Select(f => {
 			Texture2D t = LoadEmbeddedPngAsTexture2D(f);
@@ -141,16 +107,6 @@ internal static partial class Moveset {
 		var animLib = animLibObj.AddComponent<tk2dSpriteAnimation>();
 		animLib.clips = [];
 		return animLib;
-	}
-}
-
-[HarmonyPatch]
-internal static class BarnacleHit {
-	[HarmonyPatch(typeof(DamageEnemies), nameof(DamageEnemies.GetDamageDealt))]
-	[HarmonyPostfix]
-	private static void ReportNeedleDamage(DamageEnemies __instance, ref int __result) {
-		if (__result <= 0 && Moveset.OurDamagers.Contains(__instance))
-			__result = Mathf.Max(1, PlayerData.instance.nailDamage);
 	}
 }
 
@@ -178,35 +134,5 @@ internal static class NoCompletion {
 		ToolCrest? weaver = ToolItemManager.GetAllCrests().FirstOrDefault(c => c && c.name == YenId);
 		if (weaver && weaver!.IsUnlocked)
 			__instance.completionPercentage -= 1f;
-	}
-}
-//Needleforge bugfix
-[HarmonyPatch]
-internal static class LoadFix {
-	[HarmonyPatch(typeof(GameManager), nameof(GameManager.FinishedEnteringScene))]
-	[HarmonyPostfix]
-	private static void Reapplycrest() {
-		PlayerData? pd = PlayerData.instance;
-		HeroController? hc = HeroController.SilentInstance;
-		if (pd == null || !hc || pd.CurrentCrestID != YenId)
-			return;
-		ToolCrest? weaver = ToolItemManager.GetCrestByName(YenId);
-		if (!weaver || !weaver!.HeroConfig || hc!.Config == weaver.HeroConfig)
-			return;
-		ToolItemManager.SendEquippedChangedEvent(force: true);
-	}
-}
-
-// Another needleforge bugfix... (preventing duplicate crests showing up))
-[HarmonyPatch]
-internal static class NoDuplicates {
-	[HarmonyPatch(typeof(ToolItemManager), nameof(ToolItemManager.Awake))]
-	[HarmonyPostfix]
-	[HarmonyAfter("io.github.needleforge")]
-	private static void KeepNewestCrest() {
-		var list = ToolItemManager.Instance.crestList;
-		var copies = list.Where(c => c && c.name == YenId).ToList();
-		for (int i = 0; i < copies.Count - 1; i++)
-			list.Remove(copies[i]);
 	}
 }
