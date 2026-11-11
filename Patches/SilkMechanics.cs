@@ -101,7 +101,7 @@ internal static class SilkMechanics {
 		if (HeroController.instance != __instance)
 			return;
 		bool binding = __instance.cState.isBinding;
-		if (wasBinding && !binding && SilkRules.Active && BindHalfSilkSetting.Value
+		if (wasBinding && !binding && SilkRules.Active && RefundSetting.Value
 			&& PlayerData.instance.silk <= 0 && !HalfSilk.GetHasHalfSilk())
 			HalfSilk.AddHalfSilk(heroEffect: false);
 		wasBinding = binding;
