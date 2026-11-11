@@ -27,6 +27,7 @@ Note that moveset and Evo optout are still from queencrest.
 [BepInDependency("org.silksong-modding.unityhelper", "1.1.1")]
 [BepInDependency("org.silksong-modding.fsmutil", "0.3.17")]
 [BepInDependency("org.silksong-modding.assethelper", "1.3.0")]
+[BepInDependency("org.silksong-modding.modmenu", "0.8.0")]
 
 public partial class Weaver_CrestPlugin : BaseUnityPlugin
 {
@@ -41,9 +42,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> KnockbackSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> WispCostSetting { get; private set; } = null!;
-	internal static ConfigEntry<bool> BindHalfSilkSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> ChargedFloatSetting { get; private set; } = null!;
-
+	
 	internal const string
 		YenId = "Weaver";
 	internal static readonly LocalisedString
@@ -65,10 +65,10 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 				"Attacks that on breakble walls, doors, spikes, and shellshard walls refund silk");
 		WispCostSetting = Config.Bind("Silk", "Halves the cost Wisp Lantern", false,
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
-		BindHalfSilkSetting = Config.Bind("Bind", "Half silk after bind", true,
-			"When reaching 0 silk after a bind, you gain half a silk.");
 		ChargedFloatSetting = Config.Bind("Balance", "Charged attack float", false,
 			"While falling during the charged attack, fall at 20% of normal gravity instead of 60%.");
+
+		ChapelMenu.Register(Config);
 
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
@@ -95,6 +95,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(SlashFlipCancel));
 		Harmony.PatchAll(typeof(Vyrmling));
 		Harmony.PatchAll(typeof(NoCompletion)); //Remove once you add the chapel
+		Harmony.PatchAll(typeof(CrestText));
 
 		RegisterCrest();
 		HalfSilk.Initialize();
@@ -103,6 +104,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Moveset.ImportAnimations();
 		Moveset.SetupSlashes();
 		Sounds.Load();
+		
+		Chapel.Initialize();
 
 		YenCrest.Moveset.OnInitialized += () =>
 		{
@@ -113,8 +116,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 			// Charge damage mulitpler
 			Moveset.ChargedDamage();
-
-			Moveset.FixDownKB();
 
 			// Longclaw
 			var m = YenCrest.Moveset;
@@ -144,6 +145,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		float slotOffset = (0.5f - pivot.y) * (linework.rect.height / linework.pixelsPerUnit);
 
 		YenCrest = NeedleforgePlugin.AddCrest(YenId, YenName, YenDesc, linework, silhouette, glow);
+		YenCrest.UnlockedAtStart = false; // unlocked by Chapel instead (automatically, or at the shrine)
 		YenCrest.HudFrame.ProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon.png");// Save profile for normal save
 		YenCrest.HudFrame.SteelProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon_S.png"); // Save profile for Steel soul
 
