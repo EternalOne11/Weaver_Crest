@@ -43,6 +43,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 	internal static ConfigEntry<bool> RefundSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> WispCostSetting { get; private set; } = null!;
 	internal static ConfigEntry<bool> ChargedFloatSetting { get; private set; } = null!;
+	internal static ConfigEntry<RedSlotChoice> RedSlotSetting { get; private set; } = null!;
 	
 	internal const string
 		YenId = "Weaver";
@@ -67,6 +68,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.");
 		ChargedFloatSetting = Config.Bind("Balance", "Charged attack float", false,
 			"While falling during the charged attack, fall at 20% of normal gravity instead of 60%.");
+		RedSlotSetting = Config.Bind("Crest", "Red tool slot position", RedSlotChoice.Middle,
+			"The ability to move around the red slot, and swap it with the silk skill slots. Requires Restart");
 
 		ChapelMenu.Register(Config);
 
@@ -105,7 +108,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Moveset.SetupSlashes();
 		Sounds.Load();
 		
-		Chapel.Initialize();
+		//placeholder 
+				Chapel.Initialize();
 
 		YenCrest.Moveset.OnInitialized += () =>
 		{
@@ -149,12 +153,21 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		YenCrest.HudFrame.ProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon.png");// Save profile for normal save
 		YenCrest.HudFrame.SteelProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon_S.png"); // Save profile for Steel soul
 
-		//Tool slot locations (x,y)
+		//Tool slot locations (x,y) (red slot can be swapped with the a silk skill)
 	    // X is the horizontal axis, Negative values move the image left, Positive move them right.
 	    // Y is the Vertical axis, Negative values move it Down, Postive move it Up
-		YenCrest.AddSkillSlot(AttackToolBinding.Up,new(0f, 1.47f + slotOffset), false);
-		YenCrest.AddSkillSlot(AttackToolBinding.Down,new(0f, -2.19f + slotOffset), false);
-		YenCrest.AddRedSlot(AttackToolBinding.Neutral,new(0f, -0.36f + slotOffset), false);
+		(AttackToolBinding Binding, Vector2 Position) top = (AttackToolBinding.Up, new(0f, 1.47f + slotOffset));
+		(AttackToolBinding Binding, Vector2 Position) middle = (AttackToolBinding.Neutral, new(0f, -0.36f + slotOffset));
+		(AttackToolBinding Binding, Vector2 Position) bottom = (AttackToolBinding.Down, new(0f, -2.19f + slotOffset));
+
+		var (skillA, skillB, red) = RedSlotSetting.Value switch {
+			RedSlotChoice.Top => (middle, bottom, top),
+			RedSlotChoice.Bottom => (top, middle, bottom),
+			_ => (top, bottom, middle),
+		};
+		YenCrest.AddSkillSlot(skillA.Binding, skillA.Position, false);
+		YenCrest.AddSkillSlot(skillB.Binding, skillB.Position, false);
+		YenCrest.AddRedSlot(red.Binding, red.Position, false);
 
 		// Yellow and blue slots: locked behind memory lockets
 		// 4 are placed in the world, exact locations in LocketSpawn.cs
@@ -170,4 +183,9 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Hud.Setup(YenCrest);
 		YenCrest.BindEvent = Bind.TripleBind;
 	}
+}
+public enum RedSlotChoice {
+	Middle,
+	Top,
+	Bottom,
 }
