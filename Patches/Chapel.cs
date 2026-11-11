@@ -19,7 +19,7 @@ namespace Weaver_Crest.Patches;
 // The Weaver crest chapel/corpse
 public static class Chapel {
 	private const string ShrineScene = "Peak_10";
-	private static readonly Vector2 ShrinePosition = new(32f, 33f);
+	private static readonly Vector2 ShrinePosition = new(32f, 33.2f);
 	private const float ShrineZ = 0.5f;
 	private const string CorpseSprite = "Weaver_Moss_Corpse_Glow.png";
 	private const string CorpseMaterial = "Crossroads_Material_0.5";
