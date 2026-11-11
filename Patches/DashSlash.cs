@@ -116,14 +116,6 @@ internal static partial class Moveset {
 		}
 	}
 
-	internal static void HideSprint(bool hide) {
-		Transform? burst = HeroController.instance.transform.Find("Effects/Hunter SprintAttackBurst");
-		if (burst == null)
-			return;
-		foreach (var r in burst.GetComponentsInChildren<Renderer>(true))
-			r.enabled = !hide;
-	}
-
 	private static GameObject? effectObj;
 	private static tk2dSpriteAnimator? effectAnim;
 
@@ -181,10 +173,6 @@ internal static class DashPatch {
 
 		if (inDashAttack && state == "Attack Dash" && currentSlash.Value == 2)
 			totalSlashes.Value = __instance.inputHandler.inputActions.Attack.IsPressed ? 4 : 2;
-
-		Moveset.HideSprint(inDashAttack);
-		if (inDashAttack)
-			Moveset.HideAttackSprites();
 
 		if (state == lastState)
 			return;
