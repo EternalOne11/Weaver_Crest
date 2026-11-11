@@ -64,7 +64,10 @@ internal static partial class Moveset {
 			},
 		];
 		upSlashAnims.ValidateLookup();
-		sharedLib.clips = [.. sharedLib.clips, upSlashAnims.clips[1]];
+		tk2dSpriteAnimationClip upSlash = upSlashAnims.clips[1];
+		sharedLib.clips = [.. sharedLib.clips, upSlash, new tk2dSpriteAnimationClip {
+			name = "UpSlashAlt", fps = upSlash.fps, wrapMode = upSlash.wrapMode, frames = upSlash.frames,
+		}];
 
 		YenCrest.Moveset.UpSlash = new Attack {
 			Name = "WeaverUpSlash",
@@ -80,7 +83,7 @@ internal static partial class Moveset {
 	internal static IEnumerator RestartUpSlash() {
 		yield return null;
 		var heroAnim = HeroController.instance.GetComponent<tk2dSpriteAnimator>();
-		if (heroAnim.CurrentClip?.name == "UpSlash")
+		if (heroAnim.CurrentClip?.name is "UpSlash" or "UpSlashAlt")
 			heroAnim.PlayFromFrame(0);
 	}
 }
