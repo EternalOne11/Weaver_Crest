@@ -19,7 +19,7 @@ namespace Weaver_Crest.Patches;
 // The Weaver crest chapel/corpse
 public static class Chapel {
 	private const string ShrineScene = "Peak_10";
-	private static readonly Vector2 ShrinePosition = new(31f, 33f);
+	private static readonly Vector2 ShrinePosition = new(32f, 33f);
 	private const float ShrineZ = 0.5f;
 	private const string CorpseSprite = "Weaver_Moss_Corpse_Glow.png";
 	private const string CorpseMaterial = "Crossroads_Material_0.5";
@@ -194,7 +194,7 @@ public static class Chapel {
 
 	// Corpse bind animations/effects
 	private const float FigurePixelsPerUnit = 64f;
-	private static readonly Vector2 FigureOffset = Vector2.zero;
+	private static readonly Vector2 FigureOffset = new(-1f, 0f);
 
 	private static void ReplaceFigure(Transform figure) {
 		if (!corpseSprite)
@@ -241,7 +241,7 @@ public static class Chapel {
 	private const string GlowArt = "CrestGlow.png";
 	private const float GlowPixelsPerUnit = 48f;
 	private const float WebScale = 1f;
-	private static readonly Vector2 GlowOffset = Vector2.zero; // in pixels of the glow image: positive x right, y up
+	private static readonly Vector2 GlowOffset = new(0f, -0f);
 	private const string SharedGlow = "crest_glow_web";
 	private const string CrestGlowPrefix = "crest_glow_";
 	private static Sprite? glowSprite;
@@ -270,11 +270,12 @@ public static class Chapel {
 }
 
 // Force Crest unlock button
-internal static class ChapelMenu {
-	internal static void Register(BepInEx.Configuration.ConfigFile config) =>
-		config.Bind("Crest", "Force unlock", false, new BepInEx.Configuration.ConfigDescription(
+internal static class UnlockMenu {
+	internal static BepInEx.Configuration.ConfigEntryBase Register(BepInEx.Configuration.ConfigFile config) =>
+		config.Bind("Unlock", "Force unlock", false, new BepInEx.Configuration.ConfigDescription(
 			"Unlocks the Weaver crest in the loaded save.", null,
-			(Silksong.ModMenu.Plugin.ConfigEntryFactory.MenuElementGenerator)Button));
+			(Silksong.ModMenu.Plugin.ConfigEntryFactory.MenuElementGenerator)Button,
+			new Silksong.ModMenu.Plugin.ConfigEntryOrder(5, 0)));
 
 	private static bool Button(BepInEx.Configuration.ConfigEntryBase entry, out Silksong.ModMenu.Elements.MenuElement element) {
 		var button = new Silksong.ModMenu.Elements.TextButton("Forcefully unlock Crest",
@@ -284,7 +285,6 @@ internal static class ChapelMenu {
 		return true;
 	}
 }
-
 // The crest binding text
 [HarmonyPatch]
 internal static class CrestText {
