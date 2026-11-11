@@ -29,10 +29,10 @@ internal static partial class Moveset {
 
 	internal const float DownCooldown = DownAnticTime + DownKickTime + DownRecoveryTime + 0.01f;
 
-	private static readonly float[] DownEffectOffsetY = [-60f, -39f, -21f, -18f, -14f];
+	private static readonly float[] DownEffectOffsetY = [-42f, -35f, -25f, -21f, -18f];
 
 	private static readonly Vector2[] DownHitbox = [new(0.5f,-0.7f), new(-0.2f,0.3f), new(-0.9f,0.9f),
-	new(-1.6f,0.4f), new(-1.9f,-0.7f), new(-1.4f,-1.9f), new(-0.2f,-2.5f), new(0.9f,-2.1f) ];
+	new(-1.7f,0.4f), new(-1.9f,-0.7f), new(-1.4f,-1.9f), new(-0.2f,-2.5f), new(0.9f,-2.1f) ];
 
 	private static tk2dSpriteCollectionData downData = null!;
 	private static tk2dSpriteAnimation downAnims = null!;
