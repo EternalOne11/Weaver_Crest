@@ -146,18 +146,6 @@ internal static partial class Moveset {
 		foreach (var r in down!.GetComponentsInChildren<Renderer>(true))
 			r.enabled = false;
 	}
-
-	private static readonly AccessTools.FieldRef<NailSlashTravel, HeroController> TravelHero =
-		AccessTools.FieldRefAccess<NailSlashTravel, HeroController>("hc");
-
-	//recoil fix
-	internal static void FixDownKB() {
-		GameObject? down = YenCrest.Moveset.DownSlash?.GameObject;
-		if (!down)
-			return;
-		foreach (var travel in down!.GetComponentsInChildren<NailSlashTravel>(true))
-			TravelHero(travel) = HeroController.instance;
-	}
 }
 
 [HarmonyPatch]
