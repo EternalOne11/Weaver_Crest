@@ -14,11 +14,11 @@ namespace Weaver_Crest.Patches;
 
 internal static partial class Moveset {
 
-	private static readonly Vector2[] ChargeHitbox = [new(0f, 1.2f), new(-2.3f, 1.8f), new(-4.3f, 1.5f),
-	new(-6.4f, 0.4f), new(-7.3f, -1.0f), new (-4.3f, -1.4f), new (-2.4f, -1.4f), new (0f, -1.2f),];
+	private static readonly Vector2[] ChargeHitbox = [new(0f, 1.2f), new(-2.3f, 1.8f), new(-4.7f, 1.4f),
+	new(-6.4f, 0.4f), new(-7.4f, -1.0f), new (-4.3f, -1.4f), new (-2.4f, -1.4f), new (0f, -1.2f),];
 
-	private static readonly Vector2[] WindupHitbox = [new(1.9f,0.3f), new(-0.7f,0.3f), new(-1.4f,-0.4f),
-	new(-1f,-1.2f), new(2.2f,-1.3f), new(2.6f,-0.3f)];
+	private static readonly Vector2[] WindupHitbox = [new(1.9f,0.3f), new(-0.8f,0.3f), new(-1.6f,-0.4f),
+	new(-1.1f,-1.2f), new(2.2f,-1.3f), new(2.6f,-0.3f)];
 
 	// Main attack modifer
 	private const float ChargedMultiplier = 2.75f;
@@ -55,7 +55,7 @@ internal static partial class Moveset {
 		tk2dSpriteCollectionData chargedData = Tk2dUtil.CreateTk2dSpriteCollection(
 			sprites: [.. chargedTex, .. chargedHornetTex, blank],
 			spriteCenters: [
-				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(280f, -5f)),
+				.. chargedTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(285f, -5f)),
 				.. chargedHornetTex.Select(t => new Vector2(t.width, t.height) * 0.5f + new Vector2(89f, 0f)),
 				new Vector2(0.5f, 0.5f),
 			]
