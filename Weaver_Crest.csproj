@@ -247,10 +247,7 @@
     <PackageReference Include="Silksong.UnityHelper" Version="1.2.0" />
     <PackageReference Include="Silksong.GameLibs" Version="*-*" PrivateAssets="all" />
     <PackageReference Include="Silksong.AssetHelper" Version="1.3.0" />
-    <Reference Include="Silksong.ModMenu">
-      <HintPath>/home/spencer/Downloads/Silksong.ModMenu-main/Silksong.ModMenu/bin/Release/netstandard2.1/Silksong.ModMenu.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
+     <PackageReference Include="Silksong.ModMenu" Version="0.8.0" />
   </ItemGroup>
  
   <ItemGroup>
