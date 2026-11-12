@@ -1,18 +1,22 @@
+using HarmonyLib;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Weaver_Crest.Utils.ResourceUtils;
 using static Weaver_Crest.Weaver_CrestPlugin;
 
+#pragma warning disable HARMONIZE004, Harmony003
+
 namespace Weaver_Crest;
 
 // 4 memory lockets are placed in the world, one for each of the Weaver crest's locked slots.
 // They are stored within the save itself... Meaning they will be tracked like normal items.
+[HarmonyPatch]
 internal static class LocketSpawn {
 	private const string LocketName = "Crest Socket Unlocker";
 
 	// Locations of each locket... Room and position... ID must remain different.
-	private static readonly (string Id, string Scene, Vector2 Position)[] Locations = [
+	internal static readonly (string Id, string Scene, Vector2 Position)[] Locations = [
 		("WeaverLocket1", "Aqueduct_03", new Vector2(57.7f, 9.3f)),
 		("WeaverLocket2", "Peak_02", new Vector2(33.5f, 165f)),
 		("WeaverLocket3", "Song_10", new Vector2(23.6f, 51f)),
@@ -49,32 +53,27 @@ internal static class LocketSpawn {
 		CollectableItemPickup pickup = Object.Instantiate(prefab);
 		SceneManager.MoveGameObjectToScene(pickup.gameObject, scene);
 		pickup.transform.SetPosition2D(position);
-		pickup.SetItem(locket!);
 
 		var marker = pickup.gameObject.AddComponent<LocketMarker>();
 		marker.Id = id;
 		marker.SceneName = sceneName;
-		marker.CountAtSpawn = locket!.CollectedAmount;
+
+		pickup.SetItem(locket!);
 	}
 
-	// Collected check
+	// Track which locket spawns are picked up.
 	private class LocketMarker : MonoBehaviour {
 		public string Id = "";
 		public string SceneName = "";
-		public int CountAtSpawn;
-		private bool recorded;
+	}
 
-		private void Update() {
-			if (recorded || !locket || locket!.CollectedAmount <= CountAtSpawn)
-				return;
-			HeroController hero = HeroController.instance;
-			if (hero && Vector2.Distance(hero.transform.position, transform.position) < 5f) {
-				SetCollected(Id, SceneName);
-				recorded = true;
-			}
-			else
-				CountAtSpawn = locket.CollectedAmount;
-		}
+	// Counts as a collected pickup... (for randomizer compat)
+	[HarmonyPatch(typeof(CollectableItemPickup), "DoPickupAction", [typeof(bool)])]
+	[HarmonyPostfix]
+	private static void MarkCollected(CollectableItemPickup __instance) {
+		LocketMarker? marker = __instance ? __instance.GetComponent<LocketMarker>() : null;
+		if (marker)
+			SetCollected(marker!.Id, marker.SceneName);
 	}
 
 	private class LocketData : PersistentItemData<bool> { }
