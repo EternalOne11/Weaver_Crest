@@ -4,8 +4,8 @@ using HutongGames.PlayMaker.Actions;
 using Silksong.AssetHelper.ManagedAssets;
 using Silksong.FsmUtil;
 using System.Collections;
-using TeamCherry.SharedUtils;
 using System.Linq;
+using TeamCherry.SharedUtils;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
@@ -18,17 +18,16 @@ namespace Weaver_Crest.Patches;
 
 // The Weaver crest chapel/corpse
 public static class Chapel {
+	// Where the shrine/corpse is
 	private const string ShrineScene = "Peak_10";
 	private static readonly Vector2 ShrinePosition = new(32f, 33.2f);
-	private const float ShrineZ = 0.5f;
-	private const string CorpseSprite = "Weaver_Moss_Corpse_Glow.png";
-	private const string CorpseMaterial = "Crossroads_Material_0.5";
 
 	private const string RespawnMarkerName = "Crest Respawn Marker";
 	private static readonly Vector2 RespawnPosition = new(31f, 32f);
 	private const bool RespawnFacingRight = true;
 
-	private const string VanillaShrineScene = "Greymoor_20c"; //(requires completely remaking probably for the true chapel)
+	// The game's crest shrine, copied with AssetHelper
+	private const string VanillaShrineScene = "Greymoor_20c";
 	private const string VanillaShrinePath = "Crest Get Shrine";
 	private const string ShrineFsm = "Control";
 
@@ -41,10 +40,10 @@ public static class Chapel {
 		crest.Unlock();
 	}
 
+	//Force unlock config option
 	public static void ForceUnlock() {
-		if (PlayerData.instance == null || !HeroController.SilentInstance) {
+		if (PlayerData.instance == null || !HeroController.SilentInstance)
 			return;
-		}
 		GrantCrest();
 		if (GameObject.Find(ShrineName) is GameObject shrine)
 			Object.Destroy(shrine);
@@ -58,7 +57,7 @@ public static class Chapel {
 		SceneManager.sceneLoaded += PlaceShrine;
 	}
 
-	// Respawn point sets when you bind the crest.
+        // Respawn point sets when you bind the crest.
 	private static void PlaceRespawnMarker(Scene scene, LoadSceneMode mode) {
 		if (scene.name != ShrineScene
 			|| scene.GetRootGameObjects().Any(o => o.name == RespawnMarkerName && o.GetComponent<RespawnMarker>()))
@@ -68,12 +67,11 @@ public static class Chapel {
 		marker.transform.position = RespawnPosition;
 		var respawn = marker.AddComponent<RespawnMarker>();
 		respawn.respawnFacingRight = RespawnFacingRight;
-
 		respawn.customFadeDuration = new OverrideFloat();
 		respawn.overrideMapZone = new OverrideMapZone();
 	}
 
-	// The corpse is depdent upon the save, and weather or not the crest is unlocked.
+        // The corpse is depdent upon the save, and weather or not the crest is unlocked.
 	private static void PlaceShrine(Scene scene, LoadSceneMode mode) {
 		if (scene.name != ShrineScene || PlayerData.instance == null || !GameManager.instance)
 			return;
@@ -83,15 +81,13 @@ public static class Chapel {
 	}
 
 	private const string ShrineName = "Weaver Crest Shrine";
-	private static Sprite? corpseSprite;
-	private static Material? corpseMaterial;
 
 	private static IEnumerator SpawnShrine(Scene scene) {
 		GameObject root = new(ShrineName);
 		SceneManager.MoveGameObjectToScene(root, scene);
-		root.transform.position = new Vector3(ShrinePosition.x, ShrinePosition.y, ShrineZ);
+		root.transform.position = ShrinePosition;
 
-		// The vanilla shrine
+                // The vanilla shrine
 		if (vanillaShrine == null)
 			yield break;
 		if (!vanillaShrine.HasBeenLoaded)
@@ -121,7 +117,7 @@ public static class Chapel {
 		shrine.SetActive(true);
 	}
 
-	// The vanilla chapel FSM features. (mostly copied without full understanding)
+	// The vanilla chapel FSM features copied for weaver crest
 	private static bool SetUpShrine(GameObject shrine) {
 		PlayMakerFSM? fsm = shrine.GetComponents<PlayMakerFSM>().FirstOrDefault(f => f.FsmName == ShrineFsm);
 		ToolCrest? crest = ToolItemManager.GetCrestByName(YenId);
@@ -137,9 +133,9 @@ public static class Chapel {
 		if (states.FirstOrDefault(s => s.Value == null) is { Key: not null } missing) {
 			return false;
 		}
-		
 		FsmState State(string name) => states[name]!;
 		var vars = fsm.FsmVariables;
+
 		if (vars.FindFsmGameObject("Hero") is FsmGameObject hero)
 			hero.Value = HeroController.instance.gameObject;
 
@@ -152,8 +148,8 @@ public static class Chapel {
 			if (vars.FindFsmBool("Load Memory Scene") is FsmBool loadMemory)
 				loadMemory.Value = false;
 		});
-		
 		crestSet.AddTransition("FINISHED", "Check Unlocked");
+
 		foreach (var action in State("Take Control").Actions.OfType<SetPlayerDataVariable>())
 			action.Enabled = false;
 
@@ -167,21 +163,25 @@ public static class Chapel {
 		foreach (var action in crestSet2.Actions)
 			action.Enabled = false;
 		crestSet2.AddTransition("FINISHED", "Set Hero Facing");
-		FsmState end = State("End 2");
-		end.AddMethod(() => fsm.SetState("Inactive"));
-		State("Crest Msg").InsertMethod(0, () => StopEffects(vars));
 
-		// Uses Chapel of the reaper corpse but transforms its assets.
-		Transform? figure = vars.FindFsmGameObject("Crest Figure")?.Value is GameObject f && f ? f.transform : null;
-		if (figure)
-			ReplaceFigure(figure!);
+		State("Crest Msg").InsertMethod(0, () => StopEffects(vars));
+		State("End 2").AddMethod(() => fsm.SetState("Inactive"));
+
+		// The corpse Hornet binds, in place of the vanilla figure
+		if (vars.FindFsmGameObject("Crest Figure")?.Value is GameObject figure && figure)
+			ReplaceFigure(figure.transform);
 		else
 			Log.LogWarning("Corpse wasn't found");
 
-		if (vars.FindFsmGameObject("Crest Rune")?.Value is GameObject rune && rune)
+		if (vars.FindFsmGameObject("Crest Rune")?.Value is GameObject rune && rune) {
+			if (vars.FindFsmGameObject("Crest Get Hornet")?.Value is GameObject standIn && standIn) {
+				Vector3 spot = standIn.transform.position;
+				rune.transform.position = new Vector3(spot.x, spot.y, rune.transform.position.z);
+			}
 			ReplaceRune(rune);
+		}
 		else
-			Log.LogWarning("Web glow rune wasn't found");
+			Log.LogWarning("The crest rune wasn't found");
 
 		FsmState crestChange = State("Crest Change");
 		crestChange.InsertMethod(0, () => {
@@ -192,16 +192,20 @@ public static class Chapel {
 		return true;
 	}
 
-	// Corpse bind animations/effects
+	// Corpse bind sprite/animations/effects
+	private const string CorpseSprite = "Weaver_Moss_Corpse_Glow.png";
+	private const string CorpseMaterial = "Crossroads_Material_0.5";
 	private const float FigurePixelsPerUnit = 64f;
 	private static readonly Vector2 FigureOffset = new(-1f, 0f);
+	private static Sprite? corpseSprite;
+	private static Material? corpseMaterial;
 
 	private static void ReplaceFigure(Transform figure) {
 		if (!corpseSprite)
 			corpseSprite = LoadEmbeddedPngAsSprite(CorpseSprite, new Vector2(0.5f, 0.5f), FigurePixelsPerUnit);
 		if (!corpseMaterial)
 			corpseMaterial = Resources.FindObjectsOfTypeAll<Material>().FirstOrDefault(m => m.name == CorpseMaterial);
-		// Centred where the vanilla figure is drawn, like the vanilla crests' figures (the rune is centred on it)
+		// Centred where the vanilla figure is drawn, like the vanilla crests' figures (the glow is centred on it)
 		Vector3 centre = figure.GetComponent<tk2dBaseSprite>() is tk2dBaseSprite drawn ? drawn.GetBounds().center : Vector3.zero;
 		GameObject art = new("Weaver Shrine Figure");
 		art.transform.SetParent(figure, false);
@@ -237,17 +241,18 @@ public static class Chapel {
 				effect.SetActive(false);
 	}
 
-	// The Weaver crest's glow art
+        // The Weaver crest's glow art
 	private const string GlowArt = "CrestGlow.png";
-	private const float GlowPixelsPerUnit = 48f;
-	private const float WebScale = 1f;
-	private static readonly Vector2 GlowOffset = new(0f, -0f);
+	private const float GlowPixelsPerUnit = 42f;
+	private const float GlowScale = 1f;
 	private const string SharedGlow = "crest_glow_web";
 	private const string CrestGlowPrefix = "crest_glow_";
 	private static Sprite? glowSprite;
 
 	private static void ReplaceRune(GameObject rune) {
-		SpriteRenderer[] own = [.. rune.GetComponentsInChildren<SpriteRenderer>(true)
+		SpriteRenderer[] images = rune.GetComponentsInChildren<SpriteRenderer>(true);
+
+		SpriteRenderer[] own = [.. images
 			.Where(r => r.sprite && r.sprite.name.StartsWith(CrestGlowPrefix, System.StringComparison.Ordinal)
 				&& !r.sprite.name.StartsWith(SharedGlow, System.StringComparison.Ordinal))];
 		if (own.Length == 0) {
@@ -258,18 +263,16 @@ public static class Chapel {
 			Sprite vanilla = own[0].sprite;
 			Vector2 pivot = new(vanilla.pivot.x / vanilla.rect.width, vanilla.pivot.y / vanilla.rect.height);
 			Texture2D art = LoadEmbeddedPngAsTexture2D(GlowArt);
-			pivot -= new Vector2(GlowOffset.x / art.width, GlowOffset.y / art.height);
 			glowSprite = Sprite.Create(art, new Rect(0f, 0f, art.width, art.height), pivot, GlowPixelsPerUnit);
 		}
-
 		foreach (var r in own) {
 			r.sprite = glowSprite;
-			r.transform.localScale *= WebScale;
+			r.transform.localScale *= GlowScale;
 		}
 	}
 }
 
-// Force Crest unlock button
+// Force Crest unlock button in modmenu
 internal static class UnlockMenu {
 	internal static BepInEx.Configuration.ConfigEntryBase Register(BepInEx.Configuration.ConfigFile config) =>
 		config.Bind("Unlock", "Force unlock", false, new BepInEx.Configuration.ConfigDescription(
@@ -288,23 +291,23 @@ internal static class UnlockMenu {
 // The crest binding text
 [HarmonyPatch]
 internal static class CrestText {
-	private const string VanillaCrest = " GlowReaper";
+	private const string VanillaCrest = "Reaper";
+
+	private static readonly AccessTools.FieldRef<ToolCrest, TeamCherry.Localization.LocalisedString>
+		ItemNamePrefix = AccessTools.FieldRefAccess<ToolCrest, TeamCherry.Localization.LocalisedString>("itemNamePrefix"),
+		EquipText = AccessTools.FieldRefAccess<ToolCrest, TeamCherry.Localization.LocalisedString>("equipText"),
+		GetPromptDesc = AccessTools.FieldRefAccess<ToolCrest, TeamCherry.Localization.LocalisedString>("getPromptDesc");
 
 	[HarmonyPatch(typeof(ToolCrestUIMsg), "Setup")]
-	[HarmonyPostfix]
-	private static void FillWeaverText(ToolCrest crest, TMProOld.TMP_Text ___nameText, TMProOld.TMP_Text ___descText,
-		TMProOld.TMP_Text ___itemPrefixText, TMProOld.TMP_Text ___equipText) {
+	[HarmonyPrefix]
+	private static void FillWeaverTexts(ToolCrest crest) {
 		if (!crest || crest.name != YenId)
 			return;
 		ToolCrest? vanilla = ToolItemManager.GetCrestByName(VanillaCrest);
-
-		if (___nameText)
-			___nameText.text = YenName;
-		if (___descText)
-			___descText.text = YenDesc;
-		if (___itemPrefixText && vanilla)
-			___itemPrefixText.text = vanilla!.ItemNamePrefix;
-		if (___equipText && vanilla)
-			___equipText.text = vanilla!.EquipText;
+		if (vanilla) {
+			ItemNamePrefix(crest) = ItemNamePrefix(vanilla!);
+			EquipText(crest) = EquipText(vanilla!);
+		}
+		GetPromptDesc(crest) = YenDesc;
 	}
 }
