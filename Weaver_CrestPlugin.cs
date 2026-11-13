@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using Silksong.ModMenu.Plugin;
 using HarmonyLib;
+using System.Linq;
 using Needleforge;
 using Needleforge.Attacks;
 using Needleforge.Data;
@@ -59,27 +60,28 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 		RefundSetting = Config.Bind("Silk", "Essential Refunds", true, new ConfigDescription(
 			"Attacks that on breakble walls, doors, spikes, and shellshard walls, along with parries refund silk.",
-			null, new ConfigEntryOrder(0, 0)));
+			null, new ConfigurationManagerAttributes { Order = 0 }));
 		HoldToBindSetting = Config.Bind("Bind", "Hold bind", false, new ConfigDescription(
 			"Bind now requires holding the button down, the entire time, letting go early cancels it.",
-			null, new ConfigEntryOrder(1, 0)));
+			null, new ConfigurationManagerAttributes { Order = 1 }));
 		SkillSlotSetting = Config.Bind("Crest", "Silk skill bind slot", SkillSlotChoice.Top, new ConfigDescription(
 			"When binding a silk skill, on weaver crest, it will autoequip it to the selected slot, none means middle, which in this case leaves it empty.",
-			null, new ConfigEntryOrder(2, 0)));
+			null, new ConfigurationManagerAttributes { Order = 2 }));
 		RedSlotSetting = Config.Bind("Crest", "Red tool slot position", RedSlotChoice.Middle, new ConfigDescription(
 			"The ability to move around the red slot, and swap it with the silk skill slots. Requires restart",
-			null, new ConfigEntryOrder(2, 1)));
+			null, new ConfigurationManagerAttributes { Order = 3 }));
 		ChargedFloatSetting = Config.Bind("Balance", "Charged attack float", false, new ConfigDescription(
 			"While falling during the charged attack, fall at 20% of normal gravity instead of 60%.",
-			null, new ConfigEntryOrder(3, 0)));
+			null, new ConfigurationManagerAttributes { Order = 4 }));
 		KnockbackSetting = Config.Bind("Balance", "Half knockback", false, new ConfigDescription(
 			"Reduces knockback in half, making it the same as witch crest.",
-			null, new ConfigEntryOrder(3, 1)));
+			null, new ConfigurationManagerAttributes { Order = 5 }));
 		WispCostSetting = Config.Bind("Misc", "Halves the cost Wisp Lantern", false, new ConfigDescription(
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.",
-			null, new ConfigEntryOrder(4, 0)));
-			
+			null, new ConfigurationManagerAttributes { Order = 6 }));
+
 		UnlockMenu.Register(Config);
+		
 			
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
