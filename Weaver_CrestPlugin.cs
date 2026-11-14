@@ -119,8 +119,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Moveset.SetupSlashes();
 		Sounds.Load();
 		
-		//placeholder 
-				Chapel.Initialize();
+		Chapel.Initialize();
 
 		YenCrest.Moveset.OnInitialized += () =>
 		{
