@@ -22,7 +22,7 @@ public static class Chapel {
 	private const string ShrineScene = "Peak_10";
 	private static readonly Vector2 ShrinePosition = new(32f, 33.2f);
 
-	private const string RespawnMarkerName = "Crest Respawn Marker";
+	private const string RespawnMarkerName = "Death Respawn Marker";
 	private static readonly Vector2 RespawnPosition = new(31f, 32f);
 	private const bool RespawnFacingRight = true;
 
