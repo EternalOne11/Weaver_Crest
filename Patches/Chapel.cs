@@ -278,7 +278,7 @@ internal static class UnlockMenu {
 		config.Bind("Unlock", "Force unlock", false, new BepInEx.Configuration.ConfigDescription(
 			"Unlocks the Weaver crest in the loaded save.", null,
 			(Silksong.ModMenu.Plugin.ConfigEntryFactory.MenuElementGenerator)Button,
-			new ConfigurationManagerAttributes { Order = 7 }));
+			new ConfigurationManagerAttributes { Order = 3 }));
 
 	private static bool Button(BepInEx.Configuration.ConfigEntryBase entry, out Silksong.ModMenu.Elements.MenuElement element) {
 		var button = new Silksong.ModMenu.Elements.TextButton("Forcefully unlock Crest",
