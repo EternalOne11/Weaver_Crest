@@ -197,8 +197,8 @@ internal static class BreakableRefund {
 
 	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
         //Craft metal deposites, coral crusts, memory orb objects, etc.
-	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way", "break_tube", "Cage", "jail", "Float Crystal",
-		"Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall", "Memory Orb"];
+	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever",
+		"One Way", "break_tube", "Cage", "jail", "Float Crystal", "Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall", "Memory Orb", "Chest"];
 
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
