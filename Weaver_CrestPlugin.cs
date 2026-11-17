@@ -111,7 +111,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(CrestText));
 		Harmony.PatchAll(typeof(LocketSpawn));
 
-
 		RegisterCrest();
 		HalfSilk.Initialize();
 		LocketSpawn.Initialize();
@@ -132,6 +131,9 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 			// Charge damage mulitpler
 			Moveset.ChargedDamage();
 
+			// Projectile refund logic
+			TouchRefund.AddToAttacks();
+			
 			// Longclaw
 			var m = YenCrest.Moveset;
 			foreach (var attack in new GameObjectProxy?[] { m.Slash, m.AltSlash, m.UpSlash, m.WallSlash, m.DownSlash, m.DashSlash })
