@@ -98,7 +98,7 @@ internal static class BreakableRefund {
 	}
 
 //For lamps
-	private static bool NameOrAncestorMatches(GameObject obj, string[] words) {
+	internal static bool NameOrAncestorMatches(GameObject obj, string[] words) {
 		for (Transform? t = obj.transform; t; t = t!.parent)
 			if (System.Array.Exists(words, w => t!.name.IndexOf(w, System.StringComparison.OrdinalIgnoreCase) >= 0))
 				return true;
@@ -108,7 +108,7 @@ internal static class BreakableRefund {
         // Breakables, like wisp fire lanterns, coral stalactites, and others.
 	private static readonly string[] BreakableNames = ["Stalactite", "Wispfire", "Wisp Flame Lantern", "Slab Chain cage",
 		"plank_wall", "Hang Sack", "Breakable_cage", "Giant Flea Cage", "drop_planks", "pressure_plate", "lift_break_poles",
-		"blocker struts", "Junk_Pile", "Confessional", "cog_mecanism", "Song Knight Tube", "Breakable Window", "weaver_gate_ring"];
+		"blocker struts", "Junk_Pile", "Confessional", "cog_mecanism", "Song Knight Tube", "Breakable Window", "weaver_gate_ring", "charm_break_wall"];
 
 	[HarmonyPatch(typeof(Breakable), nameof(Breakable.Hit))]
 	[HarmonyPrefix]
@@ -122,16 +122,6 @@ internal static class BreakableRefund {
 	[HarmonyPrefix]
 	private static void VinePlatformHit(HitInstance damageInstance) {
 		if (Moveset.IsOurAttack(damageInstance.Source))
-			HitObstacle();
-	}
-	
-		// Some physics objects
-	private static readonly string[] PhysicsObjectNames = ["bell_ball", "spot_lamp_wheeled"];
-
-	[HarmonyPatch(typeof(HitRigidbody2D), nameof(HitRigidbody2D.Hit))]
-	[HarmonyPrefix]
-	private static void PhysicsObjectHit(HitRigidbody2D __instance, HitInstance __0) {
-		if (NameOrAncestorMatches(__instance.gameObject, PhysicsObjectNames) && Moveset.IsOurAttack(__0.Source))
 			HitObstacle();
 	}
 
@@ -208,7 +198,7 @@ internal static class BreakableRefund {
 	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
         //Craft metal deposites, coral crusts, memory orb objects, etc.
 	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way", "break_tube", "Cage", "jail", "Float Crystal",
-		"Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall", "Memory Orb", "spot_lamp_wheeled"];
+		"Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall", "Memory Orb"];
 
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
@@ -248,5 +238,41 @@ internal static class ShardWallRefund {
 	private static void OnShardWallStruck(Vector2 thunkPos, bool ___hasBox, BoxCollider2D ___box) {
 		if (___hasBox && ___box.OverlapPoint(thunkPos))
 			BreakableRefund.HitObstacle();
+	}
+}
+
+// Objects that react to the needle without a hit component the patches above hook
+// This includes some things like bouncing bells, and enemy projectiles.
+internal sealed class TouchRefund : MonoBehaviour {
+	private static readonly string[] TouchNames = [
+		// Bells, gongs and alarms
+		"Hornet_Core_bell", "kitchen_gong", "small_bell", "Bell Main", "spot_lamp_wheeled", "Docks Alarm", "caravan_signpost",
+		"Spike Collider", "Spike Hit", "Rosary Cannon Object", "Bellbeast Child",
+		// Enemy projectiles and attacks the needle clanks off
+		"DF Lava Rock", "DF Bomb Rock", "BoneBeast DropBell", "BoneBeast AtkBell", "DropBell", "Spinner AtkBell",
+		"Giant Centipede Bomb", "Giant Centipede Coil", "DefeatedCentipede", "Pin Projectile", "Shield Projectile", "Coral Flyer Throw Projectile",
+		"Conch Projectile", "Trobbio Bomb", "Trobbio Cross Bomb", "Vampire Gnat Sickle", "Hunter_Queen_ground_spear_grind", "Cloverstag White Sickle", 
+		"Ward Boss Spear", "Swamp Shaman Projectile", "Throwing Bell", "Lightning Bola Ball", "Rock Roller Bomb",
+	];
+
+	private void OnTriggerEnter2D(Collider2D other) {
+		if (YenCrest.IsEquipped && (BreakableRefund.NameOrAncestorMatches(other.gameObject, TouchNames)
+			|| IsPlainProjectile(other.gameObject)))
+			BreakableRefund.HitObstacle();
+	}
+
+	//  For projectiles like the forgebrother boomarang.
+	private static bool IsPlainProjectile(GameObject obj) =>
+		obj.name == "Projectile" && obj.GetComponent<TinkEffect>();
+
+	internal static void AddToAttacks() {
+		var m = YenCrest.Moveset;
+		GameObject?[] attacks = [m.Slash?.GameObject, m.AltSlash?.GameObject, m.UpSlash?.GameObject,
+			m.WallSlash?.GameObject, m.DownSlash?.GameObject, m.DashSlash?.GameObject, m.ChargedSlash?.GameObject];
+		foreach (GameObject? attack in attacks)
+			if (attack)
+				foreach (Collider2D col in attack!.GetComponentsInChildren<Collider2D>(true))
+					if (!col.GetComponent<TouchRefund>())
+						col.gameObject.AddComponent<TouchRefund>();
 	}
 }
