@@ -75,7 +75,9 @@ internal static class SilkMechanics {
 		BreakableRefund.HitEnemy();
 
 		if (MaskTrade.CancelCost()) {
-			HalfSilk.AddHalfSilk(heroEffect: false);
+			// At a full spool the gain covers the held cost as there is room for no more
+			if (PlayerData.instance.silk < PlayerData.instance.CurrentSilkMax)
+				HalfSilk.AddHalfSilk(heroEffect: false);
 			return;
 		}
 
@@ -88,7 +90,9 @@ internal static class SilkMechanics {
 		if (__0 <= 0 || !SilkRules.Active || !MaskTrade.CancelCost())
 			return; // nothing gained, or no cost on hold
 		BreakableRefund.HitEnemy();
-		if (PlayerData.instance.silk > SilkSpool.BindCost)
+		// The held cost is paid out of the gain, unless the spool is full
+		PlayerData pd = PlayerData.instance;
+		if (pd.silk > SilkSpool.BindCost && pd.silk < pd.CurrentSilkMax)
 			HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
@@ -206,9 +210,10 @@ internal static class MaskTrade {
 
 			hc.AddSilk(tradedLifeblood ? LifebloodSilk : Silk, false, SilkSpool.SilkAddSource.Normal, false);
 		}
-		//visual delay at 9 silk to prevent a greater visual annoyance
-		bool DipBelowBind = PlayerData.instance.silk == SilkSpool.BindCost && !HalfSilk.GetHasHalfSilk();
-		if (DipBelowBind) {
+		// Visual delay at 9 silk (dipping below bind) and at a full spool 
+		PlayerData pd = PlayerData.instance;
+		bool delayCost = !HalfSilk.GetHasHalfSilk() && (pd.silk == SilkSpool.BindCost || pd.silk >= pd.CurrentSilkMax);
+		if (delayCost) {
 			pendingCosts.Enqueue((Time.time, normalAttack));
 			return true;
 		}
@@ -363,6 +368,7 @@ internal static class HalfSilkHeart {
 		hadHalf = hasHalf;
 	}
 }
+
 // Halves the cost of wisp Lantern to now use only 1 half silk.
 [HarmonyPatch]
 internal static class WispHalfCost {
