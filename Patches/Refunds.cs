@@ -124,6 +124,16 @@ internal static class BreakableRefund {
 		if (Moveset.IsOurAttack(damageInstance.Source))
 			HitObstacle();
 	}
+	
+		// Some physics objects
+	private static readonly string[] PhysicsObjectNames = ["bell_ball", "spot_lamp_wheeled"];
+
+	[HarmonyPatch(typeof(HitRigidbody2D), nameof(HitRigidbody2D.Hit))]
+	[HarmonyPrefix]
+	private static void PhysicsObjectHit(HitRigidbody2D __instance, HitInstance __0) {
+		if (NameOrAncestorMatches(__instance.gameObject, PhysicsObjectNames) && Moveset.IsOurAttack(__0.Source))
+			HitObstacle();
+	}
 
         // Coral nuts, Kratt, and a few others
 	private static readonly string[] HitResponseNames = ["Coral Nut", "Coral Crust Tree", "Kratt", "jail_gate", "Snowflake", "Clover"];
@@ -198,7 +208,7 @@ internal static class BreakableRefund {
 	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
         //Craft metal deposites, coral crusts, memory orb objects, etc.
 	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever", "One Way", "break_tube", "Cage", "jail", "Float Crystal",
-		"Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall", "Memory Orb"];
+		"Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall", "Memory Orb", "spot_lamp_wheeled"];
 
 	[HarmonyPatch(typeof(HutongGames.PlayMaker.Actions.ReceivedDamageBase),
 		nameof(HutongGames.PlayMaker.Actions.ReceivedDamageBase.RespondToHit))]
