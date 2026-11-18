@@ -1,42 +1,46 @@
 # Version History
 
 ## 1.0.0
-Initial Public Release
+Public Release
 
-## 1.0.1 
-- Fixed binding timings... I forgot to fix this oops...
+### 1.0.1-1.0.11
+- **X.1** Fixed binding timings... I forgot to fix this oops...
 - They should now both properly line up timing wise, in the same way the vanilla ones do.
 - Plus the tiny half frame display of the vanilla bind effect should be removed.
-
-## 1.0.2
-Hotfix
-- Fixes weird error that was causing some people's builds to not work correctly... 
+- **X.2** Fixes weird error that was causing some people's builds to not work correctly... 
 Tied to either thunderstore.toml or ResourceUtils.cs. (probably system language issue)
-
-## 1.0.3
-Hotfix
-- Fixes issue with R2Modman, breaking the language file folder... (causing bugged text)
-
-## 1.0.4
-Hotfix
-- Fixed a stupid mistake and cleaned up a small amount of unused code. (I accidentally removed the deps.json *facepalm*)
-
-## 1.0.5
-- Fixed it so half silk disappears once you unequip the weaver crest... (has this previously but removed it accidentally during cleanup)
+- **X.3** Fixes issue with R2Modman, breaking the language file folder... (causing bugged text)
+- **X.4** Fixed a stupid mistake and cleaned up a small amount of unused code. (I accidentally removed the deps.json *facepalm*)
+- **X.5**  Fixed it so half silk disappears once you unequip the weaver crest... (has this previously but removed it accidentally during cleanup)
 - Changed the display health value of the noodlevyrm to be accurate. (This is for health viewers and debug mod)
+- **X.6**  Fixed invincibility frames upon a down attack hitting an enemy not activating...
+- **X.7** Fixed hunter's jounrnal text... I made a mistake in 1.0.3 that caused this issue and the 1.0.4 issue.
+- **X.8** Made it so the charge slash swipe now deals heavy damage
+- **X.9** Buffed horizontal slash range by ~7.4-8% (7.4 total hitbox size, but 8% relative to hornet)
+- **X.10** Parries now will refund silk.
+- A bugfix for an occurance that can cause multiple of the crest to appear in the inventory.
+- **X.11** Hotfix for Needleforge 0.10.0
 
-## 1.0.6
-- Fixed invincibility frames upon a down attack hitting an enemy not activating...
+## 1.1.0
+- Added a corpse in Mount Fay, to bind for the crest. (chapel not done yet)
+- Now requires Modmenu 0.8.0 as a dependency
+- Now requires Needleforge 0.10.0 and removed unneeded bugfixes that are now included in it, due to my pull request.
+- Added a config to swap the middle red tool slot with either of the silk slots.
+- Changed the slash effects of slash alt, charge slash and down slash, to be thicker.
+- A config option to unlock the crest without binding the corpse
+- Merged half silk after bind, into essential refunds.
+- Moved parry refunds to function under the essential refunds option
+- Updated Italian translation made by Banana Joe
+- Config option reordering (in the next modmenu update, implementing my pull request)
+- Improved item pickup logic, so it can be made compatible with Randomizers. 
 
-## 1.0.7
-Hotfix
-- Fixed hunter's journal text... I made a mistake in 1.0.3 that caused this issue and the 1.0.4 issue.
-
-## 1.0.8
-- Made it so the charge slash swipe now deals heavy damage
-
-
-
+### 1.1.1-1.1.2
+- **X.1** Fixed Respawn point on binding the crest being wrong...
+- **X.2** Turned hold bind on by default (will require manual change in config settings for people updating)
+- Expanded parry refunds to many projectiles from bosses and enemies.
+- Added more objects to refunds, like chests, bells, and bellbeast babies.
+- Fixed the visual annoyance of half silk use spamming the spool animation, when you reach the spool limit.
+- Adjusted ordering system to match changes in modmenu config sorting logic.
 
 ## Playtests pre 1.0.0
 ### PT1
