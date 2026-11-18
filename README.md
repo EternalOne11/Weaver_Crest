@@ -1,33 +1,38 @@
 # Crest of the Weaver
 - This crest is fully custom and themed around the Weavers and the use of silk.
-- This is likely the first custom crest, with a unique moveset, custom animations, and sound effects.
-- This has been a passion project that I have been slowly working on for over a year.
-- This crest is currently unlocked automatically, for now. It will have its own custom shrine eventually.
+- This mod has been in the works for over a year, and has been designed to be a template for other custom crests.
+- The crest is unlocked by binding a weaver in mt fay, in the lore tablet room **(chapel not done yet, but this is the room that will be reworked)** [This room actually was reworked/shrunk in 2022, as it was the original shaman/weaver crest chapel.]
+- There is a manual unlock option in modmenu options, which also houses several gameplay changing features.
 - Languages available In game for all existing Silksong options (some MTL, some manual)
 
 ## Installation and Compatibility
-- This mod requires I18n, Needleforge, Unity Helper, fsm util, and AssetHelper
-- **For config options, you must install modmenu, but its not required**
+- This mod requires I18n, Needleforge, Unity Helper, fsm util, AssetHelper, and modmenu.
 - This mod is safe to install and uninstall from an existing save.
-- When uninstalled and then reinstalled, the save the data regarding unlocked crest sockets and collected memory lockets should remain intact.
-- Half silk has been made to work, with all types of silk degradation along with the Needolin.
-- This mod is fully compatible with Architect, and crest shuffler. (Future compatibility with more mods may be added.)
+- When uninstalled and then reinstalled, the save the data regarding the crests status  should remain intact. This includes weather its locked or unlocked, along with the  unlocked crest sockets and collected memory lockets.
+- This mod has full compatability with Architect, and crest shuffler.
 
 ## Custom Mechanics
 - There are 6 custom mechanics that are central to this mod.
-- First, there is the introduction of half silk notches. These are akin to moss berry bands and cannot be used for healing or silk skills.
+- First, there is the introduction of half silk notches. These are akin to moss berry bands and cannot be used for healing or silk skills. (It has been made to work, with all types of silk degradation along with the Needolin, and silkspeed anklets.)
 - Second, the use of silk in every attack, always draining half a silk.
 - Third, silk gained from an attack is doubled, but due to the draining effect of attacks, a successful hit will provide 1.5 silk.
 - Fourth, when you run out of silk, the hornet will break a mask to gain 3 silk. (lifeblood masks trade for 1)
-- Fifth, a silk refund system, refunding silk on essential activities required for progression/transversal.
+- Fifth, a silk refund system, refunding silk on essential activities required for progression/transversal, along with enemy parries.
 - Sixth, the crest gives you a half silk heart. Its disabled once you get your first true silkheart.
 
 ## Hud & Crest Icon
-- The HUD is fully custom, with 2 states demonstrating whether the player has any silk.
-- The save slots have a custom icon to display when the crest is equipped, like the vanilla crests.
-- Both have a steel soul and a normal variant.
+- The HUD and save icons are fully custom, and has both steel soul and normal varients.
+- The HUD changes, to demonstrate weather or not the player has any silk.
 - The crest inventory has 7 slots, 2 silk slots, 1 red slot, 2 blue slots, and 2 yellow slots.
-- All yellow and blue slots are locked. (new memory lockets)
+- All yellow and blue slots are locked, and 4 memory lockets are added across the map.
+
+## Map changes
+- The crest can be found in a corpse in Mount Fay.
+- The memory lockets are in Mt. Fay, Citadel Spa, Putrefied Ducts, and Wisp/Underworks connection.
+- A new enemy has been added to a few spots across the map.
+- **The chapel itself isnt done, but it is planned**
+
+![Display of features](https://raw.githubusercontent.com/EternalOne11/Weaver_Crest/Main/Locations.png)
 
 ## Moveset
 - Every attack always uses some silk.
@@ -42,15 +47,9 @@
 - The crest has a custom bind, with 2 config options depending on preference.
 - To compensate for the increased silk generation, bind overall has been nerfed.
 - The bind now acts like multibinder, but activates 3 times, which each heals a single mask.
+- It requires the player hold down the bind key, and if let go will only heal the masks held down for. (All 9 silks are used even if you heal 1 mask.)
 - The full duration is roughly 1.7x the length of a normal bind.
-- There is a config option to make the bind require being held down.
-- If you let go, you will end the bind early and only heal some masks. (All 9 silks are used even if you heal 1 mask.)
-
-## Map changes/implementation
-- 4 new memory lockets.
-- Mt. Fay, Citadel Spa, Putrefied Ducts, and Wisp/Underworks connection.
-- Citadel spa one has a secret. 
-- **(Not yet done)** The chapel of the Weaver will be in Mt. Fay.
+- There is a config option to disable the holding mechanic and make it a single long triple bind always.
 
 ## Tool interactions
 - Multibinder adds a 4th bind that heals 1 mask.
@@ -59,15 +58,17 @@
 - Weighted belt, flint slate, and long claw are all functional.
 - Mossberry rings from druid eye/eyes can merge with half silk.
 - Silkspeed Anklets works with half silk.
+- The Wispfire lantern now uses half silk instead.
 
 ## Config Options
 - Essential Refunds. (Entire refund system) **On by Default**
-- Half silk after binding leaves you at 0 silk. **On by Default**
-- Silk Bind slot. (For when you get a silk skill) **Top slot by Default**
 - Hold Bind option. (ability to cancel mid-bind) **Off by Default**
 - Slow down charge attack's falling/airstall speed. **Off by Default**
+- Force unlock config option **manual press**
+- Silk Bind slot. (For when you get a silk skill) **Top slot by Default**
+- Swap red tool slot with a silk slot. **Off by Default**
 - Half knockback option. (Like witch) **Off by Default**
-- The Wispfire lantern can use half silk instead. **Off by Default**
+- Wisp fire lantern half silk cost **Off by Default**
 
 ## AI Disclosure
 - AI was used in the process of developing this mod.
@@ -96,6 +97,5 @@
 
 ## Please report any bugs or compatibility requests on github. (or ping me on discord)
 ## If anyone wants to take or reuse any of these ideas, feel free to.
-## Feel free to fork this mod to make your own custom crest mods.
 
 # If this mod ever reaches the notice of Team Cherry, feel free to implement any of these ideas.
