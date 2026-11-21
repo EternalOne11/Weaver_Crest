@@ -167,7 +167,7 @@ internal static class DownPatch {
 		if (clip != lastClip) {
 			if (clip == "DownSpike")
 				Moveset.PlayDownEffect();
-			// Vanilla downspike recovery. A pogo also starts the recovery clip for a frame (DownspikeBounce calls
+			// Vanilla downspike recovery. A pogo also starts the recovery clip for a frame.
 			else if (clip is "Downspike Recovery" or "Downspike Recovery Land"
 				&& lastClip is not ("Downspike Recovery" or "Downspike Recovery Land")
 				&& !__instance.cState.downSpikeBouncing)
