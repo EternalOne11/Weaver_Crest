@@ -128,7 +128,7 @@ internal static partial class Moveset {
 		downEffectAnim.Play(downAnims.GetClipByName("Weaver DownSlash Effect"));
 	}
 
-        // Moves hornet hitbox backwards to line up with the animation
+	// Moves Hornet backwards to line up with the recovery animation (only on a normal recovery, not on a pogo)
 	internal static void ShiftForRecovery(HeroController hc) {
 		float facing = hc.cState.facingRight ? 1f : -1f;
 		float shift = 38f / 64f; //64 is PerUnit
@@ -167,9 +167,10 @@ internal static class DownPatch {
 		if (clip != lastClip) {
 			if (clip == "DownSpike")
 				Moveset.PlayDownEffect();
-			// Vanilla downspike recovery
+			// Vanilla downspike recovery. A pogo also starts the recovery clip for a frame (DownspikeBounce calls
 			else if (clip is "Downspike Recovery" or "Downspike Recovery Land"
-				&& lastClip is not ("Downspike Recovery" or "Downspike Recovery Land"))
+				&& lastClip is not ("Downspike Recovery" or "Downspike Recovery Land")
+				&& !__instance.cState.downSpikeBouncing)
 				Moveset.ShiftForRecovery(__instance);
 		}
 		lastClip = clip;
