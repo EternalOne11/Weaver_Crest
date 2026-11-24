@@ -29,7 +29,7 @@ Note that moveset and Evo optout are still from queencrest.
 [BepInDependency("org.silksong-modding.unityhelper", "1.1.1")]
 [BepInDependency("org.silksong-modding.fsmutil", "0.3.17")]
 [BepInDependency("org.silksong-modding.assethelper", "1.3.0")]
-[BepInDependency("org.silksong-modding.modmenu", "0.8.0")]
+[BepInDependency("org.silksong-modding.modmenu", "1.0.0")]
 
 public partial class Weaver_CrestPlugin : BaseUnityPlugin
 {
@@ -60,29 +60,29 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 		RefundSetting = Config.Bind("Silk", "Essential Refunds", true, new ConfigDescription(
 			"Attacks that on breakble walls, doors, spikes, and shellshard walls, along with parries refund silk.",
-			null, new ConfigurationManagerAttributes { Order = 10 }));
+			null, new ConfigurationManagerAttributes { Order = 0 }));
 		HoldToBindSetting = Config.Bind("Bind", "Hold bind", true, new ConfigDescription(
 			"Bind now requires holding the button down, the entire time, letting go early cancels it.",
-			null, new ConfigurationManagerAttributes { Order = 9 }));
+			null, new ConfigurationManagerAttributes { Order = 1 }));
 		SkillSlotSetting = Config.Bind("Crest", "Silk skill bind slot", SkillSlotChoice.Top, new ConfigDescription(
 			"When binding a silk skill, on weaver crest, it will autoequip it to the selected slot, none means middle, which in this case leaves it empty.",
-			null, new ConfigurationManagerAttributes { Order = 8 }));
+			null, new ConfigurationManagerAttributes { Order = 2 }));
 		RedSlotSetting = Config.Bind("Crest", "Red tool slot position", RedSlotChoice.Middle, new ConfigDescription(
 			"The ability to move around the red slot, and swap it with the silk skill slots. Requires restart",
-			null, new ConfigurationManagerAttributes { Order = 7 }));
+			null, new ConfigurationManagerAttributes { Order = 3 }));
 		ChargedFloatSetting = Config.Bind("Balance", "Charged attack float", false, new ConfigDescription(
 			"While falling during the charged attack, fall at 20% of normal gravity instead of 60%.",
-			null, new ConfigurationManagerAttributes { Order = 6 }));
+			null, new ConfigurationManagerAttributes { Order = 4 }));
 		KnockbackSetting = Config.Bind("Balance", "Half knockback", false, new ConfigDescription(
 			"Reduces knockback in half, making it the same as witch crest.",
 			null, new ConfigurationManagerAttributes { Order = 5 }));
 		WispCostSetting = Config.Bind("Misc", "Halves the cost Wisp Lantern", false, new ConfigDescription(
 			"The Wisp Lantern now costs half a silk instead when equiped on the Weaver crest.",
-			null, new ConfigurationManagerAttributes { Order = 4 }));
+			null, new ConfigurationManagerAttributes { Order = 6 }));
 
 		UnlockMenu.Register(Config);
 		
-			
+
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
 		Harmony.PatchAll(typeof(EvaOptOut));
@@ -110,6 +110,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(NoCompletion)); //Remove once you add the chapel
 		Harmony.PatchAll(typeof(CrestText));
 		Harmony.PatchAll(typeof(LocketSpawn));
+
 
 		RegisterCrest();
 		HalfSilk.Initialize();
