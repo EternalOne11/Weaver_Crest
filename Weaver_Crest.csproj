@@ -19,7 +19,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/EternalOne11/Weaver_Crest</RepositoryUrl>
-    <Version>1.1.3</Version>
+    <Version>1.1.4</Version>
   </PropertyGroup>
   
     <ItemGroup>
@@ -247,7 +247,7 @@
     <PackageReference Include="Silksong.UnityHelper" Version="1.2.0" />
     <PackageReference Include="Silksong.GameLibs" Version="*-*" PrivateAssets="all" />
     <PackageReference Include="Silksong.AssetHelper" Version="1.3.0" />
-    <PackageReference Include="Silksong.ModMenu" Version="0.8.0" />
+    <PackageReference Include="Silksong.ModMenu" Version="1.0.0" />
   </ItemGroup>
  
   <ItemGroup>
