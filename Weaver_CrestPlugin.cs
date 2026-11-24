@@ -59,7 +59,7 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Logger.LogInfo($"Plugin {Name} ({Id}) has loaded!");
 
 		RefundSetting = Config.Bind("Silk", "Essential Refunds", true, new ConfigDescription(
-			"Attacks that on breakble walls, doors, spikes, and shellshard walls, along with parries refund silk.",
+			"Attacks that on breakble walls, doors, spikes, and shellshard walls, along with parries refund silk, for balance purposes, lore wise this would be disabed.",
 			null, new ConfigurationManagerAttributes { Order = 0 }));
 		HoldToBindSetting = Config.Bind("Bind", "Hold bind", true, new ConfigDescription(
 			"Bind now requires holding the button down, the entire time, letting go early cancels it.",
@@ -82,7 +82,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 
 		UnlockMenu.Register(Config);
 		
-
 		Harmony.PatchAll(typeof(Moveset));
 		Harmony.PatchAll(typeof(HalfSilk));
 		Harmony.PatchAll(typeof(EvaOptOut));
@@ -110,7 +109,6 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		Harmony.PatchAll(typeof(NoCompletion)); //Remove once you add the chapel
 		Harmony.PatchAll(typeof(CrestText));
 		Harmony.PatchAll(typeof(LocketSpawn));
-
 
 		RegisterCrest();
 		HalfSilk.Initialize();
