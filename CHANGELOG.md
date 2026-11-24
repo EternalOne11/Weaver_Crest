@@ -34,13 +34,17 @@ Tied to either thunderstore.toml or ResourceUtils.cs. (probably system language 
 - Config option reordering (in the next modmenu update, implementing my pull request)
 - Improved item pickup logic, so it can be made compatible with Randomizers. 
 
-### 1.1.1-1.1.2
+### 1.1.1-1.1.4
 - **X.1** Fixed Respawn point on binding the crest being wrong...
-- **X.2** Turned hold bind on by default (will require manual change in config settings for people updating)
+- **X.2** Turned hold bind on by default (will require manual change in config settings for people updating) **major gameplay change... honestly should have enabled it from the start.**
 - Expanded parry refunds to many projectiles from bosses and enemies.
 - Added more objects to refunds, like chests, bells, and bellbeast babies.
 - Fixed the visual annoyance of half silk use spamming the spool animation, when you reach the spool limit.
 - Adjusted ordering system to match changes in modmenu config sorting logic.
+- **X.3** Fixes down attack pogos not providing the correct amount of height, in some instances.
+- **X.4** Now requires Mod menu 1.0.0
+- Silk refunds now apply to rosary and shellshard objects. (had a change of opinion)
+- Many missed and misc objects added, including weavenest doors, shakra rings, and moss berries.
 
 ## Playtests pre 1.0.0
 ### PT1
