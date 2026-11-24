@@ -247,17 +247,35 @@ internal sealed class TouchRefund : MonoBehaviour {
 	private static readonly string[] TouchNames = [
 		// Bells, gongs and alarms
 		"Hornet_Core_bell", "kitchen_gong", "small_bell", "Bell Main", "spot_lamp_wheeled", "Docks Alarm", "caravan_signpost",
-		"Spike Collider", "Spike Hit", "Rosary Cannon Object", "Bellbeast Child",
+		"Spike Collider", "Spike Hit", "Rosary Cannon Object", "Bellbeast Child", "Hanging Bell", 		"moss_berry",
+		"Mapper_Ring", "Harpoon Ring", "purple_flower_set", "Hanging Dummy", "laundry_basket",
+		// Shell and rosary objects.
+		"Shell Shard Fossil", "shell_shard_string", "Geo Rock", "rosary_string", "rosary_shrine", "ant_item_string", "Craw_home", "Flea Festival Pinata",
 		// Enemy projectiles and attacks the needle clanks off
 		"DF Lava Rock", "DF Bomb Rock", "BoneBeast DropBell", "BoneBeast AtkBell", "DropBell", "Spinner AtkBell",
 		"Giant Centipede Bomb", "Giant Centipede Coil", "DefeatedCentipede", "Pin Projectile", "Shield Projectile", "Coral Flyer Throw Projectile",
 		"Conch Projectile", "Trobbio Bomb", "Trobbio Cross Bomb", "Vampire Gnat Sickle", "Hunter_Queen_ground_spear_grind", "Cloverstag White Sickle", 
-		"Ward Boss Spear", "Swamp Shaman Projectile", "Throwing Bell", "Lightning Bola Ball", "Rock Roller Bomb",
+		"Ward Boss Spear", "Swamp Shaman Projectile", "Throwing Bell", "Lightning Bola Ball", "Rock Roller Bomb", "Grass Ball",
 	];
 
+	// Weavenest door... 
+	private static readonly string[] TinkTouchNames = ["Song_Gate"];
+
 	private void OnTriggerEnter2D(Collider2D other) {
-		if (YenCrest.IsEquipped && (BreakableRefund.NameOrAncestorMatches(other.gameObject, TouchNames)
-			|| IsPlainProjectile(other.gameObject)))
+		if (!YenCrest.IsEquipped)
+			return;
+		GameObject obj = other.gameObject;
+
+		// Grave markers refund only when they have a rosary necklace
+		if (obj.name.IndexOf("grave_marker", System.StringComparison.OrdinalIgnoreCase) >= 0) {
+			Transform? rosary = obj.transform.Find("rosary");
+			if (rosary && rosary!.gameObject.activeInHierarchy)
+				BreakableRefund.HitObstacle();
+			return;
+		}
+
+		if (BreakableRefund.NameOrAncestorMatches(obj, TouchNames) || IsPlainProjectile(obj)
+			|| (obj.GetComponent<TinkEffect>() && BreakableRefund.NameOrAncestorMatches(obj, TinkTouchNames)))
 			BreakableRefund.HitObstacle();
 	}
 
