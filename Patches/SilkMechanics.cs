@@ -96,21 +96,6 @@ internal static class SilkMechanics {
 			HalfSilk.RemoveHalfSilk(interruptRegen: false);
 	}
 
-	//Option to regain 0.5 silk after a bind setting you to 0
-	private static bool wasBinding;
-
-	[HarmonyPatch(typeof(HeroController), "Update")]
-	[HarmonyPostfix]
-	private static void HalfSilkAfterBind(HeroController __instance) {
-		if (HeroController.instance != __instance)
-			return;
-		bool binding = __instance.cState.isBinding;
-		if (wasBinding && !binding && SilkRules.Active && RefundSetting.Value
-			&& PlayerData.instance.silk <= 0 && !HalfSilk.GetHasHalfSilk())
-			HalfSilk.AddHalfSilk(heroEffect: false);
-		wasBinding = binding;
-	}
-
 	[HarmonyPatch(typeof(HeroController), "Update")]
 	[HarmonyPostfix]
 	private static void PayMissed(HeroController __instance) {
