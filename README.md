@@ -1,9 +1,10 @@
 # Crest of the Weaver
 - This crest is fully custom and themed around the Weavers and the use of silk.
 - This mod has been in the works for over a year, and has been designed to be a template for other custom crests.
-- The crest is unlocked by binding a weaver in mt fay, in the lore tablet room **(chapel not done yet, but this is the room that will be reworked)** [This room actually was reworked/shrunk in 2022, as it was the original shaman/weaver crest chapel.]
+- **The crest is unlocked by binding a weaver in mt fay, in the lore tablet room, or via config.** (chapel not done yet, but this is the room that will be reworked) [This room actually was reworked/shrunk in 2022, as it was the original shaman/weaver crest chapel.]
 - There is a manual unlock option in modmenu options, which also houses several gameplay changing features.
 - Languages available In game for all existing Silksong options (some MTL, some manual)
+- **1.1.2 changed the hold bind setting, if you installed previous versions you will need to manually change the config for this update to take effect properly**
 
 ## Installation and Compatibility
 - This mod requires I18n, Needleforge, Unity Helper, fsm util, AssetHelper, and modmenu.
