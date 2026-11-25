@@ -166,8 +166,8 @@ public partial class Weaver_CrestPlugin : BaseUnityPlugin
 		YenCrest.HudFrame.SteelProfileIcon = LoadEmbeddedPngAsSprite("CrestIcon_S.png"); // Save profile for Steel soul
 
 		//Tool slot locations (x,y) (red slot can be swapped with the a silk skill)
-	    // X is the horizontal axis, Negative values move the image left, Positive move them right.
-	    // Y is the Vertical axis, Negative values move it Down, Postive move it Up
+		// X is the horizontal axis, Negative values move the image left, Positive move them right.
+		// Y is the Vertical axis, Negative values move it Down, Postive move it Up
 		(AttackToolBinding Binding, Vector2 Position) top = (AttackToolBinding.Up, new(0f, 1.47f + slotOffset));
 		(AttackToolBinding Binding, Vector2 Position) middle = (AttackToolBinding.Neutral, new(0f, -0.36f + slotOffset));
 		(AttackToolBinding Binding, Vector2 Position) bottom = (AttackToolBinding.Down, new(0f, -2.19f + slotOffset));
