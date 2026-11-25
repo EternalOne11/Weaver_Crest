@@ -78,7 +78,7 @@ internal static class BreakableRefund {
 	
 	private static int podHitFrame = -1;
 
-        // Bounce pods, wasp hives and lazy flyer pogo
+	// Bounce pods, wasp hives and lazy flyer pogo
 	[HarmonyPatch(typeof(HealthManager), nameof(HealthManager.TakeDamage), [typeof(HitInstance)])]
 	[HarmonyPrefix]
 	private static void BeforePodHit(HealthManager __instance, HitInstance hitInstance) {
@@ -97,7 +97,7 @@ internal static class BreakableRefund {
 		return System.Array.Exists(words, w => name.IndexOf(w, System.StringComparison.OrdinalIgnoreCase) >= 0);
 	}
 
-//For lamps
+	//For lamps
 	internal static bool NameOrAncestorMatches(GameObject obj, string[] words) {
 		for (Transform? t = obj.transform; t; t = t!.parent)
 			if (System.Array.Exists(words, w => t!.name.IndexOf(w, System.StringComparison.OrdinalIgnoreCase) >= 0))
@@ -105,7 +105,7 @@ internal static class BreakableRefund {
 		return false;
 	}
 
-        // Breakables, like wisp fire lanterns, coral stalactites, and others.
+	// Breakables, like wisp fire lanterns, coral stalactites, and others.
 	private static readonly string[] BreakableNames = ["Stalactite", "Wispfire", "Wisp Flame Lantern", "Slab Chain cage",
 		"plank_wall", "Hang Sack", "Breakable_cage", "Giant Flea Cage", "drop_planks", "pressure_plate", "lift_break_poles",
 		"blocker struts", "Junk_Pile", "Confessional", "cog_mecanism", "Song Knight Tube", "Breakable Window", "weaver_gate_ring", "charm_break_wall"];
@@ -125,7 +125,7 @@ internal static class BreakableRefund {
 			HitObstacle();
 	}
 
-        // Coral nuts, Kratt, and a few others
+	// Coral nuts, Kratt, and a few others
 	private static readonly string[] HitResponseNames = ["Coral Nut", "Coral Crust Tree", "Kratt", "jail_gate", "Snowflake", "Clover"];
 
 	[HarmonyPatch(typeof(HitResponse), nameof(HitResponse.Hit))]
@@ -135,10 +135,10 @@ internal static class BreakableRefund {
 			HitObstacle();
 	}
 
-        // Hazards which the needle clanks off and some enemies... Requires name being listed below)
+	// Hazards which the needle clanks off and some enemies... Requires name being listed below)
 	private static readonly string[] TinkNames = ["Blade", "Cog", "Spike Ball", "Mill Spike", "Trap", "Pendulum", "fan_hazard", "Pearl", "Mask Maker", "Bone Beast"];
 
-        // So they always refund it... even if you dont move the platform (also the slab's spike jail traps)
+	// So they always refund it... even if you dont move the platform (also the slab's spike jail traps)
 	private static readonly string[] TinkAncestorNames = ["Sliding Plat", "BounceGame", "JuggleGame", "Bellflea", "spike_trap_slab_jail"];
 
 	[HarmonyPatch(typeof(TinkEffect), nameof(TinkEffect.TryDoTinkReactionNoDamager))]
@@ -150,7 +150,7 @@ internal static class BreakableRefund {
 			HitObstacle();
 	}
 
-        // Spikes and thorns, spikes refund silk thorns do not.
+	// Spikes and thorns, spikes refund silk thorns do not.
 	[HarmonyPatch(typeof(DamageHero), "TryClashTinkCollider")]
 	[HarmonyPrefix]
 	private static void SpikeHit(DamageHero __instance, Collider2D collision) {
@@ -195,8 +195,7 @@ internal static class BreakableRefund {
 			HitObstacle();
 	}
 
-	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, 
-        //Craft metal deposites, coral crusts, memory orb objects, etc.
+	// FSM objects like vines, trap wires, flea rescue branches, Shellwood twig walls, breakable wals, explosion rocks, also Craft metal deposites, coral crusts, memory orb objects, etc.
 	private static readonly string[] ObstacleNames = ["Vine", "Trap", "Wire", "Branch", "Twig", "explod", "deposit", "Crust", "Lever",
 		"One Way", "break_tube", "Cage", "jail", "Float Crystal", "Wisp Pyre", "DropBomb", "Flea Rescue", "Bell Wall", "Memory Orb", "Chest"];
 
@@ -247,11 +246,11 @@ internal sealed class TouchRefund : MonoBehaviour {
 	private static readonly string[] TouchNames = [
 		// Bells, gongs and alarms
 		"Hornet_Core_bell", "kitchen_gong", "small_bell", "Bell Main", "spot_lamp_wheeled", "Docks Alarm", "caravan_signpost",
-		"Spike Collider", "Spike Hit", "Rosary Cannon Object", "Bellbeast Child", "Hanging Bell", "moss_berry",
-		"Mapper_Ring", "Harpoon Ring", "purple_flower_set", "Hanging Dummy", "laundry_basket",
+		"Spike Collider", "Spike Hit", "Rosary Cannon Object", "Bellbeast Child", "Hanging Bell", "moss_berry", "drop pillar", 
+		"Mapper_Ring", "Harpoon Ring", "purple_flower_set", "Hanging Dummy", "laundry_basket", "Mapper_Master_Ball", "Mapper Call Pole",
 		// Shell and rosary objects.
-		"Shell Shard Fossil", "shell_shard_string", "Geo Rock", "rosary_string", "rosary_shrine", "ant_item_string", 
-                "Song Shard Barrel", "rosary_bucket", "rosary_cache", "Craw_home", "Flea Festival Pinata",
+		"Shell Shard Fossil", "shell_shard_string", "Geo Rock", "rosary_string", "rosary_shrine", "ant_item_string",
+		"Song Shard Barrel", "rosary_bucket", "rosary_cache", "Craw_home", "Flea Festival Pinata",
 		// Enemy projectiles and attacks the needle clanks off
 		"DF Lava Rock", "DF Bomb Rock", "BoneBeast DropBell", "BoneBeast AtkBell", "DropBell", "Spinner AtkBell",
 		"Giant Centipede Bomb", "Giant Centipede Coil", "DefeatedCentipede", "Pin Projectile", "Shield Projectile", "Coral Flyer Throw Projectile",
@@ -259,7 +258,7 @@ internal sealed class TouchRefund : MonoBehaviour {
 		"Ward Boss Spear", "Swamp Shaman Projectile", "Throwing Bell", "Lightning Bola Ball", "Rock Roller Bomb", "Grass Ball",
 	];
 	// Exclusion list
-        private static readonly string[] ExcludedNames = ["Geo Rock Empty"];
+	private static readonly string[] ExcludedNames = ["Geo Rock Empty", "Surface Water Region"];
 
 	// Weavenest door... 
 	private static readonly string[] TinkTouchNames = ["Song_Gate"];
@@ -277,12 +276,20 @@ internal sealed class TouchRefund : MonoBehaviour {
 			return;
 		}
 
-                if (BreakableRefund.NameOrAncestorMatches(obj, ExcludedNames))
-                        return;
+		if (BreakableRefund.NameOrAncestorMatches(obj, ExcludedNames))
+			return;
 
-		if (BreakableRefund.NameOrAncestorMatches(obj, TouchNames) || IsPlainProjectile(obj)
+		if (BreakableRefund.NameOrAncestorMatches(obj, TouchNames) || IsPlainProjectile(obj) || IsFloatingObject(obj)
 			|| (obj.GetComponent<TinkEffect>() && BreakableRefund.NameOrAncestorMatches(obj, TinkTouchNames)))
 			BreakableRefund.HitObstacle();
+	}
+
+	// "Bop Collider" for objects floating in water.
+	private static bool IsFloatingObject(GameObject obj) {
+		for (Transform? t = obj.transform; t; t = t!.parent)
+			if (t!.Find("Bop Collider"))
+				return true;
+		return false;
 	}
 
 	//  For projectiles like the forgebrother boomarang.
