@@ -34,7 +34,7 @@ Tied to either thunderstore.toml or ResourceUtils.cs. (probably system language 
 - Config option reordering (in the next modmenu update, implementing my pull request)
 - Improved item pickup logic, so it can be made compatible with Randomizers. 
 
-### 1.1.1-1.1.4
+### 1.1.1-1.1.5
 - **X.1** Fixed Respawn point on binding the crest being wrong...
 - **X.2** Turned hold bind on by default (will require manual change in config settings for people updating) **major gameplay change... honestly should have enabled it from the start.**
 - Expanded parry refunds to many projectiles from bosses and enemies.
@@ -45,6 +45,8 @@ Tied to either thunderstore.toml or ResourceUtils.cs. (probably system language 
 - **X.4** Now requires Mod menu 1.0.0
 - Silk refunds now apply to rosary and shellshard objects. (had a change of opinion)
 - Many missed and misc objects added, including weavenest doors, shakra rings, and moss berries.
+- **X.5** Removed half silk after bind. Given the context of vanilla gameplay, along with the buffs to the refund system, switching to hold bind, and the half silk heart, this feels unneeded... (also didnt like how it played during testing... (just wait for the silk hearts to regenerate)
+- Added a few more things I missed to refund system, mainly floating objects which you can pogo.
 
 ## Playtests pre 1.0.0
 ### PT1
